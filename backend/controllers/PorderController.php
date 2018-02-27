@@ -55,28 +55,25 @@ class PorderController extends BaseController
         if(!empty($params['download'])){
             $data = [];
     	    if(!empty($result['item'])){
-                //波段
+                // 波段
                 $wave = new WaveModel;
                 $waveArr = $wave->transWaveAll();
-                //颜色
+                // 颜色
                 $color = new ColorModel;
                 $colorArr = $color->transColorAll();
-                //品牌  
+                // 品牌  
                 $brand = new BrandModel;
                 $brandArr = $brand->transBrandAll();
-                //季节  
+                // 季节  
                 $season = new SeasonModel;
                 $seasonArr = $season->transSeasonAll();
 
     	        $style_sn= [];
-                //订单总数量
-                $nums = 0;
-                //订单总价格。
-                $amount = 0;
+
                 foreach ($result['item'] as $item) {
                     $style_sn[] = $item['style_sn'];
                 }
-                $order_type = $order->customerOrderByStyleSnCount($style_sn, $params);
+                $order_type = $order->customerOrderByStyleSnCount($style_sn, $params)['styleSnSizeArr'];
                 $size = (new Query)->select(['size_id', 'size_name'])->from('meet_size')->indexBy('size_id')->all();
                 foreach($result['item'] as $k=>$v){
                     $item = $result['item'][$k];
@@ -94,14 +91,9 @@ class PorderController extends BaseController
                     $item['size_name'] = $size[$v['size_id']]['size_name'];
 
                     $result['item'][$k] = $item;
-
-                    $nums += $v['nums'];
-                    $amount += $v['cost_price']*$v['nums'];
                     
                 }
-                //订单数量汇总: 订单金额汇总:
-                $result['nums'] = $nums;
-                $result['amount'] = $amount;
+
 
     	    }
             $keys = array('大类','中类','小类','款色','流水','商品类型', '吊牌价' ,'加盟订货','直营订货','总订货','尺寸', '波段', '商品款号', '商品名称', '色号', '颜色名称', '品牌', '季节');
@@ -139,16 +131,14 @@ class PorderController extends BaseController
     	    $export->export_rows($data2);
     	    $export->export_finish();
     	}else{
+        // 网页显示
     	    if(!empty($result['item'])){
     	        $product_id= [];
-                //订单总数量
-                $nums = 0;
-                //订单总价格。
-                $amount = 0;
+
                 foreach ($result['item'] as $key => $value) {
                     $styleSnArr[] = $value['style_sn'];
                 }
-                $order_type = $order->customerOrderByStyleSnCount($styleSnArr, $params);
+                $order_type = $order->customerOrderByStyleSnCount($styleSnArr, $params)['styleSnArr'];
     	        foreach($result['item'] as $k=>$v){
                     $item = $result['item'][$k];
                     //加盟订货数
@@ -161,12 +151,7 @@ class PorderController extends BaseController
                     $item['cat_small_name'] = $select_option['cat_small'][$v['cat_s']]['cat_name'];
                     $item['type_name'] = $select_option['ptype'][$v['type_id']]['type_name'];
                     $result['item'][$k] = $item;
-    	            $nums += $v['nums'];
-                    $amount += $v['cost_price']*$v['nums'];
                 }
-                //订单数量汇总: 订单金额汇总:
-                $result['nums'] = $nums;
-                $result['amount'] = $amount;
     	    }
 
     	    // var_dump($result);exit;
@@ -183,17 +168,22 @@ class PorderController extends BaseController
     	    ]);
     	}
     }
+    /**
+     * 明细
+     * @param  string $style_sn style_sn
+     * @return [type]           [description]
+     */
     public function actionDialogue($style_sn = '')
     {
-        //以json的格式输出
+        // 以json的格式输出
         Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
         if(empty($style_sn)){
             return ['code'=>400];
         }
-        //产品详情
+        // 产品详情
         $product = new ProductModel();
         $result = $product->getList($style_sn);
-        //各尺寸销售情况统计
+        // 各尺寸销售情况统计
         if(!empty($result)){
             $result['order_count'] = $product->getProductSizeOrder($style_sn);
         }

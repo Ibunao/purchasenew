@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace common\models;
 
 use Yii;
 
@@ -50,7 +50,12 @@ class BrandModel extends \yii\db\ActiveRecord
         $result = self::find()->select(['brand_id', 'brand_name'])->asArray()->all();
         return $result;
     }
-
+    /**
+     * use
+     * backend/porder/index
+     * 品牌id对应品牌名
+     * @return [type] [description]
+     */
     public function transBrandAll()
     {
         $result = $this->getBrand();

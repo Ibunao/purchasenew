@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace common\models;
 
 use Yii;
 
@@ -58,7 +58,12 @@ class ColorModel extends \yii\db\ActiveRecord
             ->all();
         return $result;
     }
-
+    /**
+     * use
+     * backend/porder/index
+     * 颜色id对应颜色名  
+     * @return [type] [description]
+     */
     public function transColorAll(){
         $result = $this->getColor();
         $item = [];
@@ -78,7 +83,7 @@ class ColorModel extends \yii\db\ActiveRecord
 
     /**
      * 用法
-     * order/order/ImportFiles
+     * backend/morder/ImportFiles
      * 
      * 获取颜色列表
      * @return [type] [description]

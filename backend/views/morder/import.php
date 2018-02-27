@@ -79,7 +79,7 @@ $this->params['breadcrumbs'] = [
     </p>
 </div>
 <div class="col-xs-12" style="border-top: 2px solid #ff8482;">
-    <form action="/order/order/import-files" method="post" enctype="multipart/form-data"
+    <form action="/morder/import-files" method="post" enctype="multipart/form-data"
           style="margin-top: 20px">
         <div class="form-group">
             <label for="name">上传文件</label>
@@ -110,7 +110,7 @@ $this->params['breadcrumbs'] = [
             $("#sub").hide();
             $.ajax({
                 type: "get",
-                url: "/order/order/ajax-this-customer-exist?code=" + code,
+                url: "/morder/ajax-this-customer-exist?code=" + code,
                 dataType: "json",
                 success: function (data) {
                     if (data.code == 200) {

@@ -74,52 +74,58 @@ class OrderModel extends \yii\db\ActiveRecord
     {
         $query = (new Query())->from('meet_order_items as oi')
             ->where(['oi.disabled' => 'false'])
-            // ->andWhere(['<>', 'oi.order_id', '2017080957101504'])//暂时过滤掉电商A
+            // ->andWhere(['<>', 'oi.order_id', '2017080957101504'])//暂时过滤掉电商A的订单
             ->leftJoin('meet_product as p', 'p.product_id = oi.product_id');
 
         //价格可能需要的是订单详情里的价格也就是 amount
         $select = ['sum(oi.nums)as nums', 'sum(oi.amount) as amount', 'p.name', 'p.cost_price', 'p.style_sn', 'p.product_id', 'p.img_url', 'p.serial_num', 'p.cat_b', 'p.cat_m', 'p.cat_s', 'p.size_id', 'p.type_id', 'oi.order_id'];
+        // 订货会类型
         if (!empty($params['purchase'])) {
-            $query->andWhere(['or', "p.purchase_id='".$params['purchase']."'", "p.purchase_id='".Yii::$app->params['purchaseAB']."'"]);
+            // $query->andWhere(['or', "p.purchase_id='".$params['purchase']."'", "p.purchase_id='".Yii::$app->params['purchaseAB']."'"]);
+            $query->andWhere(["p.purchase_id='".$params['purchase']."'"]);
         }
-
+        // 款色号
         if (!empty($params['style_sn'])) {
             $query->andWhere(['p.style_sn' => $params['style_sn']]);
         }
+        // 大类
         if (!empty($params['cat_big'])) {
             $query->andWhere(['p.cat_b' => $params['cat_big']]);
         }
+        // 中类
         if (!empty($params['cat_middle'])) {
             $query->andWhere(['p.cat_m' => $params['cat_middle']]);
         }
+        // 小类
         if (!empty($params['cat_small'])) {
             $query->andWhere(['p.cat_s' => $params['cat_small']]);
         }
-
+        // 季节
         if (!empty($params['season'])) {
             $query->andWhere(['p.season_id' => $params['season']]);
         }
 
-
+        // 等级
         if (!empty($params['level'])) {
             $query->andWhere(['p.level_id' => $params['level']]);
         }
-
+        // 波段
         if (!empty($params['wave'])) {
             $query->andWhere(['p.wave_id' => $params['wave']]);
         }
-
+        // 色系
         if (!empty($params['scheme'])) {
             $query->andWhere(['p.scheme_id' => $params['scheme']]);
         }
-
+        // 价格带
         if (!empty($params['price_level_id'])) {
             $query->andWhere(['p.price_level_id' => $params['price_level_id']]);
         }
-
+        // 商品类型
         if(!empty($params['ptype'])){
             $query->andWhere(['p.type_id' => $params['ptype']]);
         }
+        // 客户类型 产品名称
         if (!empty($params['type']) || !empty($params['name'])) {
             $query->leftJoin('meet_order as o', 'o.order_id = oi.order_id')
             ->leftJoin('meet_customer as c', 'c.customer_id = o.customer_id');
@@ -131,25 +137,36 @@ class OrderModel extends \yii\db\ActiveRecord
                 $query->andWhere(['like','c.name', $params['name']]);
             }
         }
-        
+        // 排序
         if (!empty($params['order'])) {
             $query->orderBy($params['order']);
         } else {
             $query->orderBy('p.serial_num asc');
         }
+        // 网页显示时分组
         if (empty($params['download'])) {
             $query->groupBy(['oi.style_sn']);
+        // 下载时分组
         }else{
             $query->groupBy(['oi.style_sn', 'p.size_id']);
             $select = ArrayHelper::merge($select, ['p.product_sn', 'p.purchase_id', 'p.season_id', 'p.wave_id', 'p.brand_id', 'p.style_sn', 'p.model_sn', 'p.color_id', 'p.cost_price']);
         }
         //获取总数量
-        // $countQuery = clone $query;
-        // $count = count($countQuery->select(['sum(oi.nums)as nums'])->all());
         $pagination = '';
+        //订单总数量
+        $nums = 0;
+        //订单总价格。
+        $amount = 0;
+        $countQuery = clone $query;
+        $result = $countQuery->select(['sum(oi.nums)as nums', 'sum(oi.amount) as amount'])->all();
+        $count = count($result);
+        foreach ($result as $item) {
+            $nums += $item['nums'];
+            $amount += $item['amount'];
+        }
         if (empty($params['download'])) {
-            //分页  改用固定值，可以减少查询总数浪费的时间
-            $pagination = new Pagination(['totalCount' => 1000, 'pageSize' => ParamsClass::$pageSize]);
+            //分页  
+            $pagination = new Pagination(['totalCount' => $count, 'pageSize' => ParamsClass::$pageSize]);
 
             $query->offset($pagination->offset)
                 ->limit($pagination->limit);
@@ -191,7 +208,7 @@ class OrderModel extends \yii\db\ActiveRecord
             string(16) "2017031497575098"
           }
          */
-        return array('item' => $list, 'pagination' => $pagination);
+        return array('item' => $list, 'pagination' => $pagination, 'nums' => $nums, 'amount' => $amount);
     }
 
     //根据商品查找订单数量
@@ -218,7 +235,15 @@ class OrderModel extends \yii\db\ActiveRecord
         }
         return $productIds;
     }
-    //根据商品查找订单数量
+    /**
+     * use
+     * backend/porder/index
+     * 
+     * 根据款色号查找订单数量
+     * @param  [type] $styleSnArr style_sn数组
+     * @param  array  $params     参数
+     * @return [type]             [description]
+     */
     public function customerOrderByStyleSnCount($styleSnArr, $params = [])
     {
         $query = new Query;
@@ -229,21 +254,28 @@ class OrderModel extends \yii\db\ActiveRecord
             ->leftJoin('meet_product as p', 'p.product_id = oi.product_id')
             ->where(['in', 'oi.style_sn', $styleSnArr])
             ->andWhere(['oi.disabled' => 'false'])
-            ->andWhere(['<>', 'oi.order_id', '2017080957101504'])//暂时过滤掉电商A
+            // ->andWhere(['<>', 'oi.order_id', '2017080957101504'])//暂时过滤掉电商A
             ->groupBy(['oi.style_sn', 'p.size_id', 'c.type']);
             // ->indexBy('style_sn')
-        //判断顾客类型
+        //判断顾客类型,
         if (!empty($params['type'])) {
             $query->andWhere(['c.type' => $params['type']]);
         }
 
         $result = $query->all();
         $styleSnArr = [];
+        $styleSnSizeArr = [];
         foreach ($result as $key => $value) {
-            $styleSnArr[$value['style_sn']][$value['size_id']][$value['type']] = $value['count'];
+            $styleSnSizeArr[$value['style_sn']][$value['size_id']][$value['type']] = $value['count'];
+            if (isset($styleSnArr[$value['style_sn']][$value['type']])) {
+                $styleSnArr[$value['style_sn']][$value['type']] += $value['count'];
+            }else{
+                $styleSnArr[$value['style_sn']][$value['type']] = $value['count'];
+            }
         }
+        // var_dump($styleSnArr);exit;
 
-        return $styleSnArr;
+        return ['styleSnArr' => $styleSnArr, 'styleSnSizeArr' => $styleSnSizeArr];
     }
     //订单数量汇总: 订单金额汇总:
     public function getOrderAmount($product_id, $params)
@@ -367,9 +399,11 @@ class OrderModel extends \yii\db\ActiveRecord
         return $result;
     }
     /**
-     * order/order/index
+     * use
+     * backend/morder/index
+     * 
      * 客户订单查询
-     * @param  [type] $params [description]
+     * @param  [type] $params 过滤条件
      * @return [type]         [description]
      */
     public function orderQueryList($params)
@@ -431,6 +465,7 @@ class OrderModel extends \yii\db\ActiveRecord
                 $query->andWhere(['c.login' => null]);
             }
         }else{
+            // 添加上false则与第一版数据不一致，因为第一版的数据包含了没有下单的客户
             $query->andWhere(['o.disabled' => 'false']);
         }
         $countQuery = clone $query;
@@ -439,6 +474,7 @@ class OrderModel extends \yii\db\ActiveRecord
 // 统计订单总定额
 $countMoneyQuery = clone $query;
 $orderPrice = $countMoneyQuery
+            # 新价格为改价后的价格   订单里的是老价格  
             ->select(['sum(oi.nums*p.cost_price) as newprice', 'sum(amount) as oldprice'])
             ->leftJoin('meet_order_items as oi', 'oi.order_id = o.order_id')
             ->leftJoin('meet_product as p', 'p.product_id = oi.product_id ')
@@ -477,6 +513,7 @@ foreach ($queryAll as $key => $order) {
         }
         $query->orderBy([$orderBy => SORT_DESC]);
         $result = $query->select($select)->all();
+
         //判断下订单的价格是够改动
         foreach ($result as $k => $item) {
             //获取订单的价格
@@ -494,7 +531,7 @@ foreach ($queryAll as $key => $order) {
 
     /**
      * 使用此方法的方法
-     * orderModel/orderQueryList
+     * this/orderQueryList
      * order/order/detail
      * 
      * 
@@ -517,7 +554,7 @@ foreach ($queryAll as $key => $order) {
     }
     /**
      * 使用的方法
-     * order/order/index
+     * backend/morder/index
      * $this/getMasterCount
      * 
      * 获取该用户的下线客户的预订金额
@@ -546,7 +583,7 @@ foreach ($queryAll as $key => $order) {
 
     /**
      * 使用的方法  
-     * order/order/index
+     * backend/morder/index
      * 
      * 获取订单审核的信息
      * @param  [type] $orderId 订单id
@@ -861,6 +898,9 @@ foreach ($queryAll as $key => $order) {
     }
 
     /**
+     * use
+     * backend/morder/Discount
+     * 
      * 获取所有客户此大类的折扣信息
      * @param  [type] $type_id [description]
      * @return [type]          [description]

@@ -63,7 +63,13 @@ class WaveModel extends \yii\db\ActiveRecord
         $result = self::find()->select(['wave_id', 'wave_name'])->asArray()->all();
         return $result;
     }
-
+    /**
+     * use
+     * backend/porder/index
+     * 
+     * 波段id对应波段名
+     * @return [type] [description]
+     */
     public function transWaveAll()
     {
         $result = $this->getWave();

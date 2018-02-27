@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace common\models;
 
 use Yii;
 use yii\base\Model;
@@ -43,7 +43,7 @@ class PublicModel extends Model
 
     /**
      * use 
-     * order/order/ImportFiles
+     * backend/morder/ImportFiles
      *
      * 获取尺寸信息
      * @return [type] [description]

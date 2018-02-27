@@ -59,7 +59,13 @@ class SeasonModel extends \yii\db\ActiveRecord
         $result = self::find()->select(['season_id', 'season_name'])->asArray()->all();
         return $result;
     }
-
+    /**
+     * use
+     * backend/porder/index
+     * 
+     * 季节id对应季节名
+     * @return [type] [description]
+     */
     public function transSeasonAll()
     {
         $result = $this->getSeason();

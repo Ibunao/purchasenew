@@ -22,7 +22,6 @@ class IoXls
             header('Content-type: ' . $mimeType);
         } else {
             header('Content-type: ' . $mimeType . ';charset=utf-8');
-
         }
 
         header("Content-Disposition: attachment; filename=\"" . $fname . '"');

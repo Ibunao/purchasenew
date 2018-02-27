@@ -123,6 +123,7 @@ class CustomerModel extends \yii\db\ActiveRecord
     /**
      * use
      * backend/porder->tables()
+     * backend/morder->filter()
      * 
      * 获取下拉框选项
      * 
@@ -327,7 +328,7 @@ class CustomerModel extends \yii\db\ActiveRecord
     }
     /**
      * 使用的方法  
-     * order/order/index
+     * backend/morder/index
      * 
      * 获取客户订货指标
      * @param  [type] $param 

@@ -1,15 +1,15 @@
 <?php
 
-namespace frontend\models;
+namespace common\models;
 
 use Yii;
 use yii\db\Query;
-use frontend\config\ParamsClass;
-use frontend\models\ColorModel;
-use frontend\models\CatBigModel;
-use frontend\models\CatMiddleModel;
-use frontend\models\PurchaseModel;
-use frontend\models\OrderModel;
+use common\config\ParamsClass;
+use common\models\ColorModel;
+use common\models\CatBigModel;
+use common\models\CatMiddleModel;
+use common\models\PurchaseModel;
+use common\models\OrderModel;
 use yii\data\Pagination;
 
 /**
@@ -583,7 +583,7 @@ class ProductModel extends \yii\db\ActiveRecord
 
     /**
      * use
-     * order/default/dialogue 
+     * backend/porder/dialogue 
      *
      * 
      * 根据款号查询基本信息
@@ -608,9 +608,9 @@ class ProductModel extends \yii\db\ActiveRecord
     }
     /**
      * use
-     * order/default/dialogue
+     * backend/porder/dialogue
      *  
-     * 获取产品订单详情
+     * 获取产品订单购买详情
      * 要求商品表中产品唯一
      * @param  [type] $style_sn [description]
      * @return [type]           [description]
@@ -619,7 +619,7 @@ class ProductModel extends \yii\db\ActiveRecord
     {
 
         $query = new Query;
-        //根据款号查询尺码
+        //根据款色号查询尺码
         $result = $query->select(['p.*', 's.size_name'])
             ->from('meet_product as p')
             ->leftJoin('meet_size as s', 's.size_id = p.size_id')
@@ -726,7 +726,7 @@ class ProductModel extends \yii\db\ActiveRecord
     }
     /**
      * use 
-     * order/order/ExportMaster
+     * backend/morder/ExportMaster
      *
      * 不区分订货会输出客户总订单
      * @return [type] [description]
@@ -799,7 +799,7 @@ class ProductModel extends \yii\db\ActiveRecord
 
     /**
      * use
-     * order/order/ExportMaster
+     * backend/morder/ExportMaster
      *
      * 
      * 获取总指标/已定金额/已审核完成金额       可以优化
@@ -860,6 +860,14 @@ class ProductModel extends \yii\db\ActiveRecord
         $result['fin_target'] = $finish_tar;
         return $result;
     }
+    /**
+     * use
+     * backend/morder/actionImportFiles
+     * 
+     * 查询model_sn对应的时候又产品
+     * @param  [type] $modelSn [description]
+     * @return [type]          [description]
+     */
     public function getProductList($modelSn)
     {
         $count = self::find()->where(['model_sn' => $modelSn])

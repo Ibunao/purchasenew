@@ -36,16 +36,10 @@ return [
     
     'customer_include' => true, //用户批量导入 允许：true, 不允许 ：false
     'product_include' => true, //商品批量导入 允许：true, 不允许 ：false
-    'order_include' => true, //订单批量导入 允许：true, 不允许 ：false
+    
     'update_customer_info' => true,  //是否允许修改用户资料  允许：true， 不允许：false
     'is_latest_price' => true, //设置订单显示是否为最新价格 是最新价格：true  不是最新：false
-    'output_discount' => array(
-        '1'=>'服装',
-        '2'=>'家居',
-        '3'=>'防辐射',
-        '4'=>'备品',
-        '6'=>'化妆品',
-    ),
+    
     //需要清空缓存的地址
     'flush_cache_url' => array(
     	'http://128.128.1.74',
@@ -154,8 +148,7 @@ return [
         '34' => '台湾',
         '35' => '意向客户',
     ),
-    //同时属于AB订货会的订货会id
-    'purchaseAB' => 3,
+    
     //创建文件图片文件夹，为了更好的分类，每次订货会要更改
     'imagePath' => '/images/2018-12-12/'
 ];

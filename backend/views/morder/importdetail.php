@@ -42,7 +42,7 @@
                 }
             ?>
             </table>
-            <form action="/order/order/uploading-csv-data" method="post">
+            <form action="/morder/uploading-csv-data" method="post">
                 <input type="hidden" value="<?php echo $customer; ?>" name="param[customer_id]" id="customer">
                 <input type="hidden" value="<?php echo $file; ?>" name="param[file]" id="file">
                 <button class="btn btn-sm btn-danger" type="submit">上传</button>
@@ -59,6 +59,6 @@
             </script>
         <?php }else {
             echo "<p>" . $data . "</p>";
-            echo "<p>请按上面的错误说明修改后再次上传 <a href='/order/order/import'>点我返回</a></p>";
+            echo "<p>请按上面的错误说明修改后再次上传 <a href='/morder/import'>点我返回</a></p>";
             } ?>
 </div>

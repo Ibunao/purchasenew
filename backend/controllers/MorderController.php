@@ -1,22 +1,22 @@
 <?php
 
-namespace frontend\modules\order\controllers;
+namespace backend\controllers;
 
 use Yii;
 use yii\db\Query;
-use frontend\config\ParamsClass;
-use frontend\controllers\base\BaseController;
-use frontend\models\PurchaseModel;
-use frontend\models\ProductModel;
-use frontend\models\CustomerModel;
-use frontend\models\OrderModel;
-use frontend\models\PublicModel;
-use frontend\models\ColorModel;
-use frontend\models\ImportLogModel;
-use frontend\models\CatBigModel;
-use frontend\helpers\IoXls;
-use frontend\helpers\ErpCsv;
-use frontend\models\OrderItemsModel;
+use backend\config\ParamsClass;
+use backend\controllers\base\BaseController;
+use common\models\PurchaseModel;
+use common\models\ProductModel;
+use common\models\CustomerModel;
+use common\models\OrderModel;
+use common\models\PublicModel;
+use common\models\ColorModel;
+use common\models\ImportLogModel;
+use common\models\CatBigModel;
+use common\helpers\IoXls;
+use common\helpers\ErpCsv;
+use common\models\OrderItemsModel;
 use yii\web\NotFoundHttpException;
 
 /**
@@ -38,7 +38,9 @@ class MorderController extends BaseController
 		$orderModel = new OrderModel;
 		// 查询订单  
 		$result = $orderModel->orderQueryList($params);
+        // 预计已订货金额
 		$statistics['amount'] = $result['amount'];
+        // 已订货金额
 		$statistics['amount_really'] = $result['amount_really'];
 		$customer = new CustomerModel;
 		//总订货指标
@@ -435,7 +437,7 @@ class MorderController extends BaseController
     {
     	$code = Yii::$app->request->post('code');
         if (empty($code)) {
-            echo "<script>alert('请输入客户代码');location.href='/order/order/import'</script>";
+            echo "<script>alert('请输入客户代码');location.href='/morder/import'</script>";
             die;
         }
         $customer_id = $code;
@@ -446,12 +448,12 @@ class MorderController extends BaseController
         $allowExt = ['csv'];
 
         if (!in_array($postFileType, $allowExt)) {
-            echo "<script>alert('上传文件不支持类型，仅限传csv后缀名文件,请先下载导入模板再执行操作');location.href='/order/order/import'</script>";
+            echo "<script>alert('上传文件不支持类型，仅限传csv后缀名文件,请先下载导入模板再执行操作');location.href='/morder/import'</script>";
             die;
         }
 
         if (!is_uploaded_file($postFile['tmp_name'])) {
-            echo "<script>alert('不是通过HTP POST上传的文件');location.href='/order/order/import'</script>";
+            echo "<script>alert('不是通过HTTP POST上传的文件');location.href='/morder/import'</script>";
             die;
         }
 
@@ -470,11 +472,12 @@ class MorderController extends BaseController
         $newFile = Yii::$app->basePath . "/web/" . $newFolderPath . $newFileName;
         // var_dump($newFile);exit;
         if (move_uploaded_file($_FILES["file"]["tmp_name"], $newFile)) {
+            // 获取csv中的数据
             $handle = fopen($newFile, 'r');
             $result = ErpCsv::input_csv($handle);
             $len_result = count($result);
             if ($len_result <= 1) {
-                echo "<script>alert('对不起，您的文件中没有数据，请检查');location.href='/order/order/import'</script>";
+                echo "<script>alert('对不起，您的文件中没有数据，请检查');location.href='/morder/import'</script>";
                 die;
             }
             $arr = [];
@@ -506,11 +509,13 @@ class MorderController extends BaseController
                 if (empty($num)) {
                     $data .= "<span>数量的<b>" . $result[$i][3] . "</b>有问题</span>";
                 }
-
-                $count = (new Query)->from('meet_product')
-                	->where(['model_sn' => $model_sn])
-                	->andWhere(['purchase_id' => $c_info['purchase_id']])
-                	->andWhere(['color_id' => $color_id])
+                $query = (new Query)->from('meet_product')
+                    ->where(['model_sn' => $model_sn]);
+                // 获取订货会id,如果只属于一个订货会，添加订货会条件
+                if ($c_info['purchase_id'] != Yii::$app->params['purchaseAB']) {
+                    $query->andWhere(['purchase_id' => $c_info['purchase_id']]);
+                }
+                $count = $query->andWhere(['color_id' => $color_id])
                 	->andWhere(['size_id' => $size_id])
                 	->andWhere(['is_down' => '0'])
                 	->andWhere(['disabled' => 'false'])
@@ -547,7 +552,7 @@ class MorderController extends BaseController
                 'product_list' => $product_list,
             ));
         } else {
-            echo "<script>alert('上传失败');location.href='/order/order/import'</script>";
+            echo "<script>alert('上传失败');location.href='/morder/import'</script>";
             die;
         }
     }
@@ -592,7 +597,7 @@ class MorderController extends BaseController
     {
     	$param = Yii::$app->request->post('param');
         if (!isset($param['file']) || !isset($param['customer_id'])) {
-            echo "<script>alert('数据不存在！');location.href='/order/order/import'</script>";
+            echo "<script>alert('数据不存在！');location.href='/morder/import'</script>";
             die;
         }
 
@@ -601,7 +606,7 @@ class MorderController extends BaseController
         	->where(['customer_id' => $param['customer_id']])
         	->one();
         if (!$customer_info) {
-            echo "<script>alert('用户不存在！');location.href='/order/order/import'</script>";
+            echo "<script>alert('用户不存在！');location.href='/morder/import'</script>";
             die;
         }
 
@@ -670,7 +675,7 @@ class MorderController extends BaseController
                 //需要修改的订单详情
                 $result = $ordered_lists->save();
                 if (empty($result)) {
-                	echo "<script>alert('添加失败');location.href='/order/order/import'</script>";exit;
+                	echo "<script>alert('添加失败');location.href='/morder/import'</script>";exit;
                 }
             } else {
                 $res['nums'] = $num;
@@ -688,7 +693,7 @@ class MorderController extends BaseController
                 $orderItems->setAttributes($res);
                 $result = $orderItems->save();
                 if (empty($result)) {
-                	echo "<script>alert('添加失败');location.href='/order/order/import'</script>";exit;
+                	echo "<script>alert('添加失败');location.href='/morder/import'</script>";exit;
                 }
             }
             $model_list[$model_sn] = $model_sn;
@@ -703,7 +708,7 @@ class MorderController extends BaseController
         $implodeLog->pre_key = $order_id;
         $implodeLog->save();
 
-        echo "<script>alert('添加成功');location.href='/order/order/index'</script>";exit; 
+        echo "<script>alert('添加成功');location.href='/morder/index'</script>";exit; 
     }
 
     /**
