@@ -102,6 +102,8 @@ class ProductModel extends \yii\db\ActiveRecord
     }
 
     /**
+     * use
+     * backend/product/index
      * 获取商品筛选条件数据，下拉框数据
      * @param array $data
      * @return mixed
@@ -150,6 +152,9 @@ class ProductModel extends \yii\db\ActiveRecord
     }
 
     /**
+     * use
+     * backend/product
+     * 
      * 商品查询 ，根据关键字搜索出相应的结果
      * @param array $arr 搜索关键字
      * @param string $page 页码
@@ -661,7 +666,7 @@ class ProductModel extends \yii\db\ActiveRecord
     }
     /**
      * use
-     * order/order/detail
+     * backend/morder/detail
      * 
      * 获取指定款号产品的尺码信息
      * @param  [type] $modelSn 款号
@@ -681,7 +686,7 @@ class ProductModel extends \yii\db\ActiveRecord
     }
     /**
      * use
-     * order/order/detail
+     * backend/morder/detail
      * 
      * 获取指定款号产品的尺码信息
      * @param  [type] $modelSn 款号
@@ -702,7 +707,7 @@ class ProductModel extends \yii\db\ActiveRecord
     }
     /**
      * use 
-     * order/order/detail
+     * backend/morder/detail
      * 
      * 用户下单的产品中指定款号的商品订单信息
      * @param  [type] $orderId 单号

@@ -1,6 +1,6 @@
 <?php
 
-namespace frontend\models;
+namespace common\models;
 
 use Yii;
 
@@ -59,7 +59,7 @@ class AgentModel extends \yii\db\ActiveRecord
     }
     /**
      * use
-     * order/manage/UserImport
+     * backend/manage/UserImport
      * 
      * 转换  code => name
      *

@@ -298,7 +298,7 @@
     function tip(){
         var con = confirm('此操作会让页面停止响应至少十分钟，是否继续？');
         if(con){
-            alert('点击后请勿刷新页面，等待网页响应后xls自动会下载！切记勿动，勿刷新！！！！');
+            alert('点击后请勿刷新页面，等待网页响应后csv自动会下载！切记勿动，勿刷新！！！！');
             location.href='/morder/download-order-items-in-order-items-table';
         }
     }

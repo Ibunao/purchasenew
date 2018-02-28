@@ -49,7 +49,7 @@ $this->params['breadcrumbs'] = [
 </div>
 <a href="<?=Url::to(['/download/customer.xls']) ;?>">我是模板，要我？点我！</a>
 <div class="row" style="margin-top: 20px">
-    <form method="post" enctype="multipart/form-data" action="<?=Url::to(['/order/manage/user-import']) ;?>">
+    <form method="post" enctype="multipart/form-data" action="<?=Url::to(['/manage/user-import']) ;?>">
         <div class="form-group">
             <label for="name">上传文件</label>
             <input type="file" class="btn btn-sm btn-info" value="上传文件" name="file">

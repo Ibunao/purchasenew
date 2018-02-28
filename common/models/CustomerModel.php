@@ -175,7 +175,7 @@ class CustomerModel extends \yii\db\ActiveRecord
         foreach ($purchase_list as $k => $v) {
             $result['purchase'][$v['purchase_id']] = $v['purchase_name'];
         }
-
+        $result['purchase'][3] = 'AB';
         //省份
         $result['province'] = Yii::$app->params['customer_province'];
 
@@ -242,7 +242,7 @@ class CustomerModel extends \yii\db\ActiveRecord
     }
     /**
      * use
-     * order/manage/add
+     * backend/manage/add
      * 
      * 用户新增
      * @param array $data
@@ -298,8 +298,8 @@ class CustomerModel extends \yii\db\ActiveRecord
 
     /**
      * use
-     * order/manage/export
-     * 
+     * backend/manage/export
+     * this/transAllGuest
      * 获取所有的用户
      * @return mixed
      */
@@ -311,7 +311,7 @@ class CustomerModel extends \yii\db\ActiveRecord
 
     /**
      * use 
-     * order/manage/userimport
+     * backend/manage/userimport
      * 
      * 转换
      *
@@ -401,7 +401,7 @@ class CustomerModel extends \yii\db\ActiveRecord
     
     /**
      * use
-     * order/manage/ajax
+     * backend/manage/ajax
      * 
      * 检查code是否存在
      * @param  [type] $code 客户代码
@@ -414,7 +414,7 @@ class CustomerModel extends \yii\db\ActiveRecord
     }
     /**
      * use
-     * order/manage/Update
+     * backend/manage/Update
      * 
      * 更新用户信息
      * @param  [type] $data [description]

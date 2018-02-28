@@ -95,7 +95,7 @@ $this->params['breadcrumbs'] = [
 
     <div class="col-sm-12 form-group">
         <button class="btn btn-primary  btn-xs" type="submit">搜索</button>
-        <button class="btn btn-primary clear btn-xs"><a href="<?=Url::to(['/order/manage/index']) ;?>" style="color:#fff">清空</a></button>
+        <button class="btn btn-primary clear btn-xs"><a href="#" style="color:#fff">清空</a></button>
     </div>
 </form>
 <script>
@@ -105,9 +105,9 @@ $this->params['breadcrumbs'] = [
     });
 </script>
 <div  class="col-sm-12 form-group">
-    <a href="<?=Url::to(['/order/manage/add']) ;?>"><button class="btn btn-default btn-sm">添加用户</button></a>
-    <a href="<?=Url::to(['/order/manage/import']) ;?>"><button class="btn btn-default btn-sm">批量导入用户</button></a>
-    <a href="<?=Url::to(['/order/manage/export']) ;?>"><button class="btn btn-default btn-sm">导出用户</button></a>
+    <a href="<?=Url::to(['/manage/add']) ;?>"><button class="btn btn-default btn-sm">添加用户</button></a>
+    <a href="<?=Url::to(['/manage/import']) ;?>"><button class="btn btn-default btn-sm">批量导入用户</button></a>
+    <a href="<?=Url::to(['/manage/export']) ;?>"><button class="btn btn-default btn-sm">导出用户</button></a>
 </div>
 <table  class="org table table-hover table-bordered table-striped">
     <caption class="text-left">用户列表</caption>
@@ -132,8 +132,8 @@ $this->params['breadcrumbs'] = [
         <tr>
             <td width="25"><input type="checkbox"></td>
             <td width="30">
-                <a href="<?=Url::to(['/order/manage/update', 'id'=>$v['customer_id']]) ;?>"><i class="icon-pencil"></i></a>
-                <a href="<?=Url::to(['/order/manage/copy', 'id'=>$v['customer_id']]) ;?>"><i class="icon-copy"></i></a>
+                <a href="<?=Url::to(['/manage/update', 'id'=>$v['customer_id']]) ;?>"><i class="icon-pencil"></i></a>
+                <a href="<?=Url::to(['/manage/copy', 'id'=>$v['customer_id']]) ;?>"><i class="icon-copy"></i></a>
             </td>
             <td width="120"><?= $v['name']; ?></td>
             <td width="120"><?= $v['code']; ?></td>

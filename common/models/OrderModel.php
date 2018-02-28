@@ -532,7 +532,7 @@ foreach ($queryAll as $key => $order) {
     /**
      * 使用此方法的方法
      * this/orderQueryList
-     * order/order/detail
+     * backend/morder/detail
      * 
      * 
      * 获取订单的价格(最新和下订单时的价格) 
@@ -723,7 +723,7 @@ foreach ($queryAll as $key => $order) {
     }
     /**
      *  使用方法
-     *  order/order/detail
+     *  backend/morder/detail
      * 
      * 根据订单号获取订单中商品的款号
      * @param  [type] $order_id 订单id
@@ -745,8 +745,7 @@ foreach ($queryAll as $key => $order) {
     }
     /**
      *  使用方法
-     *  order/order/detail
-     *  order/order
+     *  backend/morder/detail
      * 
      * 订单中商品详情
      * @param  [type] $orderId [description]
@@ -808,7 +807,7 @@ foreach ($queryAll as $key => $order) {
     }
     /**
      * 用法
-     * order/order/detail
+     * backend/morder/detail
      * 
      * 商品订单的详细信息
      * @param  [type] $orderId 订单id
@@ -831,7 +830,7 @@ foreach ($queryAll as $key => $order) {
 
     /**
      * 用法
-     * order/order/check
+     * backend/morder/check
      * 
      * 审核，更新订单状态
      * @param  [type] $orderId 订单号
@@ -852,6 +851,24 @@ foreach ($queryAll as $key => $order) {
             }
         }
         return false;
+    }
+    /**
+     * 添加审核日志
+     * @param [type] $order_id 订单id
+     * @param [type] $status   状态
+     * @param [type] $name     管理员name
+     * @param [type] $user_id  用户id
+     */
+    public function addLog($order_id, $status, $name, $user_id)
+    {
+        $time = time();
+        return Yii::$app->db->createCommand()->insert('meet_order_log', [
+            'order_id' => $order_id,
+            'user_id' => $user_id,
+            'name' => $name,
+            'status' => $status,
+            'time' => $time,
+        ])->execute();
     }
     /**
      * use
@@ -902,7 +919,7 @@ foreach ($queryAll as $key => $order) {
      * backend/morder/Discount
      * 
      * 获取所有客户此大类的折扣信息
-     * @param  [type] $type_id [description]
+     * @param  [type] $type_id 大分类id
      * @return [type]          [description]
      */
     public function getAllCustomerDiscount($type_id)
@@ -1361,5 +1378,65 @@ foreach ($queryAll as $key => $order) {
         $model_sn = array_slice($model_sn, $start, 8);
         return $model_sn;
     }
-  
+    /**
+     * use
+     * backend/morder/differ
+     * 
+     * 查找这个订单不同的商品价格
+     *
+     * @param $order_id
+     * @return array
+     */
+    public function getThisOrderDifferent($order_id){
+        $result = (new Query)->select(['product_id', 'price', 'model_sn'])
+            ->from('meet_order_items')
+            ->where(['order_id' => $order_id])
+            ->andWhere(['disabled' => 'false'])
+            ->all();
+
+        if(empty($result)) return array();
+        $productids = [];
+        // 记录订单里的价格
+        foreach($result as $key => $val){
+            $arr[$val['model_sn']] = $val['price'];
+            $productids[] = $val['product_id'];
+        }
+
+        $result = (new Query)->select(['product_id', 'cost_price as price', 'model_sn'])
+            ->from('meet_product')
+            ->where(['in','product_id' ,$productids])
+            ->andWhere(['disabled' => 'false'])
+            ->andWhere(['is_down' => '0'])
+            ->all();
+        if(empty($result)) return array();
+        foreach($result as $k => $v){
+            $res[$v['model_sn']] = $v['price'];
+        }
+        $rest = array();
+        $rest['new'] = array_diff_assoc($res, $arr);
+        $rest['old'] = array_diff_assoc($arr, $res);
+        return $rest;
+    }
+
+    /**
+     * 显示该商品的不同价格
+     *
+     * @param $result
+     * @return mixed
+     */
+    public function showDifferentProduct($result){
+        if(isset($result['old'])){
+            $modelSns = [];
+            foreach($result['old'] as $key => $val){
+                $modelSns[] = $key;
+            }
+            return $result = (new Query)->select(['product_id', 'name', 'model_sn'])
+            ->from('meet_product')
+            ->where(['in','model_sn' ,$modelSns])
+            ->andWhere(['disabled' => 'false'])
+            ->andWhere(['is_down' => '0'])
+            ->groupBy('model_sn')
+            ->all();
+        }
+    }
 }

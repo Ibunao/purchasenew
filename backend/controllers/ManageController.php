@@ -1,12 +1,13 @@
 <?php
-namespace frontend\modules\order\controllers;
+namespace backend\controllers;
 
 use Yii;
-use frontend\controllers\base\BaseController;
-use frontend\models\CustomerModel;
+use backend\controllers\base\BaseController;
+use common\models\CustomerModel;
+use common\models\AgentModel;
 use PHPExcel;
 use PHPExcel_IOFactory;
-use frontend\helpers\IoXls;
+use common\helpers\IoXls;
 /**
  *用户管理
  * @author        ding
@@ -14,16 +15,16 @@ use frontend\helpers\IoXls;
 class ManageController extends BaseController
 {
     public $admin;
-
+    public $offPrize = 'percent';
     public function actionIndex()
     {
         $param = Yii::$app->request->get('param');
 
         $guestMange = new CustomerModel;
-        //
+        // 获取下拉框选项
         $insertOption = $guestMange->userFilter();
-
-        $selectResult = $guestMange->selectLikeDatabaseOperation($param);//查询检索的数据
+        // 查询检索的数据
+        $selectResult = $guestMange->selectLikeDatabaseOperation($param);
 
         return $this->render('index', [
             'param' => $param,
@@ -42,14 +43,14 @@ class ManageController extends BaseController
         $arr = Yii::$app->request->post('param');
         if (!empty($arr)) {
             //插入
-            $res = $guestModel->insertDatabaseOperation($arr);
+            $res = $guestModel->insertDbOperation($arr);
             if ($res) {
                 Yii::$app->session->setFlash('info', '添加成功');
-                $this->redirect('/order/manage/index');//如果成功，跳转
+                $this->redirect('/manage/index');//如果成功，跳转
             } else {
                 Yii::$app->session->setFlash('info', '添加失败');
 
-                $this->redirect('/order/manage/index');
+                $this->redirect('/manage/index');
             }
         }
         $insert_option = $guestModel->userFilter();//显示自带的结果
@@ -77,7 +78,7 @@ class ManageController extends BaseController
     {
         header('Content-Type:text/html;Charset=GB2312;');
         //折扣是按照百分比的显示, 百分比就是xls的折扣写的是[50%], 而不是百分比的就会写[0.5]
-        $offPrize = 'percent';
+        
         $percentTarget = false;
         $postFile = !empty($_FILES["file"]['name']) ? $_FILES['file'] : exit("请上传文件");
         //获取文件后缀
@@ -108,7 +109,7 @@ class ManageController extends BaseController
             $objPHPExcel = PHPExcel_IOFactory::load($newFile);
             $result = $objPHPExcel->getActiveSheet()->toArray();
             $len_result = count($result);
-
+            // var_dump($result);exit;
             if ($len_result <= 1) {
                 echo "<script>alert('表中没有相关数据，请检查');</script>";
                 die;
@@ -118,6 +119,7 @@ class ManageController extends BaseController
             $list['purchase'] = array(
                 Yii::$app->params['purchase_oct'],
                 Yii::$app->params['purchase_uki'],
+                Yii::$app->params['purchase_all'],
             );
             $agent = new AgentModel();
             $agent_code = $agent->transAgentCode();
@@ -226,7 +228,8 @@ class ManageController extends BaseController
                 $d_c3 = rtrim($result[$i][20], '%');
                 $d_c4 = rtrim($result[$i][21], '%');
                 $d_c6 = rtrim($result[$i][22], '%');
-                if ($offPrize == 'percent') {
+                if ($this->offPrize == 'percent') {
+
                     if (!empty($d_c1)) {
                         if ($d_c1 <= 0 || $d_c1 > 100) {
                             $warning .= '<span><b>服装折扣</b>应该在0-100且不能与0之间</span>';
@@ -298,16 +301,17 @@ class ManageController extends BaseController
                 $res_str .= "<p><span><b>客户代码有重复，请检查</b></span></p>";
             }
             if (empty($res_str)) {
+                // 添加到数据库
                 $res = $this->addCsvData($percentTarget, $result);
                 if ($res) {
                     Yii::$app->session->setFlash('info', '上传成功');
-                    $this->redirect(['/order/manage/index']);//上传成功
+                    $this->redirect(['/manage/index']);//上传成功
                 } else {
                     Yii::$app->session->setFlash('info', '上传失败');
-                    $this->redirect(['/order/manage/import']);//上传失败
+                    $this->redirect(['/manage/import']);//上传失败
                 }
             } else {
-                $this->render('errordetail', array(
+                return $this->render('errordetail', array(
                     'error' => $res_str,
                 ));
             }
@@ -339,7 +343,7 @@ class ManageController extends BaseController
             $leader = $result[$i][8];
             $leader_name = $result[$i][9];
             $agent = ltrim($result[$i][10], "'");
-            $relation_code = $result[$i][11];
+            $relation_code = $result[$i][11]?:'';
             $target = $result[$i][12];
             if($percentTarget){
                 $target_cat1 = rtrim($result[$i][13], "%") * $target / 100;
@@ -364,7 +368,7 @@ class ManageController extends BaseController
             } else {
                 $parent_id = 0;
             }
-            if ($offPrize == 'percent') {
+            if ($this->offPrize == 'percent') {
                 if (empty($discount_cat1)) {
                     $discount_cat1 = 100;
                 }
@@ -490,7 +494,7 @@ class ManageController extends BaseController
             $res = $guestModel->updateDbOperation($arr);//修改
             if ($res) {
                 Yii::$app->session->setFlash('info', '修改成功');
-                return $this->redirect('/order/manage/index');
+                return $this->redirect('/manage/index');
             } else {
                 echo "<script>alert('出错');</script>";
                 die;
@@ -516,7 +520,7 @@ class ManageController extends BaseController
             $res = $guestModel->insertDbOperation($arr);//新增操作
             if ($res) {
                 Yii::$app->session->setFlash('info', '复制成功');
-                return $this->redirect('/order/manage/index');
+                return $this->redirect('/manage/index');
             } else {
                 Yii::$app->session->setFlash('error', '复制失败');
                 echo "<script>history.go(0);</script>";

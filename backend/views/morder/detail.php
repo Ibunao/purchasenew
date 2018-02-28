@@ -8,7 +8,8 @@ $this->params['breadcrumbs'] = [
 
 ?>
 
-
+<script type="text/javascript" src="/js/layer/layer.min.js"></script>
+<script type="text/javascript" src="/js/jquery.PrintArea.js"></script>
 
 <div class="row">
     <div class="col-xs-12">
@@ -17,8 +18,8 @@ $this->params['breadcrumbs'] = [
             <label class="col-sm-3"><?php echo $order_info['purchase_name']?></label>
             <label class="col-sm-3">客户名:<?php echo $order_info['customer_name'];?></label>
             <label class="col-sm-3">客户代码:<?php echo $order_info['customer_id'];?> </label>
-            <input type="button" class="btn btn-sm btn-primary Dialogue" onclick="window.location.href='admin.php?r=order/order/detail&order_id=<?php echo $order_info['order_id'];?>'"   value="订单明细">
-            <input type="button" class="btn btn-sm btn-danger Dialogue" onclick="window.location.href='admin.php?r=order/order/statistics&order_id=<?php echo $order_info['order_id'];?>'"   value="订单统计">
+            <input type="button" class="btn btn-sm btn-primary Dialogue" onclick="window.location.href='/morder/detail?order_id=<?php echo $order_info['order_id'];?>'"   value="订单明细">
+            <input type="button" class="btn btn-sm btn-danger Dialogue" onclick="window.location.href='/morder/statistics?order_id=<?php echo $order_info['order_id'];?>'"   value="订单统计">
             <input type="button" class="btn btn-sm btn-danger print"  value="打印">
             <!--E 汇总-->
         </div>
@@ -290,7 +291,7 @@ $this->params['breadcrumbs'] = [
 
                 var order_id = $(this).attr('data-val');
                 var status = $(this).attr('data-status');
-                $.post('admin.php?r=order/order/check',{'order_id':order_id,'status':status},function(data){
+                $.post('/morder/check',{'order_id':order_id,'status':status},function(data){
                     if(data.code!==400){
                         alert('操作成功');
                         btn.parent().hide();

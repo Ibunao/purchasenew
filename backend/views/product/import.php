@@ -45,15 +45,15 @@ $this->params['breadcrumbs'] = [
 </div>
 <h3 class="text-danger">对于每次导入的商品会出现各种新的错误，请根据系统提示修改后重新上传</h3>
 <div>
-    <a href="/images/download/page.csv" class="text-info">我是批量导入模板，要我？点我！</a> <b class="text-danger">(请不要删除模板中第一行数据)</b>
+    <a href="/download/page.csv" class="text-info">我是批量导入模板，要我？点我！</a> <b class="text-danger">(请不要删除模板中第一行数据)</b>
 </div>
 
 <div class="color">
-    <a href="/admin.php?r=order/product/ExportColor" class="text-success">我是颜色色号对照表，要我？点我！</a>
+    <a href="/product/export-color" class="text-success">我是颜色色号对照表，要我？点我！</a>
 </div>
 
 <div class="row" style="margin-top: 20px">
-    <form method="post" enctype="multipart/form-data" action="/order/product/ImportFiles">
+    <form method="post" enctype="multipart/form-data" action="/product/import-files">
         <div class="form-group">
             <label for="name">上传文件</label>
             <input type="file" class="btn btn-sm btn-info" value="上传文件" name="file">

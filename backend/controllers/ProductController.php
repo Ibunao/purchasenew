@@ -1,17 +1,17 @@
 <?php
-namespace frontend\modules\order\controllers;
+namespace backend\controllers;
 
 use Yii;
 use yii\db\Query;
-use frontend\controllers\base\BaseController;
-use frontend\models\CustomerModel;
-use frontend\models\ProductModel;
-use frontend\models\PublicModel;
-use frontend\models\ColorModel;
+use backend\controllers\base\BaseController;
+use common\models\CustomerModel;
+use common\models\ProductModel;
+use common\models\PublicModel;
+use common\models\ColorModel;
 use PHPExcel;
 use PHPExcel_IOFactory;
-use frontend\helpers\IoXls;
-use frontend\config\ParamsClass;
+use common\helpers\IoXls;
+use common\config\ParamsClass;
 /**
  * 商品管理
  * @author        ding
@@ -475,7 +475,7 @@ class ProductController extends BaseController
         $postFile = isset($_FILES["file"]) ? $_FILES['file'] : exit("请上传文件");
 
         $postFileType = pathinfo($postFile['name'], PATHINFO_EXTENSION);
-        $allowExt = array('xls', 'xlsx');
+        $allowExt = array('xls', 'xlsx', 'csv');
         if (empty($postFile)) {
             exit("请上传文件");
         }
@@ -506,6 +506,7 @@ class ProductController extends BaseController
             $result = $objPHPExcel->getActiveSheet()->toArray();
 
             $len_result = count($result);
+            exit;
             if ($len_result <= 1) {
                 echo "<script>alert('表中没有相关数据，请检查');</script>";
                 die;
@@ -893,5 +894,26 @@ $result = Yii::$app->db
 
         //添加日志
 
+    }
+
+    /**
+     * 导出颜色色号
+     */
+    public function actionExportColor()
+    {
+        $color = new ColorModel();
+        $result = $color->getColor();
+        $export = new IoXls();
+        foreach ($result as $v) {
+            $item[] = $v['color_no'];
+            $item[] = $v['color_name'];
+            $data[] = $item;
+            unset($item);
+        }
+        $filename = '颜色列表' . date('Y_m_d', time());
+        $keys = array('颜色代码', '颜色名称');
+        $export->export_begin($keys, $filename, count($data));
+        $export->export_rows($data);
+        $export->export_finish();
     }
 }

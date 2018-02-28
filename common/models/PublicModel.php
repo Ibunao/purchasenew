@@ -27,7 +27,7 @@ class PublicModel extends Model
     }
     /**
      * user
-     * order/order/detail
+     * backend/morder/detail
      * 
      * 获取尺码组
      * @return [type] [description]

@@ -178,14 +178,14 @@ $this->params['breadcrumbs'] = [
 
         <div class="button-s-r">
             <button class="btn btn-primary  btn-xs" type="submit">搜索</button>
-            <button class="btn btn-primary  btn-xs"><a href="/order/product/index" style="color: #fff;text-decoration: none;">清空</a></button>
+            <button class="btn btn-primary  btn-xs"><a href="/product/index" style="color: #fff;text-decoration: none;">清空</a></button>
         </div>
     </form>
 <div class="form-group">
-    <a href="<?=Url::to(['/order/product/add']) ;?>"><button class="btn btn-default btn-sm">添加商品</button></a>
-    <a href="<?=Url::to(['/order/product/import']) ;?>"><button class="btn btn-default btn-sm">全新商品导入</button></a>
-    <a href="<?=Url::to(['/order/product/export']) ;?>"><button class="btn btn-default btn-sm">导出商品</button></a>
-    <a href="<?=Url::to(['/order/product/check']) ;?>"><button class="btn btn-default btn-sm">检查错误</button></a>
+    <a href="<?=Url::to(['/product/add']) ;?>"><button class="btn btn-default btn-sm">添加商品</button></a>
+    <a href="<?=Url::to(['/product/import']) ;?>"><button class="btn btn-default btn-sm">全新商品导入</button></a>
+    <a href="<?=Url::to(['/product/export']) ;?>"><button class="btn btn-default btn-sm">导出商品</button></a>
+    <!-- <a href="<?=Url::to(['/product/check']) ;?>"><button class="btn btn-default btn-sm">检查错误</button></a> -->
 </div>
 <table class="table table-striped table-bordered table-hover" style="margin-top: 5px;">
     <caption class="text-left">商品列表</caption>
@@ -213,8 +213,8 @@ $this->params['breadcrumbs'] = [
     <tr>
         <td width="25"><input type="checkbox"></td>
         <td width="40">
-            <a href="<?=Url::to(['/order/product/update', 'serial_num' => $v['serial_num'], 'purchase_id' => $v['purchase_id']]) ;?>"><i class="icon-pencil"></i></a>
-       &nbsp;&nbsp;&nbsp;&nbsp;<a href="<?=Url::to(['/order/product/copy', 'serial_num' => $v['serial_num']]) ;?>"><i class="icon-copy"></i></a>
+            <a href="<?=Url::to(['/product/update', 'serial_num' => $v['serial_num'], 'purchase_id' => $v['purchase_id']]) ;?>"><i class="icon-pencil"></i></a>
+       &nbsp;&nbsp;&nbsp;&nbsp;<a href="<?=Url::to(['/product/copy', 'serial_num' => $v['serial_num']]) ;?>"><i class="icon-copy"></i></a>
         </td>
         <td width="60"><?= $v['serial_num'] ?></td>
         <td width="100"><?= $v['model_sn'] ?></td>

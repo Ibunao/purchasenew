@@ -84,7 +84,7 @@ use yii\helpers\Url;
                 echo "用户复制";
             }
         ?></b></h3>
-<form action="<?=Url::to(['/order/manage/'.$action]) ;?>" method="post">
+<form action="<?=Url::to(['/manage/'.$action]) ;?>" method="post">
     <input type="hidden" <?php if($action == 'update' || $action == "copy"){ ?> name="param[id]" value="<?= isset($param['customer_id'])?$param['customer_id']:''; ?>" <?php } ?>>
 
     <div class="form-group">
@@ -238,7 +238,7 @@ use yii\helpers\Url;
             var code=$("#code").val();
             $.ajax({
                 type:"post",
-                url:"/order/manage/ajax?codes="+code,
+                url:"/manage/ajax?codes="+code,
                 dataType: "json",
                 success:function(msg){
                     $("#userinfo").html(msg);

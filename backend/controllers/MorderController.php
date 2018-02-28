@@ -216,10 +216,7 @@ class MorderController extends BaseController
         	return ['msg' => '复制订单失败', 'code' => 400];
         }
 	}
-	/**
-	 * 订单详情
-	 * @return [type] [description]
-	 */
+
 	/**
 	 * 订单详情
 	 * @param  [type] $order_id 订单id
@@ -295,14 +292,16 @@ class MorderController extends BaseController
 		$request = Yii::$app->request;
 		$orderId = $request->post('order_id');
 		$status = $request->post('status');
-		$loginInfo = Yii::$app->session->get('login_in');
-		$name = $loginInfo['name'];
+		$loginInfo = Yii::$app->session->get('backend_login_in');
+        $name = $loginInfo['name'];
 		$userId = $loginInfo['user_id'];
 		if (empty($orderId)) {
 			return ['code' => 400];
 		}
 		$order = new OrderModel();
 		if ($order->updateOrderStatus($orderId, $status)) {
+            // 添加操作日志
+            $order->addLog($orderId, $status, $name, $userId);
 			return ['code' => 200];
 		}
 		return ['code' => 400];
@@ -801,7 +800,7 @@ class MorderController extends BaseController
         $all_big_target = 0; //该大类的指标
         $all_bro_money = 0; //实际已买的金额
         $all_dis_money = 0; //折扣后的价格
-        foreach($result as $k => $v){
+        foreach($result as $k => $val){
             $data[$i]['A'] = $val['name'];
             $data[$i]['B'] = $val['purchase_id']==1?'OCT':'UKI';
             $data[$i]['C'] = $val['code'];
@@ -835,7 +834,10 @@ class MorderController extends BaseController
         // ErpCsv::exportCsv(11111, $data, $fileName);
     }
 
-
+    /**
+     * 导出商品详情
+     * @return [type] [description]
+     */
     public function actionDownloadOrderItemsInOrderItemsTable()
     {
         set_time_limit(0);
@@ -927,4 +929,19 @@ class MorderController extends BaseController
 
         return $select_option;
 	}
+
+    /**
+     * 显示修改价格的商品
+     */
+    public function actionDiffer(){
+        $order_id = Yii::$app->request->get("order_id");
+        $order = new OrderModel();
+        $result = $order->getThisOrderDifferent($order_id);
+        if(!empty($result) && !empty($result['new'])){
+            $res = $order->showDifferentProduct($result);
+            return $this->render('differ', array('result'=>$res, 'price'=>$result));
+        }else{
+            echo "<script>alert('暂无');location.href='/admin.php?r=order/order/index'</script>";
+        }
+    }
 }

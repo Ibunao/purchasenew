@@ -21,6 +21,6 @@ $this->params['breadcrumbs'] = [
 </style>
 <div class="info">
     <h3>下面是错误的问题，请根据下面提示修改EXCEL文件后再试</h3>
-    <a href="<?=Url::to(['/order/manage/import']) ;?>"><button class="btn btn-sm btn-danger">点我重试</button></a>
+    <a href="<?=Url::to(['/manage/import']) ;?>"><button class="btn btn-sm btn-danger">点我重试</button></a>
     <?php if($error){  echo $error;  } ?>
 </div>
