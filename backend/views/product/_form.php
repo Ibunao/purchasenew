@@ -179,7 +179,7 @@ use yii\widgets\LinkPager;
         }
         ?></b></h3>
 <form action="" method="POST">
-    <input type="hidden" name="r" value="order/product/<?= $action; ?>">
+    <input type="hidden" name="r" value="/product/<?= $action; ?>">
     <?php if($action == 'change'||$action=='copy') { echo "<p class='text-success'>款号，色系，色号为基础数据，基础数据不可修改，请认真填写，如果除基础数据外有填写错误，请到任意该款号的商品下修改正确即可</p>"; } ?>
 <?php if($action == 'update') {
     echo "<p class='text-danger'>款号，色系，色号为基础数据,基础数据不可修改，请认真填写</p>";
@@ -213,7 +213,7 @@ use yii\widgets\LinkPager;
         <label for="name">款号</label>
         <input type="text" name="param[modelSn]"  <?php if($action == 'update'||$action=='change'||$action=='copy'){echo "readonly";} ?> id="modelSn" class="md" value="<?= !empty($param['model_sn'])?$param['model_sn']:''; ?>" maxlength="8" onKeyUp="this.value=this.value.replace(/[^\.\d]/g,'');if(this.value.split('.').length>2){this.value=this.value.split('.')[0]+'.'+this.value.split('.')[1]}")">（<b>先填我！</b> 请输入8位款号）
     </div>
-    
+
     <div class="form-group">
         <label for="name">吊牌价</label>
         <input type="text" name="param[costPrice]" class="md" id="costPrice" <?php if($action=='change'||$action=='copy'){echo "readonly";} ?> value="<?= !empty($param['cost_price'])?$param['cost_price']:''; ?>" onkeyup="value=value.replace(/[^\d.]/g,'')">
@@ -520,12 +520,12 @@ use yii\widgets\LinkPager;
             console.log(model_sn);
             $.ajax({
                 type: "get",
-                url: "/order/product/ajax-check-modelsn-exist?modelSn="+model_sn,
+                url: "/product/ajax-check-modelsn-exist?modelSn="+model_sn,
                 dataType: "json",
                 success:function (data) {
                     if(data.code == 200){
                         $("#modelSn").val("");
-                        location.href = "/order/product/change?modelSn="+data.data;
+                        location.href = "/product/change?modelSn="+data.data;
                     }
                 }
             });
@@ -538,7 +538,7 @@ use yii\widgets\LinkPager;
             var color    = $("#form-field-select-3").val();
             $.ajax({
                 type: "get",
-                url: "/order/product/ajax-check-scheme-color-exist?scheme="+scheme+"&color="+color,
+                url: "/product/ajax-check-scheme-color-exist?scheme="+scheme+"&color="+color,
                 dataType: "json",
                 success:function (data) {
                     if(data.code == 400){
@@ -553,12 +553,12 @@ use yii\widgets\LinkPager;
             // 不存在的，model_sn 已经判断过了
             $.ajax({
                 type: "get",
-                url: "/order/product/ajax-check-modelsn-and-color?model_sn="+model_sn+"&color="+color,
+                url: "/product/ajax-check-modelsn-and-color?model_sn="+model_sn+"&color="+color,
                 dataType: "json",
                 success:function (data) {
                     if(data.code == 200){
                         $(this).removeAttr("selected");
-                        location.href = "/order/product/update?serial_num="+data.data;
+                        location.href = "/product/update?serial_num="+data.data;
                     }
                 }
             });
@@ -572,7 +572,7 @@ use yii\widgets\LinkPager;
             }
             $.ajax({
                 type: "get",
-                url: "/order/product/ajax-size-group-getsize?sizeGroup="+sizeGroup,
+                url: "/product/ajax-size-group-getsize?sizeGroup="+sizeGroup,
                 dataType: "json",
                 success:function (data) {
                     if(data.code == 200){
@@ -595,7 +595,7 @@ use yii\widgets\LinkPager;
             }
             $.ajax({
                 type: "get",
-                url: "/order/product/ajax-cat-middle?catBig="+cat,
+                url: "/product/ajax-cat-middle?catBig="+cat,
                 dataType: "json",
                 data: cat,
                 success:function (data) {
@@ -617,7 +617,7 @@ use yii\widgets\LinkPager;
             });
 //            $.ajax({
 //                type: "get",
-//                url: "/order/product/AjaxCatSeason&catBig="+cat,
+//                url: "/product/AjaxCatSeason&catBig="+cat,
 //                dataType: "json",
 //                data: cat,
 //                success:function (data) {
@@ -641,7 +641,7 @@ use yii\widgets\LinkPager;
 //            }
 //            $.ajax({
 //                type: "get",
-//                url: "/order/product/AjaxCatSmall&catSmall="+cat,
+//                url: "/product/AjaxCatSmall&catSmall="+cat,
 //                dataType: "json",
 //                data: cat,
 //                success:function (data) {

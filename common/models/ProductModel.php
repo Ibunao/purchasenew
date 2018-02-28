@@ -140,7 +140,7 @@ class ProductModel extends \yii\db\ActiveRecord
             $result['serialNum'] = $this->selectQueryRows('serial_num');
             $result['modelSn'] = $this->selectQueryRows('model_sn');
             $result['name'] = $this->selectQueryRows('name');
-            
+
             $color = new ColorModel();
             $result['color'] = $color->getColor();
 
@@ -154,7 +154,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * backend/product
-     * 
+     *
      * 商品查询 ，根据关键字搜索出相应的结果
      * @param array $arr 搜索关键字
      * @param string $page 页码
@@ -219,10 +219,10 @@ class ProductModel extends \yii\db\ActiveRecord
     }
     /**
      * use
-     * order/product/add
+     * backend/product/add
      * order/product/update
      * order/product/copy
-     * 
+     *
      * 获取增加／修改产品时所有的可选项
      * @param  array  $data [description]
      * @return [type]       [description]
@@ -299,7 +299,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * order/product/update
-     * 
+     *
      * 修改商品
      * @param  [type] $param     产品参数
      * @param  [type] $moreData  多的尺寸
@@ -354,8 +354,8 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * updateProductOperation
-     * 
-     * @param [type] $param      参数     
+     *
+     * @param [type] $param      参数
      * @param [type] $moreData   要添加的size id
      * @param [type] $serialNum  流水号
      * @param [type] $purchaseId 订货会类型
@@ -377,7 +377,7 @@ class ProductModel extends \yii\db\ActiveRecord
                         var_dump('更新失败', $productObj->errors);exit;
                     }
                     //增加修改日志。等待添加
-                    
+
                 }
                 unset($moreData[$key]);
             }
@@ -392,7 +392,7 @@ class ProductModel extends \yii\db\ActiveRecord
     }
 
     /**
-     * use 
+     * use
      * this/updateProductOperation
      *
      *                                      没有优化
@@ -438,7 +438,7 @@ class ProductModel extends \yii\db\ActiveRecord
                     }
 
                     //添加日志
-                    
+
                 }
             }
         }
@@ -527,12 +527,12 @@ class ProductModel extends \yii\db\ActiveRecord
 
         //添加日志
 
-        
+
         $updateCon = "serial_num='{$serialNum}' AND purchase_id = {$purchaseId}";
         $result1 = self::updateAll($updateParam, $updateCon);
         $updateCon = "model_sn='{$model_sn}' AND purchase_id = {$purchaseId}";
         $result2 = self::updateAll($updateBaseInfo, $updateCon);
-        
+
         if ($result1 && $result2) {
             return true;
         }
@@ -542,7 +542,7 @@ class ProductModel extends \yii\db\ActiveRecord
      * use
      * default/index
      * api/login/login
-     * 
+     *
      * 前台查询用户订单状态
      * @param  [type] $customerId 用户id
      * @return [type]             [description]
@@ -561,7 +561,7 @@ class ProductModel extends \yii\db\ActiveRecord
      *  this/getThisProductIsDown
      *  this->listModelCache
      *  this->orderSeasonTable
-     * 
+     *
      * 缓存指定订购会所有产品 包括下架的 并根据流水号排序
      * @return [type] [description]
      */
@@ -576,7 +576,7 @@ class ProductModel extends \yii\db\ActiveRecord
             }else{
                 $query->where(['purchase_id' => $purchaseId]);
             }
-                
+
             $list = $query->andWhere(['disabled' => 'false'])
                 ->orderBy(['serial_num' => SORT_ASC])
                 ->asArray()
@@ -588,9 +588,9 @@ class ProductModel extends \yii\db\ActiveRecord
 
     /**
      * use
-     * backend/porder/dialogue 
+     * backend/porder/dialogue
      *
-     * 
+     *
      * 根据款号查询基本信息
      * @param  string $style_sn [description]
      * @return [type]           [description]
@@ -598,7 +598,7 @@ class ProductModel extends \yii\db\ActiveRecord
     public function getList($style_sn = '')
     {
         $query = new Query;
-        $result = $query->select(['p.name', 'cb.cat_name as big_name', 'cs.cat_name as small_name', 'season.season_name', 'scheme.scheme_name', 
+        $result = $query->select(['p.name', 'cb.cat_name as big_name', 'cs.cat_name as small_name', 'season.season_name', 'scheme.scheme_name',
         'p.img_url', 'p.cost_price', 'color.color_name', 'p.style_sn', 'p.product_sn', 'p.memo'])
         ->from('meet_product as p')
         ->leftJoin('meet_cat_big as cb', 'cb.big_id = p.cat_b')
@@ -614,7 +614,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * backend/porder/dialogue
-     *  
+     *
      * 获取产品订单购买详情
      * 要求商品表中产品唯一
      * @param  [type] $style_sn [description]
@@ -667,7 +667,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * backend/morder/detail
-     * 
+     *
      * 获取指定款号产品的尺码信息
      * @param  [type] $modelSn 款号
      * @return [type]          [description]
@@ -687,7 +687,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * backend/morder/detail
-     * 
+     *
      * 获取指定款号产品的尺码信息
      * @param  [type] $modelSn 款号
      * @return [type]          [description]
@@ -703,12 +703,12 @@ class ProductModel extends \yii\db\ActiveRecord
             ->groupBy('c.color_id')
             ->all();
         return $result;
-        
+
     }
     /**
-     * use 
+     * use
      * backend/morder/detail
-     * 
+     *
      * 用户下单的产品中指定款号的商品订单信息
      * @param  [type] $orderId 单号
      * @param  [type] $modelSn 款号
@@ -730,7 +730,7 @@ class ProductModel extends \yii\db\ActiveRecord
         return $result;
     }
     /**
-     * use 
+     * use
      * backend/morder/ExportMaster
      *
      * 不区分订货会输出客户总订单
@@ -806,13 +806,13 @@ class ProductModel extends \yii\db\ActiveRecord
      * use
      * backend/morder/ExportMaster
      *
-     * 
+     *
      * 获取总指标/已定金额/已审核完成金额       可以优化
      * @return [type] [description]
      */
     public function getCustomerOrderInfo()
     {
-        //所有用户的订单真实订货量  
+        //所有用户的订单真实订货量
         $real_target = (new Query)->select(['o.order_id', 'status'])
             ->from('meet_order as o')
             ->leftJoin('meet_customer as c', 'o.customer_id = c.customer_id')
@@ -835,7 +835,7 @@ class ProductModel extends \yii\db\ActiveRecord
             ->where(['in', 'oi.order_id' , $orderArr])
             ->andWhere(['oi.disabled' => 'false'])
             ->one();
-        
+
         //总金额
         $real_tar = $priceResult['newprice'];
 
@@ -868,7 +868,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * backend/morder/actionImportFiles
-     * 
+     *
      * 查询model_sn对应的时候又产品
      * @param  [type] $modelSn [description]
      * @return [type]          [description]
@@ -982,7 +982,7 @@ class ProductModel extends \yii\db\ActiveRecord
             $sql_value[] = $insert_param;
         }
         $fields = ['purchase_id', 'product_sn', 'style_sn', 'model_sn',
-        'serial_num', 'name', 'img_url', 'brand_id', 'cat_b', 'cat_m', 
+        'serial_num', 'name', 'img_url', 'brand_id', 'cat_b', 'cat_m',
         'cat_s', 'color_id', 'size_id', 'season_id', 'level_id', 'wave_id', 'scheme_id', 'cost_price', 'price_level_id', 'memo', 'type_id', 'disabled', 'is_down'];
         $result = Yii::$app->db
             ->createCommand()
@@ -1082,7 +1082,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * default/index
-     * 
+     *
      * 前台商品搜索
      * @param $conArr  搜索条件
      * @param $serial   搜索型号
@@ -1093,10 +1093,10 @@ class ProductModel extends \yii\db\ActiveRecord
      * @return array
      */
     public function newitems($conArr, $serial, $params, $price = 1, $page = 1, $pagesize = 8){
-        
+
         //根据输入框的长度来判断是否是 model_sn型号 还是 serial_num 流水号查询 出去重的 style_sn 款号
         if(strlen($serial) >4){
-            //获取查询的去重的款号 的型号  
+            //获取查询的去重的款号 的型号
             $query = self::find()->select(['style_sn'])
                 ->where(['like', 'model_sn', $serial.'%', false])//右模糊
                 ->andWhere(['disabled' => 'false'])
@@ -1139,7 +1139,7 @@ class ProductModel extends \yii\db\ActiveRecord
             }
         }
 // var_dump($items);exit;
-        
+
 // var_dump($items);exit;
         //人气排序 1:降序  2:升序
         $hits_sort = [];
@@ -1176,11 +1176,11 @@ class ProductModel extends \yii\db\ActiveRecord
         ->indexBy('style_sn')
         ->all();
 
-        foreach ($orderList as $k => $v) { 
+        foreach ($orderList as $k => $v) {
             if (isset($items[$k])) {
                 $orderProduct[$k] = $items[$k];
-                unset($items[$k]);    
-                   }       
+                unset($items[$k]);
+                   }
         }
 // var_dump($orderProduct);exit;
         if (isset($orderProduct)) {
@@ -1209,13 +1209,13 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * this->newitems
-     * 
+     *
      * 搜索框为空是搜索的产品
      * @return [type] [description]
      */
     public function listStyleSn($style_sn, $params, $conArr)
     {
-        //尺码表获取所有的尺码  
+        //尺码表获取所有的尺码
         $size_list = $this->getSizes();
         //获取该订购会下所有上线的商品
         $list = $this->getProductUp();
@@ -1249,15 +1249,15 @@ class ProductModel extends \yii\db\ActiveRecord
                 'plv_' . $v['price_level_id'],
             ];
 
-            //根据筛选条件进行筛选  
+            //根据筛选条件进行筛选
             //根据该条记录拼接数来的筛选条件和用户传过来的筛选条件进行交集，看是否等于用户的筛选条件，如果等于则符合用户筛选
             if (array_intersect($conArr, $item['search_id']) != $conArr) continue;
 
-            //该商品是否已订 
+            //该商品是否已订
             $item['is_order'] = in_array($v['style_sn'], $items_model_sn) ? 1 : 2;
 
             //尺码
-            //款号style_sn 相同则尺寸信息相同  
+            //款号style_sn 相同则尺寸信息相同
             //获取一个style_sn 下产品的所有尺寸,以及商品信息
             if (isset($items[$v['style_sn']])) {
                 $item['size'] = $items[$v['style_sn']]['size'];
@@ -1279,7 +1279,7 @@ class ProductModel extends \yii\db\ActiveRecord
      * use
      * this->listSerial
      *
-     * 
+     *
      * 获取尺码数据
      * @return [type] [description]
      */
@@ -1316,7 +1316,7 @@ class ProductModel extends \yii\db\ActiveRecord
             }else{
                 $query->where(['purchase_id' => $purchaseId]);
             }
-        
+
             $items = $query->andWhere(['disabled' => 'false'])
                 ->andWhere(['is_down' => 0])
                 ->orderBy(['serial_num' => SORT_ASC])
@@ -1331,7 +1331,7 @@ class ProductModel extends \yii\db\ActiveRecord
      * use
      * this->listSerial
      *
-     * 
+     *
      * 获取客户订单详情
      * @param  [type] $purchaseId [description]
      * @param  [type] $customerId [description]
@@ -1425,7 +1425,7 @@ class ProductModel extends \yii\db\ActiveRecord
         return $model;
     }
     /**
-     * use 
+     * use
      * this->getThisOrderedInfo
      *
      * 产品id和是否下架
@@ -1443,9 +1443,9 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * default/detail
-     * 
+     *
      * 按款号缓存
-     * 
+     *
      * @param $model_sn
      * @return mixed
      */
@@ -1455,7 +1455,7 @@ class ProductModel extends \yii\db\ActiveRecord
         $color_list = $this->tableValue('color', 'color_name', 'color_id');
         $purchaseId = Yii::$app->session['purchase_id'];
         $items = Yii::$app->cache->get('model-product-list-' . $purchaseId);
-        
+
         if (!$items) {
             $list = $this->productListCache();;
             foreach ($list as $v) {
@@ -1506,7 +1506,7 @@ class ProductModel extends \yii\db\ActiveRecord
             }else{
                 $query->where(['purchase_id' => $purchaseId]);
             }
-            
+
             $result = $query->andWhere(['disabled' => 'false'])
                 ->andWhere(['is_down' => '0'])
                 ->orderBy(['serial_num' => SORT_ASC])
@@ -1537,7 +1537,7 @@ class ProductModel extends \yii\db\ActiveRecord
             }else{
                 $query->where(['purchase_id' => $purchaseId]);
             }
-            
+
             $result = $query->andWhere(['disabled' => 'false'])
                 ->asArray()
                 ->all();
@@ -1554,7 +1554,7 @@ class ProductModel extends \yii\db\ActiveRecord
      * @return string
      */
     public function checkThisProductIsDown($product_id){
-        
+
         $result = self::find()->select(['is_down'])
             ->where(['product_id' => $product_id])
             ->andWhere(['disabled' => 'false'])
@@ -1570,7 +1570,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * forder/byprice
-     * 
+     *
      * @param  [type] $item_list [description]
      * @return [type]            [description]
      */
@@ -1741,9 +1741,9 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * api/default/index
-     *     
+     *
      * 获取当前款号总数
-     * @param  [type] $customer_id 客户id 
+     * @param  [type] $customer_id 客户id
      * @param  [type] $model_sn    款号
      * @param  string $serial_num  流水号
      * @return [type]              [description]
@@ -1772,7 +1772,7 @@ class ProductModel extends \yii\db\ActiveRecord
      * use
      * api/default/index
      * this->getThisProductInfo
-     * 
+     *
      * app获取该款号的所有尺寸详细信息
      * @param $model_sn
      * @param $purchase_id
@@ -1871,7 +1871,7 @@ class ProductModel extends \yii\db\ActiveRecord
     }
 
     /**
-     * use 
+     * use
      * api/default/order-product
      *
      * 检查用户是否存在
@@ -1891,7 +1891,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * api/default/OrderProduct
-     * 
+     *
      * @param  [type] $model_sn    [description]
      * @param  [type] $purchase_id [description]
      * @param  [type] $customer_id [description]
@@ -1999,7 +1999,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      *  use
      *  api/default/OrderThisProduct
-     *  
+     *
      * 此流水号的商品规格参数
      * @param  [type] $serial_num  [description]
      * @param  [type] $purchase_id [description]
@@ -2017,7 +2017,7 @@ class ProductModel extends \yii\db\ActiveRecord
         if (empty($data)) {
             return [];
         }
-        
+
         $data['product_list'] = $this->getProductListsInfo($result['model_sn'], $purchase_id, $customer_id);
         $data['order_num'] = $this->getThisModelOrdered($customer_id, $result['model_sn']);
         $have = $this->getThisModelOrdered($customer_id, $result['model_sn'], $serial_num);
@@ -2031,7 +2031,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * api/default/OrderListSheet
-     * 
+     *
      * 按季节排序
      * @param $orderList
      * @return mixed
@@ -2184,7 +2184,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * api/default/OrderListSheet
-     * 
+     *
      * 根据价格带
      * @param $orderList
      * @return array
@@ -2319,7 +2319,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * api/default/SubmitOrder
-     * 
+     *
      * 检查此用户是否是提交了
      *
      * @param $purchase_id
@@ -2340,7 +2340,7 @@ class ProductModel extends \yii\db\ActiveRecord
         $res = $query->andWhere(['purchase_id' => $purchase_id])
             ->andWhere(['disabled' => 'false'])
             ->one();
-   
+
         if (empty($res)) $res['status'] = "active";
         return $res['status'];
     }

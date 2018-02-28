@@ -5,7 +5,7 @@ $params = array_merge(
     require(__DIR__ . '/params.php')
     // require(__DIR__ . '/params-local.php')
 );
-$db = require(__DIR__ . '/../../common/config/db.php');
+
 return [
     'id' => 'app-backend',
     'basePath' => dirname(__DIR__),
@@ -39,14 +39,14 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        'db' => $db,
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
             ],
         ],
-        
+
     ],
     'params' => $params,
 ];

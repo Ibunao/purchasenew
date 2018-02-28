@@ -29,7 +29,7 @@ class ProductController extends BaseController
 		//查询结果
 		$resultData = $productModel->productSearch($param);
 
-		//检查是否有错误  
+		//检查是否有错误
 		// $error = $productModel->isHaveError();
 
 		return $this->render('index', [
@@ -57,7 +57,7 @@ class ProductController extends BaseController
                 PublicModel::flushCacheAll();
                 //使用setFlash
                 Yii::$app->session->setFlash('info', '添加成功');
-                $this->redirect("/order/product/index");
+                $this->redirect("/product/index");
             } else {
                 Yii::$app->session->setFlash('error', '添加失败' . $res['msg']);
             }
@@ -116,19 +116,19 @@ class ProductController extends BaseController
             //新多出的size数据
             $moreData = array_diff($postParam['size'], $param['size']);
             //少了的size数据
-            $lessData = array_diff($param['size'], $postParam['size']); 
+            $lessData = array_diff($param['size'], $postParam['size']);
             $res = $productModel->updateProductOperation($postParam, $moreData, $lessData, $serialNum, $purchaseId);
-            
-            //清除缓存  
+
+            //清除缓存
             PublicModel::flushCacheAll();
             if ($res) {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '修改成功');
-                $this->redirect(['/order/product/index']);
+                $this->redirect(['/product/index']);
             } else {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '此款号出现多个货号，禁止修改');//提示错了
-                $this->redirect(['/order/product/update', 'serial_num' => $serialNum]);
+                $this->redirect(['/product/update', 'serial_num' => $serialNum]);
             }
         }
         return $this->render('update', [
@@ -146,7 +146,7 @@ class ProductController extends BaseController
         $productModel = new ProductModel();
         $guestModel = new CustomerModel();
         if (empty($modelSn)) {
-            $this->redirect('/order/product/add');
+            $this->redirect('/product/add');
         }
         $results = (new Query)->select(['p.purchase_id', 'p.brand_id', 'p.model_sn', 'p.name', 'p.cat_b', 'p.cat_m', 'p.cat_s', 'p.season_id', 'p.level_id', 'p.wave_id', 'p.scheme_id', 'p.cost_price', 'p.memo', 'p.is_down', 'p.size_id', 'p.type_id', 's.group_id AS sizeGroup'])
             ->from('meet_product as p')
@@ -169,20 +169,20 @@ class ProductController extends BaseController
             $param['wave'] = $results['wave_id'];
             $param['costPrice'] = $results['cost_price'];
             $res = $productModel->addProductOperation($param);
-            
+
             PublicModel::flushCacheAll();
             if ($res) {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '修改成功');
-                $this->redirect(['/order/product/index']);
+                $this->redirect(['/product/index']);
             } else {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '此款号出现多个货号，禁止修改');//提示错了
-                $this->redirect(['/order/product/update', 'serial_num' => $serialNum]);
+                $this->redirect(['/product/update', 'serial_num' => $serialNum]);
             }
         }
         $result = $productModel->getProductFilter($results);
-        $this->render('change', array(
+        return $this->render('change', array(
             'selectFilter' => $result,
             'param' => $results,
         ));
@@ -413,7 +413,7 @@ class ProductController extends BaseController
         $serialNum = Yii::$app->request->get("serial_num");
         if (empty($serialNum)) {
             Yii::$app->session->setFlash('info', '流水号为空');
-            $this->redirect('/order/product/index');
+            $this->redirect('/product/index');
         }
         //数据库的显示数据
         $results = (new Query)->select(['p.purchase_id', 'p.brand_id', 'p.model_sn', 'p.name', 'p.cat_b', 'p.cat_m', 'p.cat_s', 'p.season_id', 'p.level_id', 'p.wave_id', 'p.scheme_id', 'p.cost_price', 'p.memo', 'p.is_down', 'p.size_id', 'p.type_id', 's.group_id AS sizeGroup'])
@@ -440,11 +440,11 @@ class ProductController extends BaseController
             if ($res) {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '添加成功');
-                $this->redirect(['/order/product/index']);
+                $this->redirect(['/product/index']);
             } else {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '添加失败');
-                $this->redirect(['/order/product/update', 'serial_num' => $serialNum]);
+                $this->redirect(['/product/update', 'serial_num' => $serialNum]);
             }
         }
         $result = $productModel->getProductFilter($results);
@@ -571,26 +571,26 @@ $groupSize = (new PublicModel)->getGroupSize();
                     $color--;
                 }
                 // 尺码
-                
+
                 if (!isset($sizeArr[$result[$i][6]]['size_id'])) {
                     $warning .= "<span>尺码<b>" . $result[$i][6] . "</b>有错误</span>";
                 }
 
                 $size = 3;
                 // 大类
-                
+
                 if (!isset($catBigArr[$result[$i][7]]['big_id'])) {
                     $warning .= "<span>大类<b>" . $result[$i][7] . "</b>有错误</span>";
                     $size--;
                 }
                 //中类
-                
+
                 if (!isset($catMidArr[$result[$i][8]]['middle_id'])) {
                     $warning .= "<span>中类<b>" . $result[$i][8] . "</b>有错误</span>";
                     $size--;
                 }
                 // 小类
-                
+
                 if (!isset($catSmallArr[$result[$i][9]]['small_id'])) {
                     $warning .= "<span>小类<b>" . $result[$i][9] . "</b>错误</span>";
                     $size--;
@@ -607,22 +607,22 @@ $groupSize = (new PublicModel)->getGroupSize();
                     }
                 }
                 //季节
-                
+
                 if (!isset($seasonArr[$result[$i][10]]['season_id'])) {
                     $warning .= "<span>季节<b>" . $result[$i][10] . "</b>有错误</span>";
                 }
                 // 波段
-                
+
                 if (!isset($waveArr[$result[$i][11]]['wave_id'])) {
                     $warning .= "<span>波段<b>" . $result[$i][11] . "</b>有错误</span>";
                 }
                 // 等级
-                
+
                 if (!isset($levelArr[$result[$i][12]]['level_id'])) {
                     $warning .= "<span>等级<b>" . $result[$i][12] . "</b>有错误</span>";
                 }
                 // 色系
-                
+
                 if (!isset($schemeArr[$result[$i][13]]['scheme_id'])) {
                     $warning .= "<span>色系<b>" . $result[$i][13] . "</b>有错误</span>";
                     $color--;
@@ -659,7 +659,7 @@ $groupSize = (new PublicModel)->getGroupSize();
                     $warning .= "<span><b>描述为空</b></span>";
                 }
 
-                
+
                 if(!isset($typeArr[$result[$i][17]])){
                     $warning .= "<span>商品类型<b>{$result[$i][17]}</b>有错误</span>";
                 }
@@ -715,7 +715,7 @@ $checkPurchaseSizeRepeat[$result[$i][4]][$result[$i][1]][] = $result[$i][6];
 
             //检查流水号下有多种尺码，请检查！
             if (empty($res_str)) {
-                
+
                 foreach ($checkSerialSizeRepeat as $serialNum => $val) {
                     $group_id = (new Query)->select(['group_id'])
                         ->from('meet_size')
@@ -817,9 +817,9 @@ $checkPurchaseSizeRepeat[$result[$i][4]][$result[$i][1]][] = $result[$i][6];
             if (empty($res_str)) {
                 $result_upload = $this->uploadThisFile($newFile);
                 if ($result_upload) {
-                    echo "<script>alert('上传成功');location.href='/order/product/index'</script>";
+                    echo "<script>alert('上传成功');location.href='/product/index'</script>";
                 } else {
-                    echo "<script>alert('上传失败');location.href='/order/product/import'</script>";
+                    echo "<script>alert('上传失败');location.href='/product/import'</script>";
                 }
             } else {
                 return $this->render('importdetail', array(
@@ -882,7 +882,7 @@ $groupSize = (new PublicModel)->getGroupSize();
                          $color_id, $size_id, $brand_id, $b_cat_id, $m_cat_id, $s_cat_id, $season_id,
                          $level_id, $wave_id, $scheme_id, $cost_price, $price_level_id, $memo, $type_id];
         }
-        
+
         //批量导入
 $result = Yii::$app->db
 ->createCommand()
