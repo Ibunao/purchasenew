@@ -54,7 +54,7 @@ class ProductController extends BaseController
             $res = $productModel->addProductOperation($param);
             if (!isset($res['code'])) {
                 // 清除所有缓存
-                PublicModel::flushCacheAll();
+                // PublicModel::flushCacheAll();
                 //使用setFlash
                 Yii::$app->session->setFlash('info', '添加成功');
                 $this->redirect("/product/index");
@@ -77,7 +77,7 @@ class ProductController extends BaseController
         $productModel = new ProductModel;
         $request = Yii::$app->request;
         $serialNum = $request->get("serial_num");
-        $purchaseId = $request->get('purchase_id');
+        // $purchaseId = $request->get('purchase_id');
         if (empty($serialNum)) {
             echo "没有流水号";
             die;
@@ -89,7 +89,7 @@ class ProductController extends BaseController
             ->leftJoin('meet_size as s', 's.size_id = p.size_id')
             ->where(['p.serial_num' => $serialNum])
             ->andWhere(['p.disabled' => 'false'])
-            ->andWhere(['p.purchase_id' => $purchaseId])
+            // ->andWhere(['p.purchase_id' => $purchaseId])
             ->one();
 
 
@@ -100,7 +100,7 @@ class ProductController extends BaseController
             ->from('meet_product')
             ->where(['serial_num' => $serialNum])
             ->andWhere(['disabled' => 'false'])
-            ->andWhere(['purchase_id' => $purchaseId])
+            // ->andWhere(['purchase_id' => $purchaseId])
             ->groupBy('size_id')
             ->all();
         foreach ($paramSize as $val) {
@@ -112,15 +112,22 @@ class ProductController extends BaseController
 
         //post数据
         $postParam = Yii::$app->request->post("param", []);
+        // var_dump($postParam);exit;
         if (!empty($postParam)) {
+            if (isset($postParam['color_id']) && !isset($postParam['color'])) {
+                $postParam['color'] = $postParam['color_id'];
+            }
+            if (isset($postParam['scheme_id']) && !isset($postParam['scheme'])) {
+                $postParam['scheme'] = $postParam['scheme_id'];
+            }
             //新多出的size数据
             $moreData = array_diff($postParam['size'], $param['size']);
             //少了的size数据
             $lessData = array_diff($param['size'], $postParam['size']);
-            $res = $productModel->updateProductOperation($postParam, $moreData, $lessData, $serialNum, $purchaseId);
+            $res = $productModel->updateProductOperation($postParam, $moreData, $lessData, $serialNum);//, $purchaseId);
 
             //清除缓存
-            PublicModel::flushCacheAll();
+            // PublicModel::flushCacheAll();
             if ($res) {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '修改成功');
@@ -128,9 +135,11 @@ class ProductController extends BaseController
             } else {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '此款号出现多个货号，禁止修改');//提示错了
+                
                 $this->redirect(['/product/update', 'serial_num' => $serialNum]);
             }
         }
+
         return $this->render('update', [
             'selectFilter' => $result,
             'param' => $param,
@@ -170,7 +179,7 @@ class ProductController extends BaseController
             $param['costPrice'] = $results['cost_price'];
             $res = $productModel->addProductOperation($param);
 
-            PublicModel::flushCacheAll();
+            // PublicModel::flushCacheAll();
             if ($res) {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '修改成功');
@@ -436,7 +445,7 @@ class ProductController extends BaseController
             $param['type'] = $results['type_id'];
             $param['costPrice'] = $results['cost_price'];
             $res = $productModel->addProductOperation($param);
-            PublicModel::flushCacheAll();
+            // PublicModel::flushCacheAll();
             if ($res) {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '添加成功');
@@ -497,7 +506,7 @@ class ProductController extends BaseController
             mkdir($newFolderPath, 0777);
         }
 
-        $newFile = Yii::$app->basePath . "/" . $newFolderPath . "/" . $newFileName;
+        $newFile = Yii::$app->basePath . "/web/" . $newFolderPath . $newFileName;
         if (move_uploaded_file($_FILES["file"]["tmp_name"], $newFile)) {
 
             //xls
@@ -506,12 +515,12 @@ class ProductController extends BaseController
             $result = $objPHPExcel->getActiveSheet()->toArray();
 
             $len_result = count($result);
-            exit;
+
             if ($len_result <= 1) {
                 echo "<script>alert('表中没有相关数据，请检查');</script>";
                 die;
             }
-
+            // 定义订货会
             $purchase = array(
                 Yii::$app->params['purchase_oct'],
                 Yii::$app->params['purchase_uki'],
@@ -571,7 +580,6 @@ $groupSize = (new PublicModel)->getGroupSize();
                     $color--;
                 }
                 // 尺码
-
                 if (!isset($sizeArr[$result[$i][6]]['size_id'])) {
                     $warning .= "<span>尺码<b>" . $result[$i][6] . "</b>有错误</span>";
                 }
@@ -648,7 +656,7 @@ $groupSize = (new PublicModel)->getGroupSize();
                     $warning .= "<span><b>吊牌价小于0</b></span>";
                     $price_isset++;
                 }
-
+                // 价格是否符合价格带
                 if (empty($price_isset)) {
                     if ($productModel->_transCostPriceToLevel($result[$i][15]) != ParamsClass::$levelPrice[$result[$i][14]]) {
                         $warning .= "<span><b>吊牌价与价格带不匹配</b></span>";
@@ -676,18 +684,18 @@ $groupSize = (new PublicModel)->getGroupSize();
                     $checkCatRepeat[$result[$i][0]]['price_lv'][] = $result[$i][14];
                     $checkCatRepeat[$result[$i][0]]['type_id'][] = $result[$i][17];
                 }
-
+                // 一个流水号serial_num只能对应一个颜色
                 //检查流水号下的颜色是否重复
-                $checkSerialRepeat[$result[$i][4]][$result[$i][5]] = $result[$i][5];
-
+                $checkSerialRepeat[$result[$i][4]][$result[$i][5]][] = $result[$i][5];
+                // 一个款号下的一个颜色也只能对应一个流水号
                 //检查该款号下的颜色是否有多个流水号
                 $checkModelRepeat[$result[$i][0]][$result[$i][5]][] = $result[$i][4];
-
+                // 一个流水号下面也只能有一个款号
                 //判断一个颜色只能对应一个流水号
                 $checkSerialModelRepeat[$result[$i][4]][] = $result[$i][0];
-//xiugai2017-08-02
+//修改2017-08-02
 //检查此流水号下的尺码是否重复
-$checkPurchaseSizeRepeat[$result[$i][4]][$result[$i][1]][] = $result[$i][6];
+// $checkPurchaseSizeRepeat[$result[$i][4]][$result[$i][1]][] = $result[$i][6];
                 //检查此流水号下的尺码是否重复
                 $checkSerialSizeRepeat[$result[$i][4]][] = $result[$i][6];
 
@@ -784,15 +792,15 @@ $checkPurchaseSizeRepeat[$result[$i][4]][$result[$i][1]][] = $result[$i][6];
             }
 
             //检查此流水号下的尺码是否重复
-            if (empty($res_str)) {
-                foreach ($checkPurchaseSizeRepeat as $sizeKey => $sizeValue) {
-                    foreach ($sizeValue as $key => $value) {
-                        if (count($value) != count(array_unique($value))) {
-                            $res_str .= "<p><span><b>{$sizeKey}流水号</b>下有重复的尺码</span></p>";
-                        }
-                    }
-                }
-            }
+            // if (empty($res_str)) {
+            //     foreach ($checkPurchaseSizeRepeat as $sizeKey => $sizeValue) {
+            //         foreach ($sizeValue as $key => $value) {
+            //             if (count($value) != count(array_unique($value))) {
+            //                 $res_str .= "<p><span><b>{$sizeKey}流水号</b>下有重复的尺码</span></p>";
+            //             }
+            //         }
+            //     }
+            // }
 
             //检查此款号下的季节是否相同、对应
             if(empty($res_str)){

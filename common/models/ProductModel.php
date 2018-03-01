@@ -298,7 +298,7 @@ class ProductModel extends \yii\db\ActiveRecord
 
     /**
      * use
-     * order/product/update
+     * backend/product/update
      *
      * 修改商品
      * @param  [type] $param     产品参数
@@ -307,7 +307,7 @@ class ProductModel extends \yii\db\ActiveRecord
      * @param  [type] $serialNum 流水号
      * @return [type]            [description]
      */
-    public function updateProductOperation($param, $moreData, $lessData, $serialNum, $purchaseId)
+    public function updateProductOperation($param, $moreData, $lessData, $serialNum)//, $purchaseId)
     {
         if ($param['color_id'] == "" || $param['scheme_id'] == "") {
             echo "<script>alert('数据出错，请重试');</script>";
@@ -338,17 +338,17 @@ class ProductModel extends \yii\db\ActiveRecord
 
         //新增尺码数据
         if (!empty($moreData)) {
-            $addResult= $this->_addOnlyAddProducts($param, $moreData, $serialNum, $purchaseId);
+            $addResult= $this->_addOnlyAddProducts($param, $moreData, $serialNum);//, $purchaseId);
         }
 
-        //下架该尺码
+        //删除该尺码
         if (!empty($lessData)) {
-             $this->_updateProducts($lessData, $serialNum, $purchaseId);
+             $this->_updateProducts($lessData, $serialNum);//, $purchaseId);
         }
 
 
         //修改其他商品基本数据
-        return $this->_updateAllSerialNumProduct($param, $serialNum, $purchaseId);
+        return $this->_updateAllSerialNumProduct($param, $serialNum);//, $purchaseId);
 
     }
     /**
@@ -360,14 +360,14 @@ class ProductModel extends \yii\db\ActiveRecord
      * @param [type] $serialNum  流水号
      * @param [type] $purchaseId 订货会类型
      */
-    private function _addOnlyAddProducts($param, $moreData, $serialNum, $purchaseId)
+    private function _addOnlyAddProducts($param, $moreData, $serialNum)//, $purchaseId)
     {
         //检查该新增的商品在数据库中是否存在，如果存在就直接把 disabled 修改为 false就好
         $nowTime = time();
         foreach ($moreData as $key => $value) {
             $productObj = self::find()
             ->where(['serial_num' => $serialNum])
-            ->andWhere(['purchase_id' => $purchaseId])
+            // ->andWhere(['purchase_id' => $purchaseId])
             ->andWhere(['size_id' => $value])
             ->one();
             if (!empty($productObj->product_id)) {
@@ -388,7 +388,91 @@ class ProductModel extends \yii\db\ActiveRecord
         }
         $param['size'] = $moreData;
         //添加动作
-        return $this->addProductOperation($param);
+        if(empty($param['type'])){
+            $param['type'] = '0';
+        }
+
+        //色号转换
+        $color_no = (new ColorModel)->transColorAll()[$param['color']]['color_no'];
+        //当上传图片为空，给定默认值
+        if (empty($param['image'])) {
+            $param['image'] = Yii::$app->params['imagePath'] . $param['modelSn'] . "_" . $color_no . ".jpg";
+        }
+
+        //判断是否有空值
+        foreach ($param as $key => $value) {
+            if ($value == '') {
+                return ['code' => 400, 'msg' => "请检查{$k}的{$val}是空，请检查后提交"];
+            }
+        }
+
+        //款号
+        $style_sn = $param['modelSn'] . sprintf("%04d", $color_no);
+
+        //查询本款号的货号的最大一位（以便生成货号）
+        $query_model_sn_numbers = self::find()->select(['MAX(SUBSTRING(product_sn,-3,LENGTH(product_sn))) AS nums'])
+            ->where(['model_sn' => $param['modelSn']])
+            ->asArray()
+            ->one();
+
+        if(empty($query_model_sn_numbers['nums'])){
+            $countModelSn = 001;
+        }else{
+            $countModelSn = $query_model_sn_numbers['nums'];
+        }
+
+        //获取价格带id
+        $priceLevel = $this->_transCostPriceToLevel($param['costPrice']);
+
+        $sql_value = [];
+        foreach ($param['size'] as $v) {
+            //货号
+            $countModelSn++;
+            // 三位
+            $backNum = sprintf("%03d", $countModelSn);
+            // 商品货号
+            $product_sn = $style_sn . $backNum;
+
+            $insert_param = array(
+                'purchase_id' => $param['purchase'],
+                'product_sn' => $product_sn,
+                'style_sn' => $style_sn,
+                'model_sn' => $param['modelSn'],
+                'serial_num' => $serialNum,
+                'name' => addslashes($param['name']),
+                'img_url' => $param['image'],
+                'brand_id' => $param['brand'],
+                'cat_b' => $param['catBig'],
+                'cat_m' => $param['catMiddle'],
+                'cat_s' => $param['catSmall'],
+                'color_id' => $param['color'],
+                'size_id' => $v,
+                'season_id' => $param['season'],
+                'level_id' => $param['level'],
+                'wave_id' => $param['wave'],
+                'scheme_id' => $param['scheme'],
+                'cost_price' => $param['costPrice'],
+                'price_level_id' => $priceLevel,
+                'memo' => addslashes($param['memo']),
+                'type_id' => $param['type'],
+                'disabled' => 'false',
+                'is_down' => $param['status'],
+            );
+            $sql_value[] = $insert_param;
+        }
+        $fields = ['purchase_id', 'product_sn', 'style_sn', 'model_sn',
+        'serial_num', 'name', 'img_url', 'brand_id', 'cat_b', 'cat_m',
+        'cat_s', 'color_id', 'size_id', 'season_id', 'level_id', 'wave_id', 'scheme_id', 'cost_price', 'price_level_id', 'memo', 'type_id', 'disabled', 'is_down'];
+        $result = Yii::$app->db
+            ->createCommand()
+            ->batchInsert(self::tableName(),
+                $fields,
+                $sql_value)
+            ->execute();
+        if ($result) {
+            return true;
+        }
+        return ['code' => 400, 'msg' => "添加失败"];
     }
 
     /**
@@ -401,34 +485,34 @@ class ProductModel extends \yii\db\ActiveRecord
      * @param $serialNum
      * @return string
      */
-    private function _updateProducts($lessData, $serialNum, $purchaseId)
+    private function _updateProducts($lessData, $serialNum)//, $purchaseId)
     {
         $nowTime = time();
+        // var_dump($lessData, $serialNum);exit;
         foreach ($lessData as $k => $v) {
             $error_product = self::find()->select(['product_id', 'COUNT(*) AS counts'])
                 ->where(['serial_num' => $serialNum])
                 ->andWhere(['size_id' => $v])
                 ->andWhere(['is_error' => 'true'])
-                ->andWhere(['purchase_id' => $purchaseId])
+                // ->andWhere(['purchase_id' => $purchaseId])
                 ->asArray()
                 ->one();
-            if($error_product['counts'] < 0){
+            if($error_product['counts'] <= 0){
                 $productObj = self::find()
                     ->where(['serial_num' => $serialNum])
                     ->andWhere(['size_id' => $v])
                     ->andWhere(['is_error' => 'false'])
                     ->andWhere(['disabled' => 'false'])
-                    ->andWhere(['purchase_id' => $purchaseId])
+                    // ->andWhere(['purchase_id' => $purchaseId])
                     ->one();
 
-                $isBrought = (new Query)->select()
+                $isBrought = (new Query)->select(['nums'])
                     ->from('meet_order_items')
                     ->andWhere(['product_id' => $productObj->product_id])
                     ->andWhere(['disabled' => 'false'])
-                    ->andWhere(['purchase_id' => $purchaseId])
-                    ->asArray()
+                    // ->andWhere(['purchase_id' => $purchaseId])
                     ->one();
-
+                // var_dump($isBrought['nums']);exit;
                 //添加到购物车的不允许更改
                 if (empty($isBrought['nums'])) {
                     $productObj->disabled = 'true';
@@ -454,17 +538,17 @@ class ProductModel extends \yii\db\ActiveRecord
      * @param  [type] $serialNum [description]
      * @return [type]            [description]
      */
-    private function _updateAllSerialNumProduct($param, $serialNum, $purchaseId)
+    private function _updateAllSerialNumProduct($param, $serialNum)//, $purchaseId)
     {
         //色号转换
         $color_no = (new ColorModel)->transColorAll()[$param['color_id']]['color_no'];
 
         $model_sn = self::find()->where(['serial_num' => $serialNum])
             ->andWhere(['disabled' => 'false'])
-            ->andWhere(['is_down' => 0])
-            ->andWhere(['purchase_id' => $purchaseId])
+            // ->andWhere(['is_down' => 0])
+            // ->andWhere(['purchase_id' => $purchaseId])
             ->one()->model_sn;
-        $this->disabledErrorProduct($model_sn);
+        // $this->disabledErrorProduct($model_sn);
         //当上传图片为空，给定默认值
         if (empty($param['image'])) {
             $param['image'] = Yii::$app->params['imagePath'] . $param['modelSn'] . "_" . $color_no . ".jpg";
@@ -528,9 +612,9 @@ class ProductModel extends \yii\db\ActiveRecord
         //添加日志
 
 
-        $updateCon = "serial_num='{$serialNum}' AND purchase_id = {$purchaseId}";
+        $updateCon = "serial_num='{$serialNum}'";//" AND purchase_id = {$purchaseId}";
         $result1 = self::updateAll($updateParam, $updateCon);
-        $updateCon = "model_sn='{$model_sn}' AND purchase_id = {$purchaseId}";
+        $updateCon = "model_sn='{$model_sn}'";//" AND purchase_id = {$purchaseId}";
         $result2 = self::updateAll($updateBaseInfo, $updateCon);
 
         if ($result1 && $result2) {
@@ -883,18 +967,20 @@ class ProductModel extends \yii\db\ActiveRecord
     }
     /**
      * use
-     * order/product/add
-     * order/product/update
+     * backend/product/add
+     * backend/product/change
+     * backend/product/update
      * order/product/copy
      *
      * 添加产品
      * @param [type] $param [description]
      */
-    public function addProductOperation($param)
+    public function addProductOperation($param, $action = '')
     {
         if(empty($param['type'])){
             $param['type'] = '0';
         }
+
         //色号转换
         $color_no = (new ColorModel)->transColorAll()[$param['color']]['color_no'];
         //当上传图片为空，给定默认值
@@ -908,16 +994,18 @@ class ProductModel extends \yii\db\ActiveRecord
                 return ['code' => 400, 'msg' => "请检查{$k}的{$val}是空，请检查后提交"];
             }
         }
-
-        //再次判断款号与色号是否已存在，如果重复则跳转商品修改页面
-        $query_model_color_exist = self::find()->select(['serial_num'])
-            ->where(['model_sn' => $param['modelSn']])
-            ->andWhere(['color_id' => $param['color']])
-            ->asArray()
-            ->one();
-        if (!empty($query_model_color_exist)) {
-            echo "<script>location.href = '/order/product/update&serial_num={$query_model_color_exist['serial_num']}';</script>";
-            die;
+        if ($action != 'update') {
+            //再次判断款号与色号是否已存在，如果重复则跳转商品修改页面
+            $query_model_color_exist = self::find()->select(['serial_num'])
+                ->where(['model_sn' => $param['modelSn']])
+                ->andWhere(['color_id' => $param['color']])
+                ->asArray()
+                ->one();
+            if (!empty($query_model_color_exist)) {
+                echo "<script>location.href = '/product/update?serial_num={$query_model_color_exist['serial_num']}';</script>";
+                die;
+            }
+            
         }
 
         //款号

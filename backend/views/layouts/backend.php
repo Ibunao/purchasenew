@@ -123,20 +123,20 @@ use common\widgets\Alert;
 
             <ul class="nav nav-list">
                 <li class="">
-                    <a href="<?=Url::to(['/desktop/default/index']) ;?>">
+                    <a href="<?=Url::to(['/default/index']) ;?>">
                         <i class="icon-dashboard"></i>
                         <span class="menu-text"> 控制台</span>
                     </a>
                 </li>
 
                 <?php foreach (Menu::$aclList as $k=>$v):?>
-                <li class="<?= $this->context->module->id == $k && Yii::$app->request->pathInfo!='desktop/default/index'?'open':'';?>">
+                <li class="<?= $this->context->module->id == $k && Yii::$app->request->pathInfo!='default/index'?'open':'';?>">
                     <a href="#" class="dropdown-toggle">
-                        <i class="icon-desktop"></i>
+                        <i class="icon-"></i>
                         <span class="menu-text"><?= $v['name'];?></span>
                         <b class="arrow icon-angle-down"></b>
                     </a>
-                    <ul class="submenu" <?= $this->context->module->id == $k && Yii::$app->request->pathInfo!='desktop/default/index'?'style="display: block;"':'';?>>
+                    <ul class="submenu" <?= $this->context->module->id == $k && Yii::$app->request->pathInfo!='default/index'?'style="display: block;"':'';?>>
                         <?php foreach ($v['ctl'] as $vv):?>
                         <li class="<?= $this->context->module->id == $k && in_array(Yii::$app->controller->id,$vv['list_ctl'])?'open':'';?>">
                             <a href="#" class="dropdown-toggle">
@@ -144,7 +144,7 @@ use common\widgets\Alert;
                                 <?= $vv['name'];?>
                                 <b class="arrow icon-angle-down"></b>
                             </a>
-                            <ul class="submenu" style="display: <?= $this->context->module->id ==$k && in_array(Yii::$app->controller->id,$vv['list_ctl']) && Yii::$app->request->pathInfo != 'desktop/default/index'?'block':'none';?>;">
+                            <ul class="submenu" style="display: <?= $this->context->module->id ==$k && in_array(Yii::$app->controller->id,$vv['list_ctl']) && Yii::$app->request->pathInfo != 'default/index'?'block':'none';?>;">
                                 <?php foreach ($vv['act'] as $kkk=>$vvv):?>
                                 <li class="<?= $this->context->module->id == $k && Yii::$app->controller->id == $kkk ? 'active' : '';?>">
                                     <a href="<?= Url::to(["/{$k}/{$kkk}/{$vvv['default_id']}"]) ;?>">

@@ -351,10 +351,10 @@ use yii\widgets\LinkPager;
         <label for="name">图片</label>
         <input type="text" class="inc" id="banner_url" name="param[image]" value="<?= !empty($param['img_url'])?$param['img_url']:''; ?>" placeholder="图片URL">
     </div>
-
-    <button type="button" style="margin-left:90px" class="btn btn-purple btn-sm btn-more-small" id="banner_upload_regular">
+    <input type="file" id="upload-file" name="上传">
+<!--     <button type="button" style="margin-left:90px" class="btn btn-purple btn-sm btn-more-small" id="banner_upload_regular">
         <i class="icon-cloud-upload"></i>上传
-    </button>
+    </button> -->
 
     <div class="form-group col-xs-12" <?php if($action =='change'||$action=='copy'){echo "disabled";} ?>>
         <label for="name">描述</label>
@@ -656,5 +656,35 @@ use yii\widgets\LinkPager;
 //                }
 //            });
 //        });
+
+
+        function uploadfile() {
+            var formData = new FormData();
+            formData.append("Filedata",$("#upload-file")[0].files[0]);
+            $.ajax({ 
+            url : '/upload/image', 
+            type : 'POST', 
+            data : formData, 
+            // 告诉jQuery不要去处理发送的数据
+            processData : false, 
+            // 告诉jQuery不要去设置Content-Type请求头
+            contentType : false,
+            beforeSend:function(){
+                console.log("正在进行，请稍候");
+            },
+            success : function(response) { 
+                if (response.code == 200) {
+                    document.getElementById("banner_url").value = response.path;
+                }
+            }, 
+            error : function(responseStr) { 
+                console.log("error");
+            } 
+            });
+        }
+        document.getElementById("upload-file").addEventListener("change",function () {  
+            console.log("change"); 
+            uploadfile(); 
+        }); 
     });
 </script>

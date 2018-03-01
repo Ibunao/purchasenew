@@ -25,7 +25,7 @@ return [
     
     
     //创建文件图片文件夹，为了更好的分类，每次订货会要更改
-    'imagePath' => '/images/2018-12-12/',
+    'imagePath' => '/images/2018-03/',
     //大区
     'customer_area' => array(
         '1' => '京苏赣鄂渝',
