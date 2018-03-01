@@ -3,7 +3,7 @@ namespace frontend\controllers;
 
 use Yii;
 use frontend\controllers\base\FBaseController;
-use frontend\models\ProductModel;
+use common\models\ProductModel;
 /**
  * 首页controller
  */
@@ -54,7 +54,7 @@ class DefaultController extends FBaseController
 
     }
     /**
-     * 
+     *
      * 示例
      * ?c_id=1,12&sd=2_夏&wv=16_冬四&lv=4_基本款&plv=2_100-199&or=1&hits=1
      * @return [type] [description]
@@ -137,11 +137,11 @@ class DefaultController extends FBaseController
     	if ($page > 1) {
     	    return $this->renderPartial('ajaxindex', array('model' => $model, 'c_id' => $c_id, 'b_id' => $b_id,'res'=>$res));
     	} else {
-    	    return $this->render('index', 
+    	    return $this->render('index',
     	    	[
-	    	    	'model' => $model, 
-	    	    	'c_id' => $c_id, 
-	    	    	'b_id' => $b_id, 
+	    	    	'model' => $model,
+	    	    	'c_id' => $c_id,
+	    	    	'b_id' => $b_id,
 	    	    	'serial_num' => $serialNum,
 	    	    	'res'=>$res
     	    	]);

@@ -5,20 +5,18 @@ $params = array_merge(
     require(__DIR__ . '/params.php')
     // require(__DIR__ . '/params-local.php')
 );
-$db = require(__DIR__ . '/../../common/config/db.php');
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
     'bootstrap' => ['log'],
     'defaultRoute' => 'default/index',
-    'language' =>'zh-CN', 
+    'language' =>'zh-CN',
     'controllerNamespace' => 'frontend\controllers',
     'components' => [
         'request' => [
             'csrfParam' => '_csrf-frontend',
             'cookieValidationKey' => 'wJ7OBPbwfqiMfLZX-_zq2DRkSUdBUHJ0',
         ],
-        'db' => $db,
         'user' => [
             'identityClass' => 'common\models\User',
             'enableAutoLogin' => true,
@@ -40,7 +38,7 @@ return [
         'errorHandler' => [
             'errorAction' => 'site/error',
         ],
-        
+
         'urlManager' => [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
@@ -48,16 +46,16 @@ return [
             ],
         ],
     ],
-    'modules' => [
-        'api' => [
-            'class' => 'frontend\modules\api\Api',
-        ],
-        'desktop' => [
-            'class' => 'frontend\modules\desktop\Desktop',
-        ],
-        'order' => [
-            'class' => 'frontend\modules\order\Order',
-        ],
-    ],
+    // 'modules' => [
+    //     'api' => [
+    //         'class' => 'frontend\modules\api\Api',
+    //     ],
+    //     'desktop' => [
+    //         'class' => 'frontend\modules\desktop\Desktop',
+    //     ],
+    //     'order' => [
+    //         'class' => 'frontend\modules\order\Order',
+    //     ],
+    // ],
     'params' => $params,
 ];

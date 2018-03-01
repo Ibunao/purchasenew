@@ -4,7 +4,7 @@ namespace frontend\controllers\base;
 
 use Yii;
 use yii\web\Controller;
-use frontend\models\OrderModel;
+use common\models\OrderModel;
 use yii\db\Query;
 /**
  * 前台基础控制器

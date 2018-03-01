@@ -135,7 +135,7 @@ class ProductController extends BaseController
             } else {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '此款号出现多个货号，禁止修改');//提示错了
-                
+
                 $this->redirect(['/product/update', 'serial_num' => $serialNum]);
             }
         }

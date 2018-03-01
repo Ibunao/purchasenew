@@ -36,7 +36,7 @@ class MorderController extends BaseController
 		$params['page'] = $pageIndex;
 
 		$orderModel = new OrderModel;
-		// 查询订单  
+		// 查询订单
 		$result = $orderModel->orderQueryList($params);
         // 预计已订货金额
 		$statistics['amount'] = $result['amount'];
@@ -48,7 +48,7 @@ class MorderController extends BaseController
 
 		//已筛选客户订货指标
 		$statistics['choose_target_sum'] = $customer->getCustomerTargets($params, true);
-		
+
 		if (!empty($result['list'])) {
 
             foreach ($result['list'] as $k => $v) {
@@ -80,13 +80,13 @@ class MorderController extends BaseController
         }else{
         	//下载
         	$keys = [
-	        	'客户/店铺名称', 
-	        	'客户/店铺代码', 
-	        	'订货会', 
-	        	'订货指标', 
-	        	'已订货金额', 
-	        	'达成率', 
-	        	'未完成金额', 
+	        	'客户/店铺名称',
+	        	'客户/店铺代码',
+	        	'订货会',
+	        	'订货指标',
+	        	'已订货金额',
+	        	'达成率',
+	        	'未完成金额',
 	        	'下线已定货金额'
 	        ];
         	$data = [];
@@ -274,10 +274,10 @@ class MorderController extends BaseController
 		$public = new PublicModel();
 		$groupSize = $public->getGroupSize();
 		return $this->render('detail', [
-				'result' => $result, 
-				'order_info' => $orderInfo, 
-				'orderlist' => $data, 
-				'count'=>$count, 
+				'result' => $result,
+				'order_info' => $orderInfo,
+				'orderlist' => $data,
+				'count'=>$count,
 				'sizeGroup'=>$groupSize
 			]);
 	}
@@ -321,24 +321,24 @@ class MorderController extends BaseController
         $orderInfo = $order->orderInfo($order_id);//订货统计
         $orderItem = $order->DownloadOrderItemList($order_id);//商品属性
         $keys = [
-            '样品代码', 
-            '样品名称', 
+            '样品代码',
+            '样品名称',
             '单位',
-            '颜色', 
-            '颜色名称', 
-            '尺码', 
-            '尺码名称', 
-            '数量', 
-            '标准价', 
-            '折扣', 
-            '单价', 
+            '颜色',
+            '颜色名称',
+            '尺码',
+            '尺码名称',
+            '数量',
+            '标准价',
+            '折扣',
+            '单价',
             '标准金额',
-            '金额', 
-            '交货日期', 
-            '订货状态', 
-            '备注', 
-            '关联分销订单', 
-            '品牌代码', 
+            '金额',
+            '交货日期',
+            '订货状态',
+            '备注',
+            '关联分销订单',
+            '品牌代码',
             '品牌名称',
             //这里开始 都是未定义
             '大类', '中类', '小类', '面料', '种类划分', '款式划分', '波段划分'
@@ -698,7 +698,7 @@ class MorderController extends BaseController
             $model_list[$model_sn] = $model_sn;
         }
 
-        
+
         $implodeLog = new ImportLogModel();
         $nowTime = time();
         $implodeLog->import_file = $filePath;
@@ -707,7 +707,7 @@ class MorderController extends BaseController
         $implodeLog->pre_key = $order_id;
         $implodeLog->save();
 
-        echo "<script>alert('添加成功');location.href='/morder/index'</script>";exit; 
+        echo "<script>alert('添加成功');location.href='/morder/index'</script>";exit;
     }
 
     /**
@@ -813,7 +813,7 @@ class MorderController extends BaseController
             $all_big_target += $val['starget'];
             $all_dis_money += $val['final_amount'];
             $xls->export_rows($data);
-            
+
         }
         if(empty($all_big_target)){
             $bro_percent = 0 .'%';
@@ -848,14 +848,14 @@ class MorderController extends BaseController
 
 //         $xls = new IoXls();
 // $objPHPExcel = new \PHPExcel;
-// /*以下是一些设置 ，什么作者  标题啊之类的*/  
-// $objPHPExcel->getProperties()->setCreator("转弯的阳光")  
-// ->setLastModifiedBy("转弯的阳光")  
-// ->setTitle("数据EXCEL导出")  
-// ->setSubject("数据EXCEL导出")  
-// ->setDescription("备份数据")  
-// ->setKeywords("excel")  
-// ->setCategory("result file");  
+// /*以下是一些设置 ，什么作者  标题啊之类的*/
+// $objPHPExcel->getProperties()->setCreator("转弯的阳光")
+// ->setLastModifiedBy("转弯的阳光")
+// ->setTitle("数据EXCEL导出")
+// ->setSubject("数据EXCEL导出")
+// ->setDescription("备份数据")
+// ->setKeywords("excel")
+// ->setCategory("result file");
 		$key = [
 		   '商品代码',
 		   '颜色编号',
@@ -883,26 +883,26 @@ class MorderController extends BaseController
            // var_dump($data);exit;
 		   $i++;
 
-            /*以下就是对处理Excel里的数据， 横着取数据，主要是这一步，其他基本都不要改*/  
+            /*以下就是对处理Excel里的数据， 横着取数据，主要是这一步，其他基本都不要改*/
             // $customer = ($customer_info[$v['order_id']]['big_'.$model_info[$v['model_sn']].'_count'] /100);
-            // $num=$i+1;  
-            // $objPHPExcel->setActiveSheetIndex(0)//Excel的第A列，uid是你查出数组的键值，下面以此类推  
-            // ->setCellValue('A'.$num, $v['model_sn'])     
-            // ->setCellValue('B'.$num, $v['color_no'])  
-            // ->setCellValue('C'.$num, $v['size_no'])  
-            // ->setCellValue('D'.$num, $v['nums'])  
-            // ->setCellValue('E'.$num, $v['cost_price'])  
-            // ->setCellValue('F'.$num, $customer)  
-            // ->setCellValue('G'.$num, $v['code']) 
-            // ->setCellValue('G'.$num, $v['order_id']);  
+            // $num=$i+1;
+            // $objPHPExcel->setActiveSheetIndex(0)//Excel的第A列，uid是你查出数组的键值，下面以此类推
+            // ->setCellValue('A'.$num, $v['model_sn'])
+            // ->setCellValue('B'.$num, $v['color_no'])
+            // ->setCellValue('C'.$num, $v['size_no'])
+            // ->setCellValue('D'.$num, $v['nums'])
+            // ->setCellValue('E'.$num, $v['cost_price'])
+            // ->setCellValue('F'.$num, $customer)
+            // ->setCellValue('G'.$num, $v['code'])
+            // ->setCellValue('G'.$num, $v['order_id']);
 		}
-        // $objPHPExcel->getActiveSheet()->setTitle('User');  
-        // $objPHPExcel->setActiveSheetIndex(0);  
-        //  header('Content-Type: applicationnd.ms-excel');  
-        //  header('Content-Disposition: attachment;filename="'.$fileName.'.xlsx"');  
-        //  header('Cache-Control: max-age=0');  
-        //  $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');  
-        //  $objWriter->save('php://output');  
+        // $objPHPExcel->getActiveSheet()->setTitle('User');
+        // $objPHPExcel->setActiveSheetIndex(0);
+        //  header('Content-Type: applicationnd.ms-excel');
+        //  header('Content-Disposition: attachment;filename="'.$fileName.'.xlsx"');
+        //  header('Cache-Control: max-age=0');
+        //  $objWriter = \PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel2007');
+        //  $objWriter->save('php://output');
         //  exit;
 		// $xls->export_rows($data);
 		// $xls->export_finish();
@@ -944,4 +944,283 @@ class MorderController extends BaseController
             echo "<script>alert('暂无');location.href='/admin.php?r=order/order/index'</script>";
         }
     }
+	/**
+     * 订单统计
+     */
+    public function  actionStatistics()
+    {
+        $season_sp_id = Yii::$app->params['season_one'];
+        $season_sm_id = Yii::$app->params['season_two'];
+		$request = Yii::$app->request;
+        $order_id = $request->get('order_id');//获取订单号
+        $type = $request->get("type");
+        $order = new OrderModel();
+        $order_style_sn = $order->orderProductStyleSn($order_id);//获取购买的商品的商品编号
+        if (empty($order_style_sn)) {
+            echo "此订单没有商品";
+            die();
+        }
+        $order_info = $order->orderInfo($order_id);//获取订购者信息
+        $order_item = $order->orderItem($order_id);//获取商品信息
+
+        $item = array();
+        $item['model_s_1'] = $item['model_s_2'] = array();
+        $item['num_s_1'] = $item['num_s_2'] = $item['amount_s_1'] = $item['amount_s_2'] = $item['all_num'] = $item['all_amount'] = 0;
+        foreach ($order_item as $k => $v) {
+            if ($v['season'] == $season_sp_id) {
+                $item['model_s_1'][] = $v['model_sn'];
+                $item['num_s_1'] += $v['nums'];
+                $item['amount_s_1'] += $v['amount'];
+            }
+            if ($v['season'] == $season_sm_id) {
+                $item['model_s_2'][] = $v['model_sn'];
+                $item['num_s_2'] += $v['nums'];
+                $item['amount_s_2'] += $v['amount'];
+            }
+            $item['all_num'] += $v['nums'];
+            $item['all_amount'] += $v['amount'];
+        }
+        $item['target'] = $order_info['target'];
+        if ($item['target'] == 0) {//达成率
+            $item['target_percent'] = "0%";
+        } else {
+            $item['target_percent'] = round($item['all_amount'] / $item['target'] * 100, 2) . "%";
+        }
+        $cat = new CatBigModel();
+        $cat_arr = $cat->cat_big_small();
+        foreach ($cat_arr as $k => $v) {//$v 是大类
+            $cat_arr[$k]['target'] = $order_info['big_' . $v['big_cat_id']];
+            $cat_arr[$k]['nums'] = $cat_arr[$k]['amount'] = 0;
+            if (!isset($cat_arr[$k]['res_cat_num'])) $cat_arr[$k]['res_cat_num'] = 0;
+            if (!isset($cat_arr[$k]['res_cat_amount'])) $cat_arr[$k]['res_cat_amount'] = 0;
+            $cat_arr[$k]['res_num_season_1'] = $cat_arr[$k]['res_num_season_2'] = 0;
+            $cat_arr[$k]['res_amount_season_1'] = $cat_arr[$k]['res_amount_season_2'] = 0;
+            $cat_arr[$k]['res_style_season_1'] = $cat_arr[$k]['res_style_season_2'] = array();
+            foreach ($v['cat_small'] as $kk => $vv) {//$vv 是小类
+                $cat_arr[$k]['cat_small'][$kk]['cat_big_name'] = $v['big_cat_name'];
+                $cat_arr[$k]['cat_small'][$kk]['style_season_1'] = array();
+                $cat_arr[$k]['cat_small'][$kk]['style_season_2'] = array();
+                $cat_arr[$k]['cat_small'][$kk]['total_style'] = array();
+                if (!isset($cat_arr[$k]['cat_small'][$kk]['total_num'])) $cat_arr[$k]['cat_small'][$kk]['total_num'] = 0;
+                if (!isset($cat_arr[$k]['cat_small'][$kk]['total_amount'])) $cat_arr[$k]['cat_small'][$kk]['total_amount'] = 0;
+                if (!isset($cat_arr[$k]['cat_small'][$kk]['num_season_1'])) $cat_arr[$k]['cat_small'][$kk]['num_season_1'] = 0;
+                if (!isset($cat_arr[$k]['cat_small'][$kk]['num_season_2'])) $cat_arr[$k]['cat_small'][$kk]['num_season_2'] = 0;
+                if (!isset($cat_arr[$k]['cat_small'][$kk]['amount_season_1'])) $cat_arr[$k]['cat_small'][$kk]['amount_season_1'] = 0;
+                if (!isset($cat_arr[$k]['cat_small'][$kk]['amount_season_2'])) $cat_arr[$k]['cat_small'][$kk]['amount_season_2'] = 0;
+                foreach ($order_item as $kkk => $vvv) {//$vvv 订购商品的属性
+                    if ($vvv['cat_b'] == $v['big_cat_id'] && $vvv['cat_s'] == $vv['small_id']) {
+                        if ($vvv['season'] == $season_sp_id) {
+                            $cat_arr[$k]['cat_small'][$kk]['style_season_1'][] = $vvv['model_sn'];
+                            $cat_arr[$k]['cat_small'][$kk]['num_season_1'] += $vvv['nums'];
+                            $cat_arr[$k]['cat_small'][$kk]['amount_season_1'] += $vvv['amount'];
+                            $cat_arr[$k]['res_num_season_1'] += $vvv['nums'];//春季数量总计
+                            $cat_arr[$k]['res_style_season_1'][] = $vvv['model_sn'];//春季总计
+                            $cat_arr[$k]['res_amount_season_1'] += $vvv['amount'];//春季金额总计
+                        }
+                        if ($vvv['season'] == $season_sm_id) {
+                            $cat_arr[$k]['cat_small'][$kk]['style_season_2'][] = $vvv['model_sn'];
+                            $cat_arr[$k]['cat_small'][$kk]['num_season_2'] += $vvv['nums'];
+                            $cat_arr[$k]['cat_small'][$kk]['amount_season_2'] += $vvv['amount'];
+                            $cat_arr[$k]['res_num_season_2'] += $vvv['nums'];//夏季数量总计
+                            $cat_arr[$k]['res_style_season_2'][] = $vvv['model_sn'];//夏季总计
+                            $cat_arr[$k]['res_amount_season_2'] += $vvv['amount'];//春季数量总计
+                        }
+                        $cat_arr[$k]['cat_small'][$kk]['total_style'][] = $vvv['model_sn'];
+                        $cat_arr[$k]['cat_small'][$kk]['total_num'] += $vvv['nums'];
+                        $cat_arr[$k]['cat_small'][$kk]['total_amount'] += $vvv['amount'];
+
+                        $cat_arr[$k]['res_cat_num'] += $vvv['nums'];//数量总计
+                        $cat_arr[$k]['res_cat_amount'] += $vvv['amount'];//金额总计
+                    }
+                }
+            }
+            if ($cat_arr[$k]['target'] == 0) {
+                $cat_arr[$k]['target_percent'] = "0%";
+            } else {
+                $cat_arr[$k]['target_percent'] = round($cat_arr[$k]['res_cat_amount'] / $cat_arr[$k]['target'] * 100, 2) . "%";
+            }
+        }
+        if ($type == 'download') {
+            //款式数量
+            $model_s_1 = count(array_unique($item['model_s_1'])); //季节1款式数量
+            $model_s_2 = count(array_unique($item['model_s_2'])); //季节2款式数量
+            $model_all = $model_s_1 + $model_s_2; //款式数量总数
+            //订货数量
+            $num_s_1 = $item['num_s_1'];//季节1订货数量
+            if ($item['all_num'] == 0) { //季节1订货占比
+                $num_p_1 = "0%";
+            } else {
+                $num_p_1 = round($num_s_1 / $item['all_num'] * 100, 1) . "%";
+            }
+            $num_s_2 = $item['num_s_2'];//季节2订货数量
+            if ($item['all_num'] == 0) {//季节2订货占比
+                $num_p_2 = "0%";
+            } else {
+                $num_p_2 = round($num_s_2 / $item['all_num'] * 100, 1) . "%";
+            }
+            $num_all = $num_s_1 + $num_s_2;//订货数量总和
+            if ($item['all_num'] == 0) {//订货总和占比
+                $num_all_p = "0%";
+            } else {
+                $num_all_p = round($num_all / $item['all_num'] * 100, 1) . "%";
+            }
+            //订货金额
+            $amount_s_1 = $item['amount_s_1'];//季节1订货金额
+            if ($item['all_amount'] == 0) { //季节1订货金额占比
+                $amount_p_1 = "0%";
+            } else {
+                $amount_p_1 = round($amount_s_1 / $item['all_amount'] * 100, 1) . "%";
+            }
+            $amount_s_2 = $item['amount_s_2'];//季节2订货金额
+            if ($item['all_amount'] == 0) { //季节2订货金额占比
+                $amount_p_2 = "0%";
+            } else {
+                $amount_p_2 = round($amount_s_2 / $item['all_amount'] * 100, 1) . "%";
+            }
+            $amount_all = $amount_s_1 + $amount_s_2;//订货金额总计
+            if ($item['all_amount'] == 0) {
+                $amount_p = "0%";
+            } else {
+                $amount_p = round($amount_all / $item['all_amount'] * 100, 1) . "%";
+            }
+            //订货指标
+            $target = $order_info['target'];//订货指标
+            if ($amount_all == 0) {//达成率
+                $target_p = "0%";
+            } else {
+                $target_p = round($item['all_amount'] / $target * 100, 1) . "%";
+            }
+            $season_spring = Yii::$app->params['season_one_name'];
+            $season_summer = Yii::$app->params['season_two_name'];
+            $title_header = array(
+                "大类", "小类", "{$season_spring}款式数量", "{$season_summer}款式数量", "{$season_spring}{$season_summer}款式数量合计",
+                "{$season_spring}订货数量", "{$season_spring}订货数量占比", "{$season_summer}订货数量", "{$season_summer}订货数量占比",
+                "{$season_spring}{$season_summer}订货数量合计", "{$season_spring}{$season_summer}订货数量合计占比", "{$season_spring}订货金额",
+                "{$season_spring}订货金额占比", "{$season_summer}订货金额", "{$season_summer}订货金额占比", "{$season_spring}{$season_summer}订货金额",
+                "{$season_spring}{$season_summer}订货金额占比", "订货指标", "订货指标达成率"
+            );
+            $title_content[0] = array(
+                "订货总计", "", $model_s_1, $model_s_2, $model_all, $num_s_1, $num_p_1, $num_s_2, $num_p_2, $num_all, $num_all_p, $amount_s_1, $amount_p_1,
+                $amount_s_2, $amount_p_2, $amount_all, $amount_p, $target, $target_p
+            );
+            $data_xls = array();
+            $i = 1;
+            foreach ($cat_arr as $k => $v) {
+                foreach ($v['cat_small'] as $kk => $vv) {
+                    $data_xls[$i]['A'] = $vv['cat_big_name'];
+                    $data_xls[$i]['B'] = $vv['small_cat_name'];
+                    $data_xls[$i]['C'] = count(array_unique($vv['style_season_1']));
+                    $data_xls[$i]['D'] = count(array_unique($vv['style_season_2']));
+                    $data_xls[$i]['E'] = ($data_xls[$i]['C'] + $data_xls[$i]['D']);
+                    $data_xls[$i]['F'] = $vv['num_season_1'];
+                    if ($num_all == 0) {
+                        $data_xls[$i]['G'] = "0%";
+                    } else {
+                        $data_xls[$i]['G'] = round($data_xls[$i]['F'] / $num_all * 100, 1) . "%";
+                    }
+                    $data_xls[$i]['H'] = $vv['num_season_2'];
+                    if ($num_all == 0) {
+                        $data_xls[$i]['I'] = "0%";
+                    } else {
+                        $data_xls[$i]['I'] = round($data_xls[$i]['H'] / $num_all * 100, 1) . "%";
+                    }
+                    $data_xls[$i]['J'] = ($vv['num_season_1'] + $vv['num_season_2']);
+                    if ($num_all == 0) {
+                        $data_xls[$i]['K'] = "0%";
+                    } else {
+                        $data_xls[$i]['K'] = round($data_xls[$i]['J'] / $num_all * 100, 1) . "%";
+                    }
+                    $data_xls[$i]['L'] = $vv['amount_season_1'];
+                    if ($amount_all == 0) {
+                        $data_xls[$i]['M'] = "0%";
+                    } else {
+                        $data_xls[$i]['M'] = round($data_xls[$i]['L'] / $amount_all * 100, 1) . "%";
+                    }
+                    $data_xls[$i]['N'] = $vv['amount_season_2'];
+                    if ($amount_all == 0) {
+                        $data_xls[$i]['O'] = "0%";
+                    } else {
+                        $data_xls[$i]['O'] = round($data_xls[$i]['N'] / $amount_all * 100, 1) . "%";
+                    }
+                    $data_xls[$i]['P'] = $vv['amount_season_2'] + $vv['amount_season_1'];
+                    if ($amount_all == 0) {
+                        $data_xls[$i]['Q'] = "0%";
+                    } else {
+                        $data_xls[$i]['Q'] = round($data_xls[$i]['P'] / $amount_all * 100, 1) . "%";
+                    }
+                    $data_xls[$i]['R'] = "";
+                    $data_xls[$i]['S'] = "";
+                    $i++;
+                }
+                $data_xls[$i]['A'] = $v['big_cat_name'];
+                $data_xls[$i]['B'] = "订货总计";
+                $data_xls[$i]['C'] = count(array_unique($v['res_style_season_1']));
+                $data_xls[$i]['D'] = count(array_unique($v['res_style_season_2']));
+                $data_xls[$i]['E'] = $data_xls[$i]['C'] + $data_xls[$i]['D'];
+                $data_xls[$i]['F'] = $v['res_num_season_1'];
+                if ($num_all == 0) {
+                    $data_xls[$i]['G'] = "0%";
+                } else {
+                    $data_xls[$i]['G'] = round($data_xls[$i]['F'] / $num_all * 100, 1) . "%";
+                }
+                $data_xls[$i]['H'] = $v['res_num_season_2'];
+                if ($num_all == 0) {
+                    $data_xls[$i]['I'] = "0%";
+                } else {
+                    $data_xls[$i]['I'] = round($data_xls[$i]['H'] / $num_all * 100, 1) . "%";
+                }
+                $data_xls[$i]['J'] = $v['res_num_season_1'] + $v['res_num_season_2'];
+                if ($num_all == 0) {
+                    $data_xls[$i]['K'] = "0%";
+                } else {
+                    $data_xls[$i]['K'] = round($data_xls[$i]['J'] / $num_all * 100, 1) . "%";
+                }
+                $data_xls[$i]['L'] = $v['res_amount_season_1'];
+                if ($amount_all == 0) {
+                    $data_xls[$i]['M'] = "0%";
+                } else {
+                    $data_xls[$i]['M'] = round($data_xls[$i]['L'] / $amount_all * 100, 1) . "%";
+                }
+                $data_xls[$i]['N'] = $v['res_amount_season_2'];
+
+                if ($amount_all == 0) {
+                    $data_xls[$i]['O'] = "0%";
+                } else {
+                    $data_xls[$i]['O'] = round($data_xls[$i]['N'] / $amount_all * 100, 1) . "%";
+                }
+                $data_xls[$i]['P'] = $v['res_amount_season_1'] + $v['res_amount_season_2'];
+                if ($amount_all == 0) {
+                    $data_xls[$i]['Q'] = "0%";
+                } else {
+                    $data_xls[$i]['Q'] = round($data_xls[$i]['P'] / $amount_all * 100, 1) . "%";
+                }
+                $data_xls[$i]['R'] = $v['target'];
+                if($v['target'] == 0){
+                    $data_xls[$i]['S'] = "0%";
+                }else{
+                    $data_xls[$i]['S'] = round($data_xls[$i]['P'] /$v['target'] * 100, 1). "%";
+                }
+                $i = $i + 2;
+            }
+            $title_end[0] = array(
+                '订货指标：', ($order_info['target'] == 0) ? '' : number_format($order_info['target'], 2),
+            );
+            $title_end[1] = array(
+                '已定货：', number_format($order_info['cost_item'], 2)
+            );
+            $title_end[2] = array(
+                '达成率：', ($order_info['target'] == 0) ? '' : number_format($order_info['cost_item'] / $order_info['target'] * 100, 1) . "%"
+            );
+            $filename = $order_info['customer_name'] . "_" . $order_info['order_id'];
+            $export = new IoXls();
+            $export->export_begin($title_header, $filename, count($title_content));
+            $export->export_rows($title_content);
+            $export->export_rows($data_xls);
+            $export->export_rows($title_end);
+            $export->export_finish();
+        } else {
+            return $this->render('statistics', array('cat_arr' => $cat_arr, 'order_info' => $order_info, 'item' => $item));
+        }
+    }
+
 }

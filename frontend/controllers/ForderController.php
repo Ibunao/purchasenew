@@ -1,10 +1,10 @@
-<?php 
+<?php
 namespace frontend\controllers;
 
 use Yii;
 use frontend\controllers\base\FBaseController;
-use frontend\models\OrderModel;
-use frontend\models\ProductModel;
+use common\models\OrderModel;
+use common\models\ProductModel;
 /**
 * ce
 */
@@ -35,7 +35,7 @@ class ForderController extends FBaseController
         }else{
             echo json_encode(array('code'=>'400', 'msg'=>'订货失败'));
         }
-        
+
     }
     /**
      * 季节汇总、订单统计
@@ -43,7 +43,7 @@ class ForderController extends FBaseController
     public function actionBycount()
     {
         header("Content-Type:text/html;charset=utf-8");
-        
+
         $page = Yii::$app->request->get('page', 1);
         $orderModel = new OrderModel();
         $productModel = new ProductModel();
@@ -78,7 +78,7 @@ class ForderController extends FBaseController
             //     $twoCatArr['cat'][] = urlencode($v['b_name']);
             //     $twoCatArr['value'][] = 0;
             // }
-            
+
         }
         $oneCatArr['cat'] = urldecode(json_encode(isset($oneCatArr['cat'])?$oneCatArr['cat']:''));
         $oneCatArr['value'] = json_encode(isset($oneCatArr['value'])?$oneCatArr['value']:0);
@@ -117,55 +117,55 @@ class ForderController extends FBaseController
         foreach ($result['list'] as $k => $v) {
             $bing['name'][] = urlencode($v['b_name']);
             $bing['amount'][] = ['value' => $v['amount'], 'name' => urlencode($v['b_name'])];
-            // $zhu['0-99'] 
+            // $zhu['0-99']
             if (isset($v['dpj']['0-99'])) {
                 $zhu['a'][] = $v['dpj']['0-99']['nums'];
             }else{
                 $zhu['a'][] = '';
             }
-            // $zhu['100-199'] 
+            // $zhu['100-199']
             if (isset($v['dpj']['100-199'])) {
                 $zhu['b'][] = $v['dpj']['100-199']['nums'];
             }else{
                 $zhu['b'][] = '';
             }
-            // $zhu['200-299'] 
+            // $zhu['200-299']
             if (isset($v['dpj']['200-299'])) {
                 $zhu['c'][] = $v['dpj']['200-299']['nums'];
             }else{
                 $zhu['c'][] = '';
             }
-            // $zhu['300-399'] 
+            // $zhu['300-399']
             if (isset($v['dpj']['300-399'])) {
                 $zhu['d'][] = $v['dpj']['300-399']['nums'];
             }else{
                 $zhu['d'][] = '';
             }
-            // $zhu['400-499'] 
+            // $zhu['400-499']
             if (isset($v['dpj']['400-499'])) {
                 $zhu['e'][] = $v['dpj']['400-499']['nums'];
             }else{
                 $zhu['e'][] = '';
             }
-            // $zhu['500-999'] 
+            // $zhu['500-999']
             if (isset($v['dpj']['500-999'])) {
                 $zhu['f'][] = $v['dpj']['500-999']['nums'];
             }else{
                 $zhu['f'][] = '';
             }
-            // $zhu['1000-1499'] 
+            // $zhu['1000-1499']
             if (isset($v['dpj']['1000-1499'])) {
                 $zhu['g'][] = $v['dpj']['1000-1499']['nums'];
             }else{
                 $zhu['g'][] = '';
             }
-            // $zhu['1500-2000'] 
+            // $zhu['1500-2000']
             if (isset($v['dpj']['1500-2000'])) {
                 $zhu['h'][] = $v['dpj']['1500-2000']['nums'];
             }else{
                 $zhu['h'][] = '';
             }
-            // $zhu['2000以上'] 
+            // $zhu['2000以上']
             if (isset($v['dpj']['2000以上'])) {
                 $zhu['l'][] = $v['dpj']['2000以上']['nums'];
             }else{
@@ -179,7 +179,7 @@ class ForderController extends FBaseController
         $bing['name'] = urldecode(json_encode(isset($bing['name'])?$bing['name']:''));
         $bing['amount'] = urldecode(json_encode(isset($bing['amount'])?$bing['amount']:0));
         return $this->render('byprice', array('list' => $result['list'], 'result' => $result, 'bingname' => $bing['name'], 'bingdata' => $bing['amount'],
-            
+
 
             )+$zhu);
     }

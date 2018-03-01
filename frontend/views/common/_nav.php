@@ -1,5 +1,5 @@
-<?php 
-use frontend\models\PublicModel;
+<?php
+use common\models\PublicModel;
 
  ?>
 <!-- 左侧导航-->

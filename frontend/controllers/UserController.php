@@ -3,8 +3,8 @@ namespace frontend\controllers;
 
 use Yii;
 use yii\web\Controller;
-use frontend\models\CustomerModel;
-use frondent\models\PublicModel;
+use common\models\CustomerModel;
+use common\models\PublicModel;
 /**
  * 前台登录页
  *
@@ -81,5 +81,5 @@ class UserController extends Controller
     {
         PublicModel::flushCacheAll();
     }
-    
+
 }

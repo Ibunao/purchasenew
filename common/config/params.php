@@ -1,7 +1,7 @@
 <?php
 return [
     'web_sites_title' => '十月妈咪秋冬订货会', //前后台台网站title
-    
+
     'is_latest_price' => true, //复制订单时是否为最新价格 是最新价格：true  不是最新：false
 
     'update_customer_info' => true,  //是否允许修改用户资料  允许：true， 不允许：false
@@ -22,10 +22,18 @@ return [
         'http://128.128.1.75',
         'http://128.128.1.79',
     ),
-    
-    
+
+
     //创建文件图片文件夹，为了更好的分类，每次订货会要更改
     'imagePath' => '/images/2018-03/',
+
+    //订货会基础数据相关配置
+    'season_one' => '1', //季节1ID ！【'1'(春) || '3'(秋)】
+    'season_two' => '2', //季节2ID ！【'2'(夏) || '4'(冬)】
+    'season_one_name' => '春', //季节1名称 【'春' || '秋'】
+    'season_two_name' => '夏', //季节2名称 【'夏' || '冬'】
+    'season_title' => '春夏',  //季节1、2 名称 【'春夏' || '秋冬'】
+    
     //大区
     'customer_area' => array(
         '1' => '京苏赣鄂渝',

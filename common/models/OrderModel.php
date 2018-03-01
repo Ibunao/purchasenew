@@ -65,7 +65,7 @@ class OrderModel extends \yii\db\ActiveRecord
     /**
      * use
      * backend/porder/index
-     * 
+     *
      * 商品订单查询
      * @param  [type] $params 查询条件
      * @return [type]         [description]
@@ -165,7 +165,7 @@ class OrderModel extends \yii\db\ActiveRecord
             $amount += $item['amount'];
         }
         if (empty($params['download'])) {
-            //分页  
+            //分页
             $pagination = new Pagination(['totalCount' => $count, 'pageSize' => ParamsClass::$pageSize]);
 
             $query->offset($pagination->offset)
@@ -174,7 +174,7 @@ class OrderModel extends \yii\db\ActiveRecord
         $query->select($select);
         $list = $query->all();
         /*
-        
+
         array(15) {
           [0]=>
           array(14) {
@@ -238,7 +238,7 @@ class OrderModel extends \yii\db\ActiveRecord
     /**
      * use
      * backend/porder/index
-     * 
+     *
      * 根据款色号查找订单数量
      * @param  [type] $styleSnArr style_sn数组
      * @param  array  $params     参数
@@ -302,15 +302,15 @@ class OrderModel extends \yii\db\ActiveRecord
      * use
      * FBaseController
      * this->addAjax
-     * 
-     * 获取用户的订单详情 
+     *
+     * 获取用户的订单详情
      * 添加商品订单的时候注意清缓存
      * @param  [type] $purchaseId 订货会id
      * @param  [type] $customerId  用户id
      * @return [type]              [description]
      */
     public function orderItems($purchaseId, $customerId)
-    {   
+    {
         // $cacheName = 'order-items-' . $purchaseId . '_' . $customerId;
         // $model = Yii::$app->cache->get($cacheName);
 
@@ -320,7 +320,7 @@ class OrderModel extends \yii\db\ActiveRecord
         // }
         //原代码有的，可以在更新状态的时候直接删除缓存就行了
         // else{
-        //     //如果订单已经存在 
+        //     //如果订单已经存在
         //     //获取订单状态
         //     $orderRow = self::find()
         //         ->select(['status'])
@@ -339,12 +339,12 @@ class OrderModel extends \yii\db\ActiveRecord
      * use
      * this/orderItems
      * this/AddAjax
-     * 
+     *
      * 要缓存的订单信息     没缓存
      * @param  [type] $purchaseId 订购会id
      * @param  [type] $customerId  用户id
      * @return [type]              [description]
-     */ 
+     */
     public function orderCache($purchaseId, $customerId)
     {
         //查询生效的订单
@@ -401,26 +401,26 @@ class OrderModel extends \yii\db\ActiveRecord
     /**
      * use
      * backend/morder/index
-     * 
+     *
      * 客户订单查询
      * @param  [type] $params 过滤条件
      * @return [type]         [description]
      */
     public function orderQueryList($params)
     {
-        $select = ['c.code', 'c.agent', 'c.customer_id', 'c.`name` as customer_name', 'c.`type`', 'c.purchase_id', 'c.province', 'c.area', 'c.target', 'o.order_id', 'o.`status`', 'o.cost_item', 'o.create_time', 
+        $select = ['c.code', 'c.agent', 'c.customer_id', 'c.`name` as customer_name', 'c.`type`', 'c.purchase_id', 'c.province', 'c.area', 'c.target', 'o.order_id', 'o.`status`', 'o.cost_item', 'o.create_time',
         '`o`.`cost_item` / `c`.`target`  as rate', 'c.parent_id', 'o.cost_item as count_all'];
         $query = (new Query)
             ->from('meet_customer as c')
             ->leftJoin('meet_order as o', 'c.customer_id = o.customer_id');
-            
+
         //排序条件
         if (!empty($params['order'])) {
             $orderBy = $params['order'];
         }else{
             $orderBy = 'o.cost_item';
         }
-        
+
         //订货会筛选,3为两个订货会都有的产品
         if (!empty($params['purchase'])) {
             $query->andWhere(['in', 'c.purchase_id', [$params['purchase'], 3]]);
@@ -474,7 +474,7 @@ class OrderModel extends \yii\db\ActiveRecord
 // 统计订单总定额
 $countMoneyQuery = clone $query;
 $orderPrice = $countMoneyQuery
-            # 新价格为改价后的价格   订单里的是老价格  
+            # 新价格为改价后的价格   订单里的是老价格
             ->select(['sum(oi.nums*p.cost_price) as newprice', 'sum(amount) as oldprice'])
             ->leftJoin('meet_order_items as oi', 'oi.order_id = o.order_id')
             ->leftJoin('meet_product as p', 'p.product_id = oi.product_id ')
@@ -533,9 +533,9 @@ foreach ($queryAll as $key => $order) {
      * 使用此方法的方法
      * this/orderQueryList
      * backend/morder/detail
-     * 
-     * 
-     * 获取订单的价格(最新和下订单时的价格) 
+     *
+     *
+     * 获取订单的价格(最新和下订单时的价格)
      * @param  [type]  $order_id 订单id
      * @return [type]            [description]
      */
@@ -556,7 +556,7 @@ foreach ($queryAll as $key => $order) {
      * 使用的方法
      * backend/morder/index
      * $this/getMasterCount
-     * 
+     *
      * 获取该用户的下线客户的预订金额
      * @param string $code
      * @return int
@@ -582,9 +582,9 @@ foreach ($queryAll as $key => $order) {
     }
 
     /**
-     * 使用的方法  
+     * 使用的方法
      * backend/morder/index
-     * 
+     *
      * 获取订单审核的信息
      * @param  [type] $orderId 订单id
      * @return [type]          [description]
@@ -595,14 +595,14 @@ foreach ($queryAll as $key => $order) {
             ->where(['order_id' => $orderId])
             ->orderBy(['time' => SORT_DESC])
             ->one();
-        
+
         return $result;
     }
 
     /**
      * 使用的方法
      * order/order/docopy
-     * 
+     *
      * 获取客户订单
      * @param  [type] $customerId 客户id
      * @return [type]             [description]
@@ -610,7 +610,11 @@ foreach ($queryAll as $key => $order) {
     public function  getCustomerOrder($customerId){
         return $result = self::find()->where(['customer_id' => $customerId])->asArray()->one();
     }
-
+    /**
+    * use
+    * backend/morder/statistics
+    * backend/morder/docopy
+    */
     public function orderItem($orderId)
     {
         $query = new Query;
@@ -634,9 +638,9 @@ foreach ($queryAll as $key => $order) {
     }
 
     /**
-     * 使用的方法  
+     * 使用的方法
      *order/order/docopy
-     * 
+     *
      * 添加订单
      * @param [type] $purchaseId   from订货会id
      * @param [type] $customerId   to用户id
@@ -680,7 +684,7 @@ foreach ($queryAll as $key => $order) {
     /**
      *  使用方法
      *  order/order/docopy
-     * 
+     *
      * 添加订单详情
      * @param [type] $orderId   订单id
      * @param [type] $orderList 订单item
@@ -709,7 +713,7 @@ foreach ($queryAll as $key => $order) {
             ['order_id', 'product_id', 'product_sn', 'style_sn', 'model_sn', 'name', 'price', 'amount', 'nums'], $items)
         ->execute();
 
-        
+
         return $result;
     }
 
@@ -724,7 +728,7 @@ foreach ($queryAll as $key => $order) {
     /**
      *  使用方法
      *  backend/morder/detail
-     * 
+     *
      * 根据订单号获取订单中商品的款号
      * @param  [type] $order_id 订单id
      * @return [type]           [description]
@@ -746,7 +750,7 @@ foreach ($queryAll as $key => $order) {
     /**
      *  使用方法
      *  backend/morder/detail
-     * 
+     *
      * 订单中商品详情
      * @param  [type] $orderId [description]
      * @return [type]          [description]
@@ -775,7 +779,7 @@ foreach ($queryAll as $key => $order) {
 
     public function DownloadOrderItemList($orderId)
     {
-        $select = ['oi.*', 'p.cat_b', 'p.cat_s', 's.size_id', 's.size_no', 's.size_name', 'ms.scheme_id', 'ms.scheme_name', 'p.color_id', 'c.color_no', 'c.color_name', 'cb.big_id', 'cb.cat_name as big_name', 
+        $select = ['oi.*', 'p.cat_b', 'p.cat_s', 's.size_id', 's.size_no', 's.size_name', 'ms.scheme_id', 'ms.scheme_name', 'p.color_id', 'c.color_no', 'c.color_name', 'cb.big_id', 'cb.cat_name as big_name',
         'cm.middle_id', 'cm.cat_name as middle_name', 'sm.small_id', 'sm.cat_name as small_name', 'cs.season_id', 'cs.season_name', 'p.level_id', 'l.level_name', 'p.memo', 'b.brand_name', 'b.brand_id', 'g.wave_name', 'g.wave_id', 'p.cost_price'];
         $result = (new Query)->select($select)
             ->from('meet_order_items as oi')
@@ -808,7 +812,7 @@ foreach ($queryAll as $key => $order) {
     /**
      * 用法
      * backend/morder/detail
-     * 
+     *
      * 商品订单的详细信息
      * @param  [type] $orderId 订单id
      * @return [type]          [description]
@@ -831,7 +835,7 @@ foreach ($queryAll as $key => $order) {
     /**
      * 用法
      * backend/morder/check
-     * 
+     *
      * 审核，更新订单状态
      * @param  [type] $orderId 订单号
      * @param  [type] $status  状态
@@ -873,7 +877,7 @@ foreach ($queryAll as $key => $order) {
     /**
      * use
      * order/order/ExportMaster
-     * 
+     *
      * 该用户的所有线下的客户的预定金额
      * @param  [type] $data 客户code拼接字符串
      * @return [type]       [description]
@@ -917,7 +921,7 @@ foreach ($queryAll as $key => $order) {
     /**
      * use
      * backend/morder/Discount
-     * 
+     *
      * 获取所有客户此大类的折扣信息
      * @param  [type] $type_id 大分类id
      * @return [type]          [description]
@@ -932,7 +936,7 @@ foreach ($queryAll as $key => $order) {
             ->leftJoin('meet_customer AS c', 'c.customer_id=o.customer_id')
             ->where(['o.disabled' => 'false'])
             ->all();
-        
+
         foreach($result as $val){
             $val['amount'] = $this->getThisCustomerCatBigBroughtInfo($type_id,$val['order_id']);
             $val['final_amount'] = $val['amount'] * $val['discount'] /100;
@@ -1040,7 +1044,7 @@ foreach ($queryAll as $key => $order) {
             $arr['order_id'] = $val['order_id'];
             $arr['size_no'] = $sizeQuery[$productQuery[$val['product_id']]['size_id']]['size_no'];
             try {
-                
+
                 $arr['code'] = $customerQuery[$val['customer_id']]['code'];
                 $arr['name'] = $customerQuery[$val['customer_id']]['name'];
             } catch (\Exception $e) {
@@ -1057,7 +1061,7 @@ foreach ($queryAll as $key => $order) {
      * use
      * forder/actionGetAllPrice
      * api/default/OrderProduct
-     * 
+     *
      * 前台添加商品
      */
     public function addAjax($product, $purchase_id, $customer_id, $customer_name)
@@ -1089,7 +1093,7 @@ foreach ($queryAll as $key => $order) {
             $orderModel->cost_item = 0;
             $orderModel->create_time = $create_time;
             $result = $orderModel->save();
-            
+
         }
         if (empty($result)) {
             return false;
@@ -1099,7 +1103,7 @@ foreach ($queryAll as $key => $order) {
         return $result;
         //更新订单缓存
         // $this->orderCache($purchase_id, $customer_id);
-    
+
     }
     /**
      * use
@@ -1169,7 +1173,7 @@ foreach ($queryAll as $key => $order) {
         //新增商品
         if (isset($insert_data_arr) && $insert_data_arr){
             $keys = ['order_id', 'product_id', 'product_sn', 'style_sn', 'model_sn', 'name', 'price', 'amount', 'nums'];
-        
+
             $result = Yii::$app->db
             ->createCommand()
             ->batchInsert(OrderItemsModel::tableName(),
@@ -1187,7 +1191,7 @@ foreach ($queryAll as $key => $order) {
      * use
      * forder/GetAllPrice
      * api/default/index
-     * 
+     *
      * 获取该用户的订货总量、金额、完成率、目标
      * @param $customer_id
      * @return mixed
@@ -1219,7 +1223,7 @@ foreach ($queryAll as $key => $order) {
      * use
      * forder/Bydownuser
      *
-     * 
+     *
      * 获取下线订单ID
      *
      * @param $customer_id
@@ -1264,7 +1268,7 @@ foreach ($queryAll as $key => $order) {
     {
         $where = 'purchase_id = ' .$purchase_id . ' AND customer_id = ' .$customer_id;
         $result = self::updateAll(['status' => 'confirm'], $where);
-        
+
         //更新订单缓存
         // $this->orderCache($purchase_id, $customer_id);
 
@@ -1381,7 +1385,7 @@ foreach ($queryAll as $key => $order) {
     /**
      * use
      * backend/morder/differ
-     * 
+     *
      * 查找这个订单不同的商品价格
      *
      * @param $order_id
@@ -1439,4 +1443,23 @@ foreach ($queryAll as $key => $order) {
             ->all();
         }
     }
+
+    /**
+    * use
+    * backend/morder/statistics
+    *
+    */
+    public function orderProductStyleSn($order_id)
+    {
+
+        if (empty($order_id)) {
+            return array();
+        }
+        $result = (new Query)->select(['style_sn'])
+            ->from('meet_order_items')
+            ->where(['order_id' => $order_id])
+            ->all();
+        return $result;
+    }
+
 }
