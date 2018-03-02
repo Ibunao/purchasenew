@@ -61,6 +61,7 @@ class DefaultController extends FBaseController
      */
     public function actionIndex()
     {
+
     	$request = Yii::$app->request;
     	//页码
     	$page = $request->get('page', 1);

@@ -98,7 +98,7 @@ class PublicModel extends Model
                 ->where(['disabled' => 'false'])
                 ->andWhere(['is_down' => '0']);
             if ($purchase_id == Yii::$app->params['purchaseAB']) {
-                $query->andWhere(['or', 'purchase_id', [1,2]]);
+                $query->andWhere(['in', 'purchase_id', [1,2]]);
             }else{
                 $query->andWhere(['purchase_id' => $purchase_id]);
             }

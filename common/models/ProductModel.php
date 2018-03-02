@@ -642,6 +642,7 @@ class ProductModel extends \yii\db\ActiveRecord
 
     /**
      *  use
+     *  this/getProductIsDown
      *  this/getThisProductIsDown
      *  this->listModelCache
      *  this->orderSeasonTable
@@ -656,7 +657,7 @@ class ProductModel extends \yii\db\ActiveRecord
         if (empty($list)) {
             $query = self::find();
             if ($purchaseId == Yii::$app->params['purchaseAB']) {
-                $query->where(['in', 'purchase_id' => $purchaseId]);
+                $query->where(['in', 'purchase_id', [1, 2]]);
             }else{
                 $query->where(['purchase_id' => $purchaseId]);
             }
@@ -1205,7 +1206,7 @@ class ProductModel extends \yii\db\ActiveRecord
             if (!empty($serial)) {
                 //流水号
                 $query = self::find()->select(['style_sn'])
-                ->where(['serial_num', $serial])
+                ->where(['serial_num' => $serial])
                 ->andWhere(['disabled' => 'false'])
                 ->andWhere(['is_down' => 0]);
                 if ($params['purchase_id'] == Yii::$app->params['purchaseAB']) {
@@ -1400,7 +1401,7 @@ class ProductModel extends \yii\db\ActiveRecord
         if (empty($items)) {
             $query = self::find();
             if ($purchaseId == Yii::$app->params['purchaseAB']) {
-                $query->where(['or', 'purchase_id', [1,2]]);
+                $query->where(['in', 'purchase_id', [1,2]]);
             }else{
                 $query->where(['purchase_id' => $purchaseId]);
             }
@@ -1590,7 +1591,7 @@ class ProductModel extends \yii\db\ActiveRecord
             $purchaseId = Yii::$app->session['purchase_id'];
             $query = self::find();
             if ($purchaseId == Yii::$app->params['purchaseAB']) {
-                $query->where(['in', 'purchase_id' => $purchaseId]);
+                $query->where(['in', 'purchase_id', [1, 2]]);
             }else{
                 $query->where(['purchase_id' => $purchaseId]);
             }

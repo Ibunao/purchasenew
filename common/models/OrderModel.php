@@ -300,7 +300,7 @@ class OrderModel extends \yii\db\ActiveRecord
 
     /**
      * use
-     * FBaseController
+     * frontend/FBaseController/orderTotal
      * this->addAjax
      *
      * 获取用户的订单详情
@@ -349,7 +349,7 @@ class OrderModel extends \yii\db\ActiveRecord
     {
         //查询生效的订单
         $model['order_row'] = self::find()
-            ->where(['purchase_id' => $purchaseId])//可以不添加，因为一个用户就对应了订货会类型
+            // ->where(['purchase_id' => $purchaseId])//可以不添加，因为一个用户就对应了订货会类型
             ->andWhere(['customer_id' => $customerId])
             ->andWhere(['disabled' => 'false'])
             ->asArray()
@@ -382,6 +382,8 @@ class OrderModel extends \yii\db\ActiveRecord
     }
     /**
      * 产品是否下架
+     * this->orderCache
+     * 
      * @return [type] [description]
      */
     public function getProductIsDown()
@@ -421,7 +423,7 @@ class OrderModel extends \yii\db\ActiveRecord
             $orderBy = 'o.cost_item';
         }
 
-        //订货会筛选,3为两个订货会都有的产品
+        //订货会筛选,3为两个订货会都有的客户
         if (!empty($params['purchase'])) {
             $query->andWhere(['in', 'c.purchase_id', [$params['purchase'], 3]]);
         }

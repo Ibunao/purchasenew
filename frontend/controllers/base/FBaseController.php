@@ -17,13 +17,13 @@ class FBaseController extends Controller
     public $enableCsrfValidation = false;
 
 
-    public $totalNum;//订单总数量
-    public $amount;//订单总价格
-    public $orderState;//订单状态
+    public $totalNum;// 订单总数量
+    public $amount;// 订单总价格
+    public $orderState;// 订单状态
 
-    public $customerId;//用户id
-    public $username;//用户名
-    public $purchaseId;//订购会id
+    public $customerId;// 用户id
+    public $username;// 用户名
+    public $purchaseId;// 订购会id
 	public function init()
 	{
 		parent::init();
@@ -47,6 +47,7 @@ class FBaseController extends Controller
         $orderModel = new OrderModel;
         $items = $orderModel->orderItems($this->purchaseId, $this->customerId);
         $this->totalNum = isset($items['order_row']['total_num'])?$items['order_row']['total_num']:0;
+        // 订货的总数金额
         if (isset($items['order_row']['order_id'])) {
             $this->amount = (new Query)->from('meet_order_items')
                 ->where(['order_id' => $items['order_row']['order_id']])
@@ -107,7 +108,7 @@ class FBaseController extends Controller
      * @return string
      */
 
-    function globalSubstr($String,$CutNum,$Style='',$encoding='utf-8'){
+    function globalSubstr($String, $CutNum, $Style='', $encoding='utf-8'){
         if(!function_exists('mb_substr')) {
             die('must support php_mb_substr');
         }
