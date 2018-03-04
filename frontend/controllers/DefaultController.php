@@ -85,7 +85,7 @@ class DefaultController extends FBaseController
     	    if (isset($cat_arr[0])) $b_id = $cat_arr[0];
             //小分类
     	    if (isset($cat_arr[1])) $c_id = $cat_arr[1];
-
+            // 如果设置里小类
     	    if ($c_id) {
     	        $conArr[] = 's_id_' . $b_id;
     	        $conArr[] = 'c_id_' . $c_id;
@@ -159,6 +159,7 @@ class DefaultController extends FBaseController
         $purchaseId = $this->purchaseId;
         $customerId = $this->customerId;
         $order = $productModel->getThisOrderedInfo($purchaseId, $customerId, $model_sn);
+        // var_dump($purchaseId, $customerId, $model_sn,$order);exit;
         $total = 0;
         if (isset($order) && $order) {
             foreach ($order as $v) {

@@ -1,14 +1,14 @@
 <?php
 
-namespace frontend\modules\api\controllers;
+namespace api\controllers;
 
 use Yii;
 use yii\db\Query;
-use frontend\models\CustomerModel;
-use frontend\models\ProductModel;
-use frontend\models\PublicModel;
-use frontend\models\OrderModel;
-use frontend\modules\api\controllers\base\ApiController;
+use common\models\CustomerModel;
+use common\models\ProductModel;
+use common\models\PublicModel;
+use common\models\OrderModel;
+use api\controllers\base\ApiController;
 
 /**
  * api接口

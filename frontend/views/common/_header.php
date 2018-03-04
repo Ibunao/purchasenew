@@ -8,7 +8,7 @@
     if ($purchaseId == 1) {
         echo Yii::$app->params['purchase_oct'];
     }elseif ($purchaseId == 2) {
-        echo $app->params['purchase_uki'];
+        echo Yii::$app->params['purchase_uki'];
     }else{
         echo Yii::$app->params['purchase_all'];
     }

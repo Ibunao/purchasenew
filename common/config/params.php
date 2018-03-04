@@ -34,6 +34,10 @@ return [
     'season_two_name' => '夏', //季节2名称 【'夏' || '冬'】
     'season_title' => '春夏',  //季节1、2 名称 【'春夏' || '秋冬'】
     
+    //图片地址
+    'img_url' => 'http://128.128.1.79', //正式环境请 取消注释
+    //'img_url' => 'http://fair.st.octmami.com',//给app审核 正式上线请注释
+    
     //大区
     'customer_area' => array(
         '1' => '京苏赣鄂渝',

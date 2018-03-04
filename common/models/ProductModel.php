@@ -624,7 +624,7 @@ class ProductModel extends \yii\db\ActiveRecord
     }
     /**
      * use
-     * default/index
+     * frondent/default/index
      * api/login/login
      *
      * 前台查询用户订单状态
@@ -1170,7 +1170,7 @@ class ProductModel extends \yii\db\ActiveRecord
 
     /**
      * use
-     * default/index
+     * frondent/default/index
      *
      * 前台商品搜索
      * @param $conArr  搜索条件
@@ -1489,11 +1489,11 @@ class ProductModel extends \yii\db\ActiveRecord
             ->from('meet_order')
             ->where(['customer_id' => $customer])
             ->andWhere(['disabled' => 'false']);
-        if ($purchase_id == 3) {
-            $query->andWhere(['in', 'purchase_id', [1,2]]);
-        }else{
+        // if ($purchase_id == 3) {
+        //     $query->andWhere(['in', 'purchase_id', [1,2]]);
+        // }else{
             $query->andWhere(['purchase_id' => $purchase_id]);
-        }
+        // }
         $orderId = $query->one();
         if(empty($orderId)) return [];
         //获取订单的详细信息
@@ -1622,7 +1622,7 @@ class ProductModel extends \yii\db\ActiveRecord
             $purchaseId = Yii::$app->session['purchase_id'];
             $query = self::find();
             if ($purchaseId == Yii::$app->params['purchaseAB']) {
-                $query->where(['in', 'purchase_id' => $purchaseId]);
+                $query->where(['in', 'purchase_id', [1, 2]]);
             }else{
                 $query->where(['purchase_id' => $purchaseId]);
             }
@@ -1875,11 +1875,11 @@ class ProductModel extends \yii\db\ActiveRecord
 
         $product_list = Yii::$app->cache->get("app-get-size-color-product_sn-" . $model_sn);
         if (!$product_list) {
-            $query = slef::find()
+            $query = self::find()
                 ->select(['size_id', 'color_id', 'product_sn', 'product_id'])
                 ->where(['model_sn' => $model_sn]);
             if ($purchase_id == Yii::$app->params['purchaseAB']) {
-                $query->andWhere(['in', 'purchase_id' => $purchase_id]);
+                $query->andWhere(['in', 'purchase_id' , [1, 2]]);
             }else{
                 $query->andWhere(['purchase_id' => $purchase_id]);
             }
@@ -1897,7 +1897,7 @@ class ProductModel extends \yii\db\ActiveRecord
             $query = self::find()->select(['size_id'])
                 ->where(['model_sn' => $model_sn]);
             if ($purchase_id == Yii::$app->params['purchaseAB']) {
-                $query->andWhere(['in', 'purchase_id' => $purchase_id]);
+                $query->andWhere(['in', 'purchase_id', [1, 2]]);
             }else{
                 $query->andWhere(['purchase_id' => $purchase_id]);
             }
@@ -1925,7 +1925,7 @@ class ProductModel extends \yii\db\ActiveRecord
             $query = self::find()->select(['color_id'])
                 ->where(['model_sn' => $model_sn]);
             if ($purchase_id == Yii::$app->params['purchaseAB']) {
-                $query->andWhere(['in', 'purchase_id' => $purchase_id]);
+                $query->andWhere(['in', 'purchase_id', [1, 2]]);
             }else{
                 $query->andWhere(['purchase_id' => $purchase_id]);
             }

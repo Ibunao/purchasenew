@@ -349,7 +349,7 @@ class OrderModel extends \yii\db\ActiveRecord
     {
         //查询生效的订单
         $model['order_row'] = self::find()
-            // ->where(['purchase_id' => $purchaseId])//可以不添加，因为一个用户就对应了订货会类型
+            ->where(['purchase_id' => $purchaseId])//可以不添加，因为一个用户就对应了订货会类型
             ->andWhere(['customer_id' => $customerId])
             ->andWhere(['disabled' => 'false'])
             ->asArray()
@@ -357,6 +357,7 @@ class OrderModel extends \yii\db\ActiveRecord
         if (empty($model['order_row'])) {
             return ['order_row' => [], 'item_list' => []];
         }
+        // var_dump($model['order_row']['order_id']);exit;
         $itemList = (new Query)->from('meet_order_items')
             ->where(['order_id' => $model['order_row']['order_id']])
             ->andWhere(['disabled' => 'false'])
@@ -370,6 +371,7 @@ class OrderModel extends \yii\db\ActiveRecord
             return ['order_row' => $model['order_row'], 'item_list' => []];
         }
         $isDown = $this->getProductIsDown();
+        // var_dump($isDown);exit;
         foreach ($itemList as $item) {
             $model['item_list'][$item['product_id']] = $item;
             $model['item_list'][$item['product_id']]['is_down'] = $isDown[$item['product_id']];
