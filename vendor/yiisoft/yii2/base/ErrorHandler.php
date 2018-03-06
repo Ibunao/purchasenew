@@ -105,9 +105,9 @@ abstract class ErrorHandler extends Component
 
         try {
             $this->logException($exception);
-            if ($this->discardExistingOutput) {
-                $this->clearOutput();
-            }
+            // if ($this->discardExistingOutput) {
+            //     $this->clearOutput();
+            // }
             $this->renderException($exception);
             if (!YII_ENV_TEST) {
                 \Yii::getLogger()->flush(true);

@@ -10,6 +10,7 @@ use common\models\CatBigModel;
 use common\models\CatMiddleModel;
 use common\models\PurchaseModel;
 use common\models\OrderModel;
+use common\models\SchemeModel;
 use yii\data\Pagination;
 
 /**
@@ -1095,7 +1096,7 @@ class ProductModel extends \yii\db\ActiveRecord
      * @param string $costPrice
      * @return string
      */
-    private function _transCostPriceToLevel($costPrice = '')
+    public function _transCostPriceToLevel($costPrice = '')
     {
         $costPrice = (int)$costPrice;
         if ($costPrice <= 99) {

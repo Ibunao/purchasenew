@@ -335,7 +335,7 @@ class ManageController extends BaseController
             $name = $result[$i][1];
             $password = md5(md5(substr($result[$i][2], -4)));
             $mobile = $result[$i][2];
-            $purchase_id = $result[$i][3] == Yii::$app->params['purchase_oct'] ? 1 : 2;
+            $purchase_id = $result[$i][3] == Yii::$app->params['purchase_oct'] ? 1 : $result[$i][3] == Yii::$app->params['purchase_uki'] ? 2 : 3;
             $department = $result[$i][4];
             $type = $result[$i][5];
             $area = $result[$i][6];

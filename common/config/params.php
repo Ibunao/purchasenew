@@ -12,9 +12,10 @@ return [
         '直营' => '直营',
         '客户' => '客户',
     ),
-    'purchase_oct' => '2017OCT春夏订货会', //OCT订货会名称
-    'purchase_uki' => '2017Weekend春夏订货会', //Weekend订货会名称
-    'purchase_all' => '2018春夏订货会', //AB订货会名称
+    // 每次订货会要改
+    'purchase_oct' => '2018OCT春夏订货会A', //OCT订货会名称
+    'purchase_uki' => '2018OCT春夏订货会B', //Weekend订货会名称
+    'purchase_all' => '2018OCT春夏订货会', //AB订货会名称
 
     //需要清空缓存的地址
     'flush_cache_url' => array(

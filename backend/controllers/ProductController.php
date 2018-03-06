@@ -8,6 +8,15 @@ use common\models\CustomerModel;
 use common\models\ProductModel;
 use common\models\PublicModel;
 use common\models\ColorModel;
+use common\models\SchemeModel;
+use common\models\BrandModel;
+use common\models\CatBigModel;
+use common\models\CatMiddleModel;
+use common\models\CatSmallModel;
+use common\models\SeasonModel;
+use common\models\WaveModel;
+use common\models\LevelModel;
+use common\models\TypeModel;
 use PHPExcel;
 use PHPExcel_IOFactory;
 use common\helpers\IoXls;
@@ -480,7 +489,6 @@ class ProductController extends BaseController
      */
     public function actionImportFiles()
     {
-
         $postFile = isset($_FILES["file"]) ? $_FILES['file'] : exit("请上传文件");
 
         $postFileType = pathinfo($postFile['name'], PATHINFO_EXTENSION);
@@ -513,7 +521,7 @@ class ProductController extends BaseController
             $objPHPExcel = new PHPExcel();
             $objPHPExcel = PHPExcel_IOFactory::load($newFile);
             $result = $objPHPExcel->getActiveSheet()->toArray();
-
+// var_dump($result);exit;
             $len_result = count($result);
 
             if ($len_result <= 1) {
@@ -536,7 +544,7 @@ $sizeArr = (new PublicModel)->sizeList();
 $catBigArr = (new CatBigModel)->getList('cat_name');
 $catMidArr = (new CatMiddleModel)->getList('cat_name');
 $catSmallArr = (new CatSmallModel)->getList('cat_name');
-$seasonArr = (new SeasonModel)->getList('scheme_name');
+$seasonArr = (new SeasonModel)->getList('season_name');
 $waveArr = (new WaveModel)->getList('wave_name');
 $levelArr = (new LevelModel)->getList('level_name');
 $schemeArr = (new SchemeModel)->getList('scheme_name');
@@ -707,17 +715,19 @@ $groupSize = (new PublicModel)->getGroupSize();
 
                 if (empty($warning)) {
                     // 检查款号或流水号是否存在
-                    $result = $productModel->find()
+                    $check = $productModel->find()
                         ->where(['model_sn' => $model_sn])
                         ->orWhere(['serial_num' => $result[$i][4]])
                         ->count();
-                    if (empty($result)) {
+                    if (empty($check)) {
                         $warning .= "<span><b>此产品流水号/款号已存在,请到商品管理添加修改</b></span>";
                     }
                 }
 
                 if (!empty($warning)) {
-                    $res_str .= "<p>第" . ($i + 1) . "行 &nbsp;&nbsp;&nbsp;&nbsp;".$result[$i][3] .'&nbsp;&nbsp;&nbsp;&nbsp;'. $warning . "</p>";
+                    $row = $i + 1;
+                    $str = "<p>第" . $row . "行 &nbsp;&nbsp;&nbsp;&nbsp;".$result[$i][3] .'&nbsp;&nbsp;&nbsp;&nbsp;'. $warning . "</p>";
+                    $res_str .= $str;
                 }
             }
 
