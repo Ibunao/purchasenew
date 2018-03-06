@@ -391,7 +391,7 @@ class OrderModel extends \yii\db\ActiveRecord
     public function getProductIsDown()
     {
         $purcheaseId = Yii::$app->session->get('purchase_id');
-        $result = Yii::$app->cache->get("product_list_is_down_". $purcheaseId);
+        $result = false;Yii::$app->cache->get("product_list_is_down_". $purcheaseId);
         if(empty($result)){
             $product = new ProductModel();
             $res = $product->productListCache();

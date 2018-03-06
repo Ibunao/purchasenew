@@ -37,5 +37,9 @@ phpunit.phar
 # runtime
 runtime/
 common/config/db-local.php
+backend/web/avatars/
+backend/web/css/
 backend/web/upload/
 backend/web/images/
+
+*.csv

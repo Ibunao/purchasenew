@@ -719,7 +719,7 @@ $groupSize = (new PublicModel)->getGroupSize();
                         ->where(['model_sn' => $model_sn])
                         ->orWhere(['serial_num' => $result[$i][4]])
                         ->count();
-                    if (empty($check)) {
+                    if (!empty($check)) {
                         $warning .= "<span><b>此产品流水号/款号已存在,请到商品管理添加修改</b></span>";
                     }
                 }
@@ -856,8 +856,7 @@ $groupSize = (new PublicModel)->getGroupSize();
         $result = $objPHPExcel->getActiveSheet()->toArray();
         $len_result = count($result);
         $data_values = [];
-        $keys = ['purchase_id', 'product_sn', 'style_sn', 'model_sn', 'serial_num', 'name', 'img_url', 'color_id', 'size_id', 'brand_id', 'cat_b', '
-                cat_m', 'cat_s', 'season_id', 'level_id', 'wave_id', 'scheme_id', 'cost_price', 'price_level_id', 'memo', 'type_id'];
+        $keys = ['purchase_id', 'product_sn', 'style_sn', 'model_sn', 'serial_num', 'name', 'img_url', 'color_id', 'size_id', 'brand_id', 'cat_b', 'cat_m', 'cat_s', 'season_id', 'level_id', 'wave_id', 'scheme_id', 'cost_price', 'price_level_id', 'memo', 'type_id'];
 
 $brandArr = (new BrandModel)->transBrandName();
 $colorArr = (new ColorModel)->transColorNo();
@@ -865,7 +864,7 @@ $sizeArr = (new PublicModel)->sizeList();
 $catBigArr = (new CatBigModel)->getList('cat_name');
 $catMidArr = (new CatMiddleModel)->getList('cat_name');
 $catSmallArr = (new CatSmallModel)->getList('cat_name');
-$seasonArr = (new SeasonModel)->getList('scheme_name');
+$seasonArr = (new SeasonModel)->getList('season_name');
 $waveArr = (new WaveModel)->getList('wave_name');
 $levelArr = (new LevelModel)->getList('level_name');
 $schemeArr = (new SchemeModel)->getList('scheme_name');
@@ -893,7 +892,7 @@ $groupSize = (new PublicModel)->getGroupSize();
             if ($i > 1 && $model_sn != $result[$i - 1][0]) {
                 $num = 1;
             }
-            $style_sn = $model_sn . sprintf('%04d', $export->color[$result[$i][5]]['color_no']);
+            $style_sn = $model_sn . sprintf('%04d', $colorArr[$result[$i][5]]['color_no']);
             $product_sn = $style_sn . sprintf('%03d', $num);
             $img_url = Yii::$app->params['imagePath'] . $model_sn . '_' . $colorArr[$result[$i][5]]['color_no'] . '.jpg';
             $data_values[] = [$purchase_id, $product_sn, $style_sn, $model_sn, $serial_num, $name, $img_url,
@@ -909,9 +908,10 @@ $result = Yii::$app->db
     $data_values
     )
 ->execute();
-
+    
         //添加日志
-
+        
+        return $result;
     }
 
     /**
