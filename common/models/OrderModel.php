@@ -1262,6 +1262,7 @@ foreach ($queryAll as $key => $order) {
     /**
      * use
      * forder/submit
+     * api/default/SubmitOrder
      * 订单提交
      *
      * @param $purchase_id

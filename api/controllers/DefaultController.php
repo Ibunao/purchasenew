@@ -134,7 +134,7 @@ class DefaultController extends ApiController
             $item['memo'] = $v['memo'];
             $item['type'] = $this->type[$v['type_id']];
             $model_sn = $item['model_sn'];
-            $item['order_num'] = $productModel->getThisModelOrdered($customer_id, $model_sn);
+            $item['order_num'] = $productModel->getThisModelOrdered($customer_id, $model_sn)?:null;
             $item['product_list'] = $productModel->getProductListsInfo($model_sn, $purchase_id, $customer_id);
             $arr[] = $item;
         }
@@ -171,6 +171,8 @@ class DefaultController extends ApiController
     }
 
     /**
+     * use
+     * this->index
      * 获取该款号的所有尺寸列表
      * @param $model_sn
      * @return array
@@ -183,6 +185,7 @@ class DefaultController extends ApiController
         		->from('meet_product as p')
         		->leftJoin('meet_size as s', 's.size_id=p.size_id')
         		->where(['p.model_sn' => $model_sn])
+                ->groupBy('s.size_name')
         		->orderBy(['s.size_id' => SORT_ASC])
         		->all();
 
@@ -315,7 +318,8 @@ class DefaultController extends ApiController
 
         $orderModel = new OrderModel();
         $res = $orderModel->orderSubmit($purchase_id, $customer_id);
-        return ['code' => '200', 'msg' => '提交订单成功', 'status'=>$res];
+        // 服气
+        return ['code' => '200', 'msg' => '提交订单成功', 'status'=> 'confirm'];
     }
 
     /**

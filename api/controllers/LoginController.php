@@ -27,7 +27,7 @@ class LoginController extends ApiController
             $res->login = $nowTime;
             $res->save();
             $result['customer_id'] = $res->customer_id;
-            $result['purchase_id'] = $res->purchase_id;
+            $result['purchase_id'] = (string)$res->purchase_id;
             $result['name'] = $res->name;
             //检查该用户订单状态
             $orderModel = new ProductModel();

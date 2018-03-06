@@ -6,7 +6,7 @@ return [
      * 如果is_online = yes 并且 is_change_url = no, 此时接口地址为 http://128.128.1.75/api.php?r=api%@
      * 如果is_online = yes 并且 is_change_url = yes,则此时读取【change_url】的地址
      */
-    'is_online' => 'yes',
+    'is_online' => 'no',
     /*
      * 如果接口地址有变化，
      * 请更改 [is_change_url] 为 yes

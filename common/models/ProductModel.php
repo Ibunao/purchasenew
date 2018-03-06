@@ -470,6 +470,8 @@ class ProductModel extends \yii\db\ActiveRecord
                 $sql_value)
             ->execute();
         if ($result) {
+            // 添加日志
+            Yii::info(Yii::$app->request->getPathInfo().$param['modelSn'], Yii::$app->session->get('backend_login_in')['name']);
             return true;
         }
         return ['code' => 400, 'msg' => "添加失败"];
@@ -522,7 +524,7 @@ class ProductModel extends \yii\db\ActiveRecord
                     }
 
                     //添加日志
-
+                    Yii::info(Yii::$app->request->getPathInfo(), Yii::$app->session->get('backend_login_in')['name']);
                 }
             }
         }
@@ -609,15 +611,14 @@ class ProductModel extends \yii\db\ActiveRecord
         $log2 = serialize($updateBaseInfo);
 
 
-        //添加日志
-
-
         $updateCon = "serial_num='{$serialNum}'";//" AND purchase_id = {$purchaseId}";
         $result1 = self::updateAll($updateParam, $updateCon);
         $updateCon = "model_sn='{$model_sn}'";//" AND purchase_id = {$purchaseId}";
         $result2 = self::updateAll($updateBaseInfo, $updateCon);
 
         if ($result1 && $result2) {
+            //添加日志
+            Yii::info(Yii::$app->request->getPathInfo().$param['modelSn'], Yii::$app->session->get('backend_login_in')['name']);
             return true;
         }
         return false;
@@ -1080,6 +1081,8 @@ class ProductModel extends \yii\db\ActiveRecord
                 $sql_value)
             ->execute();
         if ($result) {
+            // 添加日志 
+            Yii::info(Yii::$app->request->getPathInfo().$param['modelSn'], Yii::$app->session->get('backend_login_in')['name']);
             return true;
         }
         return ['code' => 400, 'msg' => "添加失败"];
@@ -1171,7 +1174,8 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * frondent/default/index
-     *
+     * api/default/index
+     * 
      * 前台商品搜索
      * @param $conArr  搜索条件
      * @param $serial   搜索型号
@@ -1830,7 +1834,7 @@ class ProductModel extends \yii\db\ActiveRecord
     /**
      * use
      * api/default/index
-     *
+     * api/default/order-this-product
      * 获取当前款号总数
      * @param  [type] $customer_id 客户id
      * @param  [type] $model_sn    款号
@@ -1995,10 +1999,10 @@ class ProductModel extends \yii\db\ActiveRecord
         if (!$product_list) {
             $query = self::find()->select(['size_id', 'color_id', 'product_sn', 'product_id'])
                 ->where(['model_sn' => $model_sn]);
-            if ($params['purchase_id'] == Yii::$app->params['purchaseAB']) {
+            if ($purchase_id == Yii::$app->params['purchaseAB']) {
                 $query->andWhere(['in', 'purchase_id', [1,2]]);
             }else{
-                $query->andWhere(['purchase_id' => $params['purchase_id']]);
+                $query->andWhere(['purchase_id' => $purchase_id]);
             }
             $res = $query->andWhere(['disabled' => 'false'])
                 ->asArray()
@@ -2107,9 +2111,9 @@ class ProductModel extends \yii\db\ActiveRecord
             return [];
         }
 
-        $data['product_list'] = $this->getProductListsInfo($result['model_sn'], $purchase_id, $customer_id);
-        $data['order_num'] = $this->getThisModelOrdered($customer_id, $result['model_sn']);
-        $have = $this->getThisModelOrdered($customer_id, $result['model_sn'], $serial_num);
+        $data['product_list'] = $this->getProductListsInfo($data['model_sn'], $purchase_id, $customer_id);
+        $data['order_num'] = $this->getThisModelOrdered($customer_id, $data['model_sn'])?:null;
+        $have = $this->getThisModelOrdered($customer_id, $data['model_sn'], $serial_num);
         if ($have >= 1) {
             $data['is_order'] = 1;
         } else {
@@ -2128,9 +2132,9 @@ class ProductModel extends \yii\db\ActiveRecord
     public function orderSeasonTable($orderList)
     {
         //配置第一个季节ID
-        $season_spring_one = Yii::app()->params['season_one'];
+        $season_spring_one = Yii::$app->params['season_one'];
         //配置第二个季节ID
-        $season_spring_two = Yii::app()->params['season_two'];
+        $season_spring_two = Yii::$app->params['season_two'];
 
         $listProducts = $this->productListCache();
         $all_list = array();
@@ -2280,7 +2284,7 @@ class ProductModel extends \yii\db\ActiveRecord
      */
     public function orderPriceTable($orderList)
     {
-        $listProducts = $self->productListCache();
+        $listProducts = $this->productListCache();
         foreach ($listProducts as $list) {
             $all_list[$list['product_id']] = $list;
         }

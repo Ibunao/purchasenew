@@ -51,7 +51,6 @@ class DefaultController extends FBaseController
             8 => '1.5k-2k',
             9 => '2k以上',
         );
-
     }
     /**
      *
