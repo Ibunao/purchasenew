@@ -1,4 +1,6 @@
 <?php
+// error_reporting(E_ALL);
+// ini_set('display_errors', '1');
 // ini_set('open_basedir', '/');
 defined('YII_DEBUG') or define('YII_DEBUG', true);
 defined('YII_ENV') or define('YII_ENV', 'dev');
@@ -20,7 +22,7 @@ if (!YII_ENV_TEST) {
     $config['bootstrap'][] = 'debug';
     $config['modules']['debug'] = [
         'class' => 'yii\debug\Module',
-        'allowedIPs' => ['128.128.1.76', '127.0.0.1', '::1', '128.128.2.200']
+        'allowedIPs' => ['128.128.1.76', '127.0.0.1', '::1', '128.128.2.160']
     ];
 
     $config['bootstrap'][] = 'gii';

@@ -26,6 +26,12 @@ $this->params['breadcrumbs'] = [
                         <th tabindex="0" style="width: 109px;">订货指标</th>
                         <th tabindex="0" style="width: 109px;">已订货金额</th>
                         <th tabindex="0" style="width: 100px;">达成率</th>
+                        <th tabindex="0" style="width: 100px;">OCT占比</th>
+                        <th tabindex="0" style="width: 100px;">Weekend占比</th>
+                        <th tabindex="0" style="width: 100px;">UKI占比</th>
+                        <th tabindex="0" style="width: 100px;">UKI线上 占比</th>
+                        <th tabindex="0" style="width: 100px;">外采用品占比</th>
+                        <th tabindex="0" style="width: 100px;">OCT线上 占比</th>
                         <th tabindex="0" style="width: 180px;">未完成金额</th>
                         <th tabindex="0" style="width: 180px;">下线已定货金额</th>
                         <th tabindex="0" style="width: 300px;">审核人/审核时间</th>
@@ -44,10 +50,15 @@ $this->params['breadcrumbs'] = [
                             <td><?= ($v['target'] == 0) ? '' : number_format($v['target'], 2); ?></td>
                             <td><?= number_format($v['cost_item'], 2); ?></td>
                             <td><?= ($v['target'] == 0) ? '' : number_format($v['cost_item'] / $v['target'] * 100, 2) . '%'; ?> </td>
-                            <td><?= ($v['target'] - $v['cost_item'] <= 0) ? 0.00 : number_format($v['target'] - $v['cost_item'], 2); ?> </td>
-                            <td><?= number_format($v['xxydhje'], 2); ?></td>
+                            <td><?= isset($v['brands']['OCT'])?$v['brands']['OCT']:0; ?></td>
+                            <td><?= isset($v['brands']['Weekend'])?$v['brands']['Weekend']:0; ?></td>
+                            <td><?= isset($v['brands']['UKI'])?$v['brands']['UKI']:0; ?></td>
+                            <td><?= isset($v['brands']['UKI 线上'])?$v['brands']['UKI 线上']:0; ?></td>
+                            <td><?= isset($v['brands']['外采用品'])?$v['brands']['外采用品']:0; ?></td>
+                            <td><?= isset($v['brands']['OCT 线上'])?$v['brands']['OCT 线上']:0; ?></td>
                             <td><?= $v['check_user'] . '/' . $v['check_time']; ?> </td>
 
+                            <td><?= ($v['target'] - $v['cost_item'] <= 0) ? 0.00 : number_format($v['target'] - $v['cost_item'], 2); ?> </td>
                             <td>
                                 <span class="btn-group col-sm-5">
                                 <input type="button" class="btn btn-sm btn-info "

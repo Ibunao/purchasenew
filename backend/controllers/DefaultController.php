@@ -58,4 +58,12 @@ class DefaultController extends BaseController
 
         return $this->render('index', ['res'=>$result]);
     }
+    /**
+     * 删除缓存
+     */
+    public function actionCache()
+    {
+        Yii::$app->cache->flush();
+        echo "清除缓存";
+    }
 }

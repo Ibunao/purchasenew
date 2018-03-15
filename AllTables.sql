@@ -1237,12 +1237,12 @@ CREATE TABLE `meet_admin_users` (
 -- Records of meet_admin_users
 -- ----------------------------
 INSERT INTO `meet_admin_users` VALUES ('1', '1', 'admin', '1416965007', null, null, null, '1', null, '323', 'false', null, '14e1b600b1fd579f47433b88e8d85291', null, '1');
-INSERT INTO `meet_admin_users` VALUES ('2', '1', 'sd01', '0', '彭红星', '', null, '1', null, '0', 'false', '', '4ac391edb99dac1ce1396dc184b8cfa2', '', '1');
-INSERT INTO `meet_admin_users` VALUES ('3', '1', 'sd02', '0', '刘成海', null, null, '1', null, '0', 'false', '', '992ff0f913b4ab64efd4e6769dad49a1', '', '1');
-INSERT INTO `meet_admin_users` VALUES ('4', '1', 'sd03', '0', '杨娟', null, null, '1', null, '0', 'false', '', '0e8f566c2d3c546147e831dd31d1864f', '', '1');
-INSERT INTO `meet_admin_users` VALUES ('5', '1', 'dy01', '0', '吴振芸', null, null, '1', null, '0', 'false', '', 'bd8015c804185b2af09eca50bce12b86', '', '1');
-INSERT INTO `meet_admin_users` VALUES ('6', '1', 'dy02', '0', '张雅琴', null, null, '1', null, '0', 'false', '', '2c8df27f170841c7b73bea83ec09d1c4', '', '1');
-INSERT INTO `meet_admin_users` VALUES ('8', '1', '查单', '0', null, null, null, '0', null, '0', 'false', '', '14e1b600b1fd579f47433b88e8d85291', '', '2');
+INSERT INTO `meet_admin_users` VALUES ('2', '1', 'sd01', '0', '彭红星', '', null, '1', null, '0', 'false', '', 'd8cbec4d46e7f421213bab17b89e8174', '', '1');
+INSERT INTO `meet_admin_users` VALUES ('3', '1', 'sd02', '0', '刘成海', null, null, '1', null, '0', 'false', '', 'd8cbec4d46e7f421213bab17b89e8174', '', '1');
+INSERT INTO `meet_admin_users` VALUES ('4', '1', 'sd03', '0', '杨娟', null, null, '1', null, '0', 'false', '', 'd8cbec4d46e7f421213bab17b89e8174', '', '1');
+INSERT INTO `meet_admin_users` VALUES ('5', '1', 'dy01', '0', '吴振芸', null, null, '1', null, '0', 'false', '', 'd8cbec4d46e7f421213bab17b89e8174', '', '1');
+INSERT INTO `meet_admin_users` VALUES ('6', '1', 'dy02', '0', '张雅琴', null, null, '1', null, '0', 'false', '', 'd8cbec4d46e7f421213bab17b89e8174', '', '1');
+INSERT INTO `meet_admin_users` VALUES ('8', '1', '查单', '0', null, null, null, '0', null, '0', 'false', '', 'd8cbec4d46e7f421213bab17b89e8174', '', '2');
 
 
 /*

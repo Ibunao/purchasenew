@@ -622,7 +622,7 @@ class ProductModel extends \yii\db\ActiveRecord
             Yii::info(Yii::$app->request->getPathInfo().$param['modelSn'], Yii::$app->session->get('backend_login_in')['name']);
             return true;
         }
-        return false;
+        return true;
     }
     /**
      * use
@@ -2113,7 +2113,7 @@ class ProductModel extends \yii\db\ActiveRecord
         }
 
         $data['product_list'] = $this->getProductListsInfo($data['model_sn'], $purchase_id, $customer_id);
-        $data['order_num'] = $this->getThisModelOrdered($customer_id, $data['model_sn'])?:null;
+        $data['order_num'] = $this->getThisModelOrdered($customer_id, $data['model_sn'])?:0;
         $have = $this->getThisModelOrdered($customer_id, $data['model_sn'], $serial_num);
         if ($have >= 1) {
             $data['is_order'] = 1;

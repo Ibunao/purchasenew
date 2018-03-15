@@ -27,8 +27,33 @@ use common\config\ParamsClass;
  */
 class ProductController extends BaseController
 {
+    /**
+     * 执行之后记录日志
+     * @param  [type] $action [description]
+     * @param  [type] $result [description]
+     * @return [type]         [description]
+     */
+    public function afterAction($action, $result)
+    {
+        parent::afterAction($action, $result);
+        $route = $action->id;
+        $ids = ['update', 'add', 'copy', 'change'];
+
+        // 记录日志
+        if (in_array($route, $ids)) {
+            Yii::$app->db->createCommand()->insert('meet_pchange_log', [
+                'change_id' => $route,
+                'change_name' => Yii::$app->session->get('backend_login_in')['name'],
+                'change_log' => json_encode(['get'=>$_GET, 'post'=>$_POST]),
+                'create_time' => time(),
+            ])->execute();
+        }
+        return $result;
+    }
 	public function actionIndex()
 	{
+        // $catSmallArr = (new CatSmallModel)->getList('cat_name');
+        // var_dump($catSmallArr,$catSmallArr['包鞋袜']);exit;
 		$request = Yii::$app->request;
 		$pageIndex = $request->get('page', 1);
 		$param = $request->get('param', []);
@@ -141,11 +166,13 @@ class ProductController extends BaseController
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '修改成功');
                 $this->redirect(['/product/index']);
+                return;
             } else {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '此款号出现多个货号，禁止修改');//提示错了
 
                 $this->redirect(['/product/update', 'serial_num' => $serialNum]);
+                return;
             }
         }
 
@@ -608,7 +635,7 @@ $groupSize = (new PublicModel)->getGroupSize();
                 // 小类
 
                 if (!isset($catSmallArr[$result[$i][9]]['small_id'])) {
-                    $warning .= "<span>小类<b>" . $result[$i][9] . "</b>错误</span>";
+                    $warning .= "<span>小类<b>" . $result[$i][9] ."</b>错误</span>";
                     $size--;
                 }
                 // 大小类匹配

@@ -1091,7 +1091,7 @@ font-size: 1.6rem;
 	width: 300px;
 	height: 300px;
 	margin-top: 270px;
-	margin-left: 50px;
+	margin-left: 180px;
 }
 .login_input {
 	margin: 0 2rem 2rem;
@@ -1114,7 +1114,7 @@ font-size: 1.6rem;
 .login_button {
 	height: 44px;
 	border-radius: 4px;
-	background: #d73d5b;
+	background: #1d4926;
 	text-align: center;
 	margin: 0 2rem;
 	padding: 0 5px;
@@ -1122,7 +1122,7 @@ font-size: 1.6rem;
 }
 .login_button input {
 	width: 100%;
-	background: #d73d5b;
+	background: #1d4926;
 	font-size: 1.8rem;
 	color: #fff;
 	padding: 0;

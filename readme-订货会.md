@@ -25,4 +25,8 @@ api		  app接口
 PublicModel::flushCacheAll()
 
 
-meet_order中的 `cost_item` 字段不再使用，而是用订单详情中的计算
+meet_order中的 `cost_item` 字段不再使用，而是用订单详情中的计算  
+
+待添加
+操作product添加日志  
+

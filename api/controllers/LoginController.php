@@ -38,7 +38,7 @@ class LoginController extends ApiController
             $result['change_url'] = Yii::$app->params['change_url'];
             $result['is_distribution'] = $res['parent_id'] == 1 ? 'yes' : 'no';
             $result['purchase_name'] = $res['purchase_id'] == 1 ?
-                Yii::$app->params['purchase_oct'] : $res['purchase_id'] == 2 ? Yii::$app->params['purchase_uki']: Yii::$app->params['purchase_all'];
+                Yii::$app->params['purchase_oct'] : ($res['purchase_id'] == 2 ? Yii::$app->params['purchase_uki']: Yii::$app->params['purchase_all']);
             $result['is_spring_summer'] = Yii::$app->params['season_title'] == '春夏' ? 'yes' : 'no';
             return ['code' => '200', 'data' => $result];
         } else {

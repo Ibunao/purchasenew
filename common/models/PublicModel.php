@@ -67,7 +67,7 @@ class PublicModel extends Model
     {
         $res = Yii::$app->params['flush_cache_url'];
         foreach ($res as $val) {
-            file_get_contents($val . '/user/cache');
+            file_get_contents($val . '/default/cache');
         }
         echo "清除所有的缓存";
     }

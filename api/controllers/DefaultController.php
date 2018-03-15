@@ -398,6 +398,14 @@ class DefaultController extends ApiController
         	return ['code' => 200, 'data' => $downUserInfo];
         }
     }
+    /**
+     * 删除缓存
+     */
+    public function actionCache()
+    {
+        Yii::$app->cache->flush();
+        echo "清除缓存";
+    }
 }
 
 

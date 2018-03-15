@@ -43,3 +43,4 @@ backend/web/upload/
 backend/web/images/
 
 *.csv
+api/web/images/

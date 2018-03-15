@@ -168,4 +168,12 @@ class DefaultController extends FBaseController
         // var_dump(array('list' => $list, 'total' => $total, 'order_items'=>$order));exit;
         return $this->renderPartial('detail', array('list' => $list, 'total' => $total, 'order_items'=>$order));
     }
+    /**
+     * 删除缓存
+     */
+    public function actionCache()
+    {
+        Yii::$app->cache->flush();
+        echo "清除缓存";
+    }
 }
