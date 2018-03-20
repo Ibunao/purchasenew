@@ -424,6 +424,8 @@ class OrderModel extends \yii\db\ActiveRecord
         }else{
             $orderBy = 'o.cost_item';
         }
+        // 订单详情总价格更新到订单表
+        $this->updateOrderCostItem();
 
         //订货会筛选,3为两个订货会都有的客户
         if (!empty($params['purchase'])) {
@@ -517,7 +519,7 @@ foreach ($queryAll as $key => $order) {
         }
         $query->orderBy([$orderBy => SORT_DESC]);
         $result = $query->select($select)->all();
-
+// var_dump($result);exit;
         $orderIds = [];
         //判断下订单的价格是够改动
         foreach ($result as $k => $item) {
@@ -532,29 +534,49 @@ foreach ($queryAll as $key => $order) {
             // 记录订单id
             $orderIds[] = $item['order_id'];
         }
-        $bands = (new Query)->select(['SUM(oi.price * nums) as total', 'b.brand_id', 'b.brand_name', 'oi.order_id'])
-            ->from('meet_order_items as oi', 'oi.order_id = o.order_id')
-            ->leftJoin('meet_product as p', 'p.product_id = oi.product_id')
-            ->leftJoin('meet_brand as b', 'p.brand_id = b.brand_id')
-            ->andWhere(['oi.disabled' => 'false'])
-            ->andWhere(['in', 'oi.order_id', $orderIds])
-            // ->andWhere(['o.status' => 'finish'])
-            ->groupBy('b.brand_id')
-            ->all();
-        $orderBands = [];
-        foreach ($bands as $key => $value) {
-            $orderBands[$value['order_id']][$value['brand_name']] = $value['total'];
-        }
-        foreach ($result as $k => $v) {
-            foreach ($orderBands[$v['order_id']] as $key => $value) {
-                $orderBands[$v['order_id']][$key] = round($orderBands[$v['order_id']][$key]/$result[$k]['cost_item'] * 100, 2).'%';
-            }
-            $result[$k]['brands'] = $orderBands[$v['order_id']];
-        }
+        // 添加品牌
+        // $bands = (new Query)->select(['SUM(oi.price * nums) as total', 'b.brand_id', 'b.brand_name', 'oi.order_id'])
+        //     ->from('meet_order_items as oi', 'oi.order_id = o.order_id')
+        //     ->leftJoin('meet_product as p', 'p.product_id = oi.product_id')
+        //     ->leftJoin('meet_brand as b', 'p.brand_id = b.brand_id')
+        //     ->andWhere(['oi.disabled' => 'false'])
+        //     ->andWhere(['in', 'oi.order_id', $orderIds])
+        //     // ->andWhere(['o.status' => 'finish'])
+        //     ->groupBy('oi.order_id, b.brand_id')
+        //     ->all();
+        // $orderBands = [];
+        // foreach ($bands as $key => $value) {
+        //     $orderBands[$value['order_id']][$value['brand_name']] = $value['total'];
+        // }
+        // foreach ($result as $k => $v) {
+        //     foreach ($orderBands[$v['order_id']] as $key => $value) {
+        //         $orderBands[$v['order_id']][$key] = round($orderBands[$v['order_id']][$key]/$result[$k]['cost_item'] * 100, 2).'%';
+        //     }
+        //     $result[$k]['brands'] = $orderBands[$v['order_id']];
+        // }
         // var_dump($result);exit;
         return ['list'=>$result, 'pagination'=>$pagination, 'amount'=>$countMoney, 'amount_really'=>$finishMoney];
     }
-
+    /**
+     * 更新订单的数据
+     * @return [type] [description]
+     */
+    public function updateOrderCostItem()
+    {
+        $orderInfo = (new Query)->select(['sum(amount) amount', 'o.cost_item', 'o.order_id'])
+            ->from('meet_order o')
+            ->leftJoin('meet_order_items oi', 'o.order_id = oi.order_id')
+            ->andWhere(['oi.disabled' => 'false'])
+            ->groupBy('o.order_id')
+            ->all();
+        foreach ($orderInfo as $k => $info) {
+            if ($info['amount'] == $info['cost_item']) {
+                continue;
+            }
+            // var_dump($info['amount'], $info['cost_item'], $info['order_id']);
+            Yii::$app->db->createCommand()->update('meet_order', ['cost_item' => $info['amount']], 'order_id = '.$info['order_id'])->execute();
+        }
+    }
     /**
      * 使用此方法的方法
      * this/orderQueryList

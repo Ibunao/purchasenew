@@ -5,6 +5,7 @@ use Yii;
 use yii\web\Controller;
 use yii\web\Response;
 use common\models\PublicModel;
+use common\models\OrderModel;
 /**
  * Site controller
  */
@@ -29,6 +30,10 @@ class TestController extends Controller
     public function actionPassword()
     {
     	echo md5(md5('a12345'));
+    }
+    public function actionTest()
+    {
+        (new OrderModel)->updateOrderCostItem();
     }
 }
 

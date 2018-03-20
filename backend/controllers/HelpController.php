@@ -22,6 +22,7 @@ class HelpController extends Controller
         $result = (new Query)->select(['p.model_sn', 'c.color_no'])
             ->from('meet_product as p')
             ->leftJoin('meet_color as c', 'p.color_id = c.color_id')
+            ->where(['is_down' => 0])
             ->all();
         $checkArr = [];
         foreach ($result as $key => $item) {

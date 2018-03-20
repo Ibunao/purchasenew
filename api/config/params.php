@@ -21,6 +21,6 @@ return [
     'app_login_frame_x' => '0.229548', //app登录框的x轴
     'app_login_frame_y' => '0.460912', //app登录框的y轴
 
-    'img_url' => 'http://fair.st.octmami.com',//给app审核 正式上线请注释
+    // 'img_url' => 'http://fair.st.octmami.com',//给app审核 正式上线请注释
     'background_images' => 'http://fair.st.octmami.com/images/pic_bg_login_0315.webp',//app显示登陆的背景图片
 ];

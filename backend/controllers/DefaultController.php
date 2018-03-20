@@ -1,7 +1,7 @@
 <?php
 
 namespace backend\controllers;
-
+use Yii;
 use backend\controllers\base\BaseController;
 use backend\models\TableModel;
 /**

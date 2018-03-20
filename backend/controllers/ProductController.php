@@ -747,7 +747,15 @@ $groupSize = (new PublicModel)->getGroupSize();
                         ->orWhere(['serial_num' => $result[$i][4]])
                         ->count();
                     if (!empty($check)) {
-                        $warning .= "<span><b>此产品流水号/款号已存在,请到商品管理添加修改</b></span>";
+                        $checkModel = $productModel->find()
+                        ->where(['model_sn' => $model_sn])
+                        // ->orWhere(['serial_num' => $result[$i][4]])
+                        ->count();
+                        $checkSerial = $productModel->find()
+                        // ->where(['model_sn' => $model_sn])
+                        ->where(['serial_num' => $result[$i][4]])
+                        ->count();
+                        $warning .= "<span><b>此产品流水号".$checkSerial."/款号".$checkModel."已存在,请到商品管理添加修改</b></span>";
                     }
                 }
 

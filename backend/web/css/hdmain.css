@@ -1269,7 +1269,9 @@ font-size: 1.6rem;
 }
 .hd_rt_main .pd_brdcbs label{color:#999;font-weight: bold;}
 .hd_rt_main .pd_brdcbs span{padding: 0 10px;display: inline-block;color:#75d2c7;border:1px solid #e5e5e5;min-width: 25px;text-align: center;}
-.hd_rt_main .pd_brdcbs i{display: inline-block;width:20px;height:100%;vertical-align: top;background:url(../images/pd_ico.png) center no-repeat;}
+.hd_rt_main .pd_brdcbs i{display: inline-block;width:20px;height:100%;vertical-align: top;
+	background:url(../images/pd_ico.png) center no-repeat;
+}
 .order_total{
 	width: 110px;
 	background: #35c8b7;

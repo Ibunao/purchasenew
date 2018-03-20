@@ -230,11 +230,14 @@ class ProductModel extends \yii\db\ActiveRecord
      */
     public function getProductFilter($data = [])
     {
-        $result = Yii::$app->cache->get('add-product-filter');
+        $result = false;Yii::$app->cache->get('add-product-filter');
         if (empty($result)) {
             //获取订购会数据
             $purchaseModel = new PurchaseModel;
             $result['purchase'] = $purchaseModel->getPurchase();
+            // var_dump($result['purchase']);exit;
+            // 暂时修改
+            unset($result['purchase']['1']);
             //获取品牌数据
             $brandModel = new BrandModel;
             $result['brand'] = $brandModel->getBrand();
@@ -1796,6 +1799,7 @@ class ProductModel extends \yii\db\ActiveRecord
             if (!isset($items[$product_item['cat_b']]['season_id_1'])) $items[$product_item['cat_b']]['season_id_1'] = 0;
             if (!isset($items[$product_item['cat_b']]['season_id_2'])) $items[$product_item['cat_b']]['season_id_2'] = 0;
             if (!isset($items[$product_item['cat_b']]['season_id_3'])) $items[$product_item['cat_b']]['season_id_3'] = 0;
+            // var_dump($product_item['season_id']);
             if ($product_item['season_id'] == $season_one) {
                 $items[$product_item['cat_b']]['season_id_1'] += $v['nums'];
                 $season_1 += $v['nums'];

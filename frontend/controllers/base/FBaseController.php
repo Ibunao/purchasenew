@@ -27,6 +27,10 @@ class FBaseController extends Controller
 	public function init()
 	{
 		parent::init();
+        // 如果是清缓存，放行
+        if ($this->module->requestedRoute == 'default/cache') {
+            return;
+        }
         // var_dump(Yii::$app->session->get('purchase_id'));exit;
         $purchaseId = Yii::$app->session->get('purchase_id');
         //未登录跳转登陆
