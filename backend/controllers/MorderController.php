@@ -964,49 +964,65 @@ class MorderController extends BaseController
         $order_item = $order->orderItem($order_id);//获取商品信息
 
         $item = array();
-        $item['model_s_1'] = $item['model_s_2'] = array();
-        $item['num_s_1'] = $item['num_s_2'] = $item['amount_s_1'] = $item['amount_s_2'] = $item['all_num'] = $item['all_amount'] = 0;
+        // 季节1 季节2 其它
+        $item['model_s_1'] = $item['model_s_2'] = $item['model_s_other'] = array();
+        $item['num_s_1'] = $item['num_s_2'] = $item['num_s_other'] = $item['amount_s_1'] = $item['amount_s_2'] = $item['amount_s_other'] = $item['all_num'] = $item['all_amount'] = 0;
         foreach ($order_item as $k => $v) {
+            // 季节1
             if ($v['season'] == $season_sp_id) {
                 $item['model_s_1'][] = $v['model_sn'];
                 $item['num_s_1'] += $v['nums'];
                 $item['amount_s_1'] += $v['amount'];
-            }
-            if ($v['season'] == $season_sm_id) {
+            // 季节2
+            }else if ($v['season'] == $season_sm_id) {
                 $item['model_s_2'][] = $v['model_sn'];
                 $item['num_s_2'] += $v['nums'];
                 $item['amount_s_2'] += $v['amount'];
+            // 其它
+            }else{
+                $item['model_s_other'][] = $v['model_sn'];
+                $item['num_s_other'] += $v['nums'];
+                $item['amount_s_other'] += $v['amount'];
             }
             $item['all_num'] += $v['nums'];
             $item['all_amount'] += $v['amount'];
         }
         $item['target'] = $order_info['target'];
-        if ($item['target'] == 0) {//达成率
+        // 达成率
+        if ($item['target'] == 0) {
             $item['target_percent'] = "0%";
         } else {
             $item['target_percent'] = round($item['all_amount'] / $item['target'] * 100, 2) . "%";
         }
         $cat = new CatBigModel();
         $cat_arr = $cat->cat_big_small();
+        // 计算各类的数据
         foreach ($cat_arr as $k => $v) {//$v 是大类
+            // 大类目标
             $cat_arr[$k]['target'] = $order_info['big_' . $v['big_cat_id']];
+            // 大类数量 大类总价
             $cat_arr[$k]['nums'] = $cat_arr[$k]['amount'] = 0;
             if (!isset($cat_arr[$k]['res_cat_num'])) $cat_arr[$k]['res_cat_num'] = 0;
             if (!isset($cat_arr[$k]['res_cat_amount'])) $cat_arr[$k]['res_cat_amount'] = 0;
-            $cat_arr[$k]['res_num_season_1'] = $cat_arr[$k]['res_num_season_2'] = 0;
-            $cat_arr[$k]['res_amount_season_1'] = $cat_arr[$k]['res_amount_season_2'] = 0;
-            $cat_arr[$k]['res_style_season_1'] = $cat_arr[$k]['res_style_season_2'] = array();
+            $cat_arr[$k]['res_num_season_1'] = $cat_arr[$k]['res_num_season_2'] = $cat_arr[$k]['res_num_season_other'] = 0;
+            $cat_arr[$k]['res_amount_season_1'] = $cat_arr[$k]['res_amount_season_2'] = $cat_arr[$k]['res_amount_season_other'] = 0;
+            $cat_arr[$k]['res_style_season_1'] = $cat_arr[$k]['res_style_season_2'] = $cat_arr[$k]['res_style_season_other'] = array();
             foreach ($v['cat_small'] as $kk => $vv) {//$vv 是小类
+                // 小类的大类名
                 $cat_arr[$k]['cat_small'][$kk]['cat_big_name'] = $v['big_cat_name'];
+                // 各小类的季节统计
                 $cat_arr[$k]['cat_small'][$kk]['style_season_1'] = array();
                 $cat_arr[$k]['cat_small'][$kk]['style_season_2'] = array();
+                $cat_arr[$k]['cat_small'][$kk]['style_season_other'] = array();
                 $cat_arr[$k]['cat_small'][$kk]['total_style'] = array();
                 if (!isset($cat_arr[$k]['cat_small'][$kk]['total_num'])) $cat_arr[$k]['cat_small'][$kk]['total_num'] = 0;
                 if (!isset($cat_arr[$k]['cat_small'][$kk]['total_amount'])) $cat_arr[$k]['cat_small'][$kk]['total_amount'] = 0;
                 if (!isset($cat_arr[$k]['cat_small'][$kk]['num_season_1'])) $cat_arr[$k]['cat_small'][$kk]['num_season_1'] = 0;
                 if (!isset($cat_arr[$k]['cat_small'][$kk]['num_season_2'])) $cat_arr[$k]['cat_small'][$kk]['num_season_2'] = 0;
+                if (!isset($cat_arr[$k]['cat_small'][$kk]['num_season_other'])) $cat_arr[$k]['cat_small'][$kk]['num_season_other'] = 0;
                 if (!isset($cat_arr[$k]['cat_small'][$kk]['amount_season_1'])) $cat_arr[$k]['cat_small'][$kk]['amount_season_1'] = 0;
                 if (!isset($cat_arr[$k]['cat_small'][$kk]['amount_season_2'])) $cat_arr[$k]['cat_small'][$kk]['amount_season_2'] = 0;
+                if (!isset($cat_arr[$k]['cat_small'][$kk]['amount_season_other'])) $cat_arr[$k]['cat_small'][$kk]['amount_season_other'] = 0;
                 foreach ($order_item as $kkk => $vvv) {//$vvv 订购商品的属性
                     if ($vvv['cat_b'] == $v['big_cat_id'] && $vvv['cat_s'] == $vv['small_id']) {
                         if ($vvv['season'] == $season_sp_id) {
@@ -1016,14 +1032,20 @@ class MorderController extends BaseController
                             $cat_arr[$k]['res_num_season_1'] += $vvv['nums'];//春季数量总计
                             $cat_arr[$k]['res_style_season_1'][] = $vvv['model_sn'];//春季总计
                             $cat_arr[$k]['res_amount_season_1'] += $vvv['amount'];//春季金额总计
-                        }
-                        if ($vvv['season'] == $season_sm_id) {
+                        }else if ($vvv['season'] == $season_sm_id) {
                             $cat_arr[$k]['cat_small'][$kk]['style_season_2'][] = $vvv['model_sn'];
                             $cat_arr[$k]['cat_small'][$kk]['num_season_2'] += $vvv['nums'];
                             $cat_arr[$k]['cat_small'][$kk]['amount_season_2'] += $vvv['amount'];
                             $cat_arr[$k]['res_num_season_2'] += $vvv['nums'];//夏季数量总计
                             $cat_arr[$k]['res_style_season_2'][] = $vvv['model_sn'];//夏季总计
                             $cat_arr[$k]['res_amount_season_2'] += $vvv['amount'];//春季数量总计
+                        }else{
+                            $cat_arr[$k]['cat_small'][$kk]['style_season_other'][] = $vvv['model_sn'];
+                            $cat_arr[$k]['cat_small'][$kk]['num_season_other'] += $vvv['nums'];
+                            $cat_arr[$k]['cat_small'][$kk]['amount_season_other'] += $vvv['amount'];
+                            $cat_arr[$k]['res_num_season_other'] += $vvv['nums'];//夏季数量总计
+                            $cat_arr[$k]['res_style_season_other'][] = $vvv['model_sn'];//夏季总计
+                            $cat_arr[$k]['res_amount_season_other'] += $vvv['amount'];//春季数量总计
                         }
                         $cat_arr[$k]['cat_small'][$kk]['total_style'][] = $vvv['model_sn'];
                         $cat_arr[$k]['cat_small'][$kk]['total_num'] += $vvv['nums'];

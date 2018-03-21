@@ -51,20 +51,23 @@ $this->params['breadcrumbs'] = [
                     <tr class="odd text-center">
                         <td rowspan="2">大类</td>
                         <td rowspan="2">小类</td>
-                        <td colspan="3">款式数量</td>
-                        <td colspan="6">订货数量</td>
-                        <td colspan="6">订货金额</td>
+                        <td colspan="4">款式数量</td>
+                        <td colspan="8">订货数量</td>
+                        <td colspan="8">订货金额</td>
                         <td colspan="2">指标</td>
                     </tr>
                     <tr class="odd" style="background-color: #f9f9f9">
                         <!-- 款式数量-->
                         <td><?php echo Yii::$app->params['season_one_name']; ?></td>
                         <td><?php echo Yii::$app->params['season_two_name']; ?></td>
+                        <td>其它</td>
                         <td>合计</td>
                         <!-- 订货数量-->
                         <td><?php echo Yii::$app->params['season_one_name']; ?></td>
                         <td>占比</td>
                         <td><?php echo Yii::$app->params['season_two_name']; ?></td>
+                        <td>占比</td>
+                        <td>其它</td>
                         <td>占比</td>
                         <td>总计</td>
                         <td>占比</td>
@@ -72,6 +75,8 @@ $this->params['breadcrumbs'] = [
                         <td><?php echo Yii::$app->params['season_one_name']; ?></td>
                         <td>占比</td>
                         <td><?php echo Yii::$app->params['season_two_name']; ?></td>
+                        <td>占比</td>
+                        <td>其它</td>
                         <td>占比</td>
                         <td>总计</td>
                         <td>占比</td>
@@ -90,7 +95,10 @@ $this->params['breadcrumbs'] = [
                             <?php echo $style_season_2 = count(array_unique($item['model_s_2'])); ?>
                         </td>
                         <td>
-                            <?php echo $style_season_1 + $style_season_2; ?>
+                            <?php echo $style_season_other = count(array_unique($item['model_s_other'])); ?>
+                        </td>
+                        <td>
+                            <?php echo $style_season_1 + $style_season_2 + $style_season_other; ?>
                         </td>
                         <!-- 订货数量-->
                         <td>
@@ -112,7 +120,15 @@ $this->params['breadcrumbs'] = [
                                 echo round($num_season_2 / $item['all_num'] * 100, 1) . "%";
                             } ?></td>
                         <td>
-                            <?php echo $num_season_all = $num_season_1 + $num_season_2; ?>
+                            <?php echo $num_season_other = $item['num_s_other']; ?></td>
+                        <td>
+                            <?php if ($item['all_num'] == 0) {
+                                echo "0%";
+                            } else {
+                                echo round($num_season_other / $item['all_num'] * 100, 1) . "%";
+                            } ?></td>
+                        <td>
+                            <?php echo $num_season_all = $num_season_1 + $num_season_2 + $num_season_other; ?>
                         </td>
                         <td>
                             <?php
@@ -144,7 +160,17 @@ $this->params['breadcrumbs'] = [
                             } ?>
                         </td>
                         <td>
-                            <?php echo $amount_season_all = $amount_season_1 + $amount_season_2; ?>
+                            <?php echo $amount_season_other = $item['amount_s_other']; ?>
+                        </td>
+                        <td>
+                            <?php if ($item['all_amount'] == 0) {
+                                echo "0%";
+                            } else {
+                                echo round($amount_season_other / $item['all_amount'] * 100, 1) . "%";
+                            } ?>
+                        </td>
+                        <td>
+                            <?php echo $amount_season_all = $amount_season_1 + $amount_season_2 + $amount_season_other; ?>
                         </td>
                         <td>
                             <?php
@@ -187,7 +213,10 @@ $this->params['breadcrumbs'] = [
                                 <?php echo $small_season_2 = count(array_unique($cat['cat_small'][0]['style_season_2'])); ?>
                             </td>
                             <td>
-                                <?php echo $small_season_1 + $small_season_2; ?>
+                                <?php echo $small_season_other = count(array_unique($cat['cat_small'][0]['style_season_other'])); ?>
+                            </td>
+                            <td>
+                                <?php echo $small_season_1 + $small_season_2 + $small_season_other; ?>
                             </td>
                             <td>
                                 <?php echo $small_season_1_num = $cat['cat_small'][0]['num_season_1']; ?>
@@ -210,7 +239,17 @@ $this->params['breadcrumbs'] = [
                                 } ?>
                             </td>
                             <td>
-                                <?php echo $small_season_all_num = $small_season_1_num + $small_season_2_num ?>
+                                <?php echo $small_season_other_num = $cat['cat_small'][0]['num_season_other']; ?>
+                            </td>
+                            <td>
+                                <?php if ($item['all_num'] == 0) {
+                                    echo "0%";
+                                } else {
+                                    echo round(($small_season_other_num / $item['all_num']) * 100, 1) . "%";
+                                } ?>
+                            </td>
+                            <td>
+                                <?php echo $small_season_all_num = $small_season_1_num + $small_season_2_num + $small_season_other_num; ?>
                             </td>
                             <td>
                                 <?php if ($item['all_num'] == 0) {
@@ -249,8 +288,29 @@ $this->params['breadcrumbs'] = [
                                     echo round(($small_season_2_amount / $item['all_amount']) * 100, 1) . "%";
                                 } ?>
                             </td>
+                            <td>
+                                <?php echo $small_season_other_amount = $cat['cat_small'][0]['amount_season_other']; ?>
+                            </td>
+                            <td>
+                                <?php if ($item['all_amount'] == 0) {
+                                    echo "0%";
+                                } else {
+                                    echo round(($small_season_other_amount / $item['all_amount']) * 100, 1) . "%";
+                                } ?>
+                            </td>
+                            <td>
+                                    <?php echo $small_amount_season_all = $small_season_2_amount + $small_season_1_amount + $small_season_other_amount; ?>
+                                </td>
+                                <td>
+                                    <?php if ($item['all_amount'] == 0) {
+                                        echo "0%";
+                                    } else {
+                                        echo round(($small_amount_season_all / $item['all_amount']) * 100, 1) . "%";
+                                    } ?>
+                                </td>
                             <td></td>
                             <td></td>
+
                         </tr>
                         <?php unset($cat['cat_small'][0]);
                         foreach ($cat['cat_small'] as $small) {
@@ -266,7 +326,10 @@ $this->params['breadcrumbs'] = [
                                     <?php echo $small_season_cat_2 = count(array_unique($small['style_season_2'])); ?>
                                 </td>
                                 <td>
-                                    <?php echo $small_season_cat_1 + $small_season_cat_2; ?>
+                                    <?php echo $small_season_cat_other = count(array_unique($small['style_season_other'])); ?>
+                                </td>
+                                <td>
+                                    <?php echo $small_season_cat_1 + $small_season_cat_2 + $small_season_cat_other; ?>
                                 </td>
                                 <td>
                                     <?php echo $small_num_season_one = $small['num_season_1']; ?>
@@ -289,7 +352,17 @@ $this->params['breadcrumbs'] = [
                                     } ?>
                                 </td>
                                 <td>
-                                    <?php echo $small_num_season_all = $small_num_season_one + $small_num_season_two ?></td>
+                                    <?php echo $small_num_season_other = $small['num_season_other']; ?>
+                                </td>
+                                <td>
+                                    <?php if ($item['all_num'] == 0) {
+                                        echo "0%";
+                                    } else {
+                                        echo round(($small_num_season_other / $item['all_num']) * 100, 1) . "%";
+                                    } ?>
+                                </td>
+                                <td>
+                                    <?php echo $small_num_season_all = $small_num_season_one + $small_num_season_two + $small_num_season_other ?></td>
                                 <td>
                                     <?php if ($item['all_num'] == 0) {
                                         echo "0%";
@@ -319,7 +392,27 @@ $this->params['breadcrumbs'] = [
                                     } ?>
                                 </td>
                                 <td>
-                                    <?php echo $small_amount_season_all = $small_amount_season_1 + $small_amount_season_2; ?>
+                                    <?php echo $small_amount_season_2 = $small['amount_season_2']; ?>
+                                </td>
+                                <td>
+                                    <?php if ($item['all_amount'] == 0) {
+                                        echo "0%";
+                                    } else {
+                                        echo round(($small_amount_season_2 / $item['all_amount']) * 100, 1) . "%";
+                                    } ?>
+                                </td>
+                                <td>
+                                    <?php echo $small_amount_season_other = $small['amount_season_other']; ?>
+                                </td>
+                                <td>
+                                    <?php if ($item['all_amount'] == 0) {
+                                        echo "0%";
+                                    } else {
+                                        echo round(($small_amount_season_other / $item['all_amount']) * 100, 1) . "%";
+                                    } ?>
+                                </td>
+                                <td>
+                                    <?php echo $small_amount_season_all = $small_amount_season_1 + $small_amount_season_2 + $small_amount_season_other; ?>
                                 </td>
                                 <td>
                                     <?php if ($item['all_amount'] == 0) {
@@ -343,7 +436,10 @@ $this->params['breadcrumbs'] = [
                                 <?php echo $season_2 = count(array_unique($cat['res_style_season_2'])); ?>
                             </td>
                             <td class="success">
-                                <?php echo $season_1 + $season_2; ?>
+                                <?php echo $season_other = count(array_unique($cat['res_style_season_other'])); ?>
+                            </td>
+                            <td class="success">
+                                <?php echo $season_1 + $season_2 + $season_other; ?>
                             </td>
                             <td class="success">
                                 <?php echo $season_1_num = $cat['res_num_season_1']; ?>
@@ -366,7 +462,17 @@ $this->params['breadcrumbs'] = [
                                 } ?>
                             </td>
                             <td class="success">
-                                <?php echo $season_all_num = $season_1_num + $season_2_num ?>
+                                <?php echo $season_other_num = $cat['res_num_season_other']; ?>
+                            </td>
+                            <td class="success">
+                                <?php if ($item['all_num'] == 0) {
+                                    echo "0%";
+                                } else {
+                                    echo round($season_other_num / $item['all_num'] * 100, 1) . "%";
+                                } ?>
+                            </td>
+                            <td class="success">
+                                <?php echo $season_all_num = $season_1_num + $season_2_num + $season_other_num ?>
                             </td>
                             <td class="success">
                                 <?php if ($item['all_num'] == 0) {
@@ -396,7 +502,17 @@ $this->params['breadcrumbs'] = [
                                 } ?>
                             </td>
                             <td class="success">
-                                <?php echo $amount_all = $amount_1 + $amount_2 ?>
+                                <?php echo $amount_other = $cat['res_amount_season_other'] ?>
+                            </td>
+                            <td class="success">
+                                <?php if ($item['all_amount'] == 0) {
+                                    echo "0%";
+                                } else {
+                                    echo round($amount_other / $item['all_amount'] * 100, 1) . "%";
+                                } ?>
+                            </td>
+                            <td class="success">
+                                <?php echo $amount_all = $amount_1 + $amount_2 + $amount_other ?>
                             </td>
                             <td class="success">
                                 <?php if ($item['all_amount'] == 0) {

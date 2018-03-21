@@ -566,10 +566,10 @@ foreach ($queryAll as $key => $order) {
         $orderInfo = (new Query)->select(['sum(amount) amount', 'o.cost_item', 'o.order_id'])
             ->from('meet_order o')
             ->leftJoin('meet_order_items oi', 'o.order_id = oi.order_id')
-            ->leftJoin('meet_product p', 'p.product_id = oi.product_id')
+            // ->leftJoin('meet_product p', 'p.product_id = oi.product_id')
             ->andWhere(['oi.disabled' => 'false'])
-            ->andWhere(['p.disabled' => 'false'])
-            ->andWhere(['p.is_down' => 0])
+            // ->andWhere(['p.disabled' => 'false'])
+            // ->andWhere(['p.is_down' => 0])
             ->groupBy('o.order_id')
             ->all();
         foreach ($orderInfo as $k => $info) {

@@ -14,13 +14,13 @@
     </li>
     <li class="pd_list_dt">
         <!--右侧按钮合计区域-->
-        <?php if ($this->order_state == 'active'):?>
+        <?php if ($this->context->orderState == 'active'):?>
             <a href="#inline1" class="order_bt_modify fancybox" data="<?= $v['model_sn'];?>">修改</a>
         <!--
             <a href="#inline3" class="order_bt_del fancybox3" data="<?= '/order/delete?order_id='.$order_row['order_id'].'&model_sn='.$v['model_sn'];?>">删除</a>
             -->
         <?php endif;?>
-        <?php if ($this->order_state == 'confirm'):?>
+        <?php if ($this->context->orderState == 'confirm'):?>
             <a href="javascript:;" class="order_bt_modify disabled">修改</a>
             <!--
             <a href="javascript:;" class="order_bt_del disabled">删除</a>
@@ -43,7 +43,7 @@
                     </tr>
                     <tr>
                         <td class="pd_list_title_m">波段：</td>
-                        <td class="pd_list_content_m"><?= $this->wave[$v['wave_id']];?></td>
+                        <td class="pd_list_content_m"><?= $this->context->wave[$v['wave_id']];?></td>
                     </tr>
                     <tr>
                         <td class="pd_list_title_m">商品名称：</td>
