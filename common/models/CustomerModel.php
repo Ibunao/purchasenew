@@ -257,6 +257,7 @@ class CustomerModel extends \yii\db\ActiveRecord
             $data['big_4'] = (string)round($data['target'] * $data['big_4'] /100 , 2);
             $data['big_6'] = (string)round($data['target'] * $data['big_6'] /100 , 2);
         }
+
         if(empty($data['big_1_count'])){
             $data['big_1_count'] = 100;
         }
@@ -494,7 +495,7 @@ class CustomerModel extends \yii\db\ActiveRecord
     {
         if (empty($id)) {
             echo "<script>alert('出错,缺少参数');history.go(-1);</script>";
-            die;
+            die; 
         }
         $res = (new Query)->from('meet_customer as a')
             ->leftJoin('meet_agent as b', 'a.agent = b.agent_code')
@@ -504,7 +505,7 @@ class CustomerModel extends \yii\db\ActiveRecord
             echo "<script>alert('暂无此用户信息');history.go(0);</script>";
             die;
         }
-        if($res['target'] != '0.00') {
+        if(!(empty($res['target']) || $res['target'] == '0.00')) {
             $res['big_1'] = round($res['big_1'] / $res['target'] * 100, 2);
             $res['big_2'] = round($res['big_2'] / $res['target'] * 100, 2);
             $res['big_3'] = round($res['big_3'] / $res['target'] * 100, 2);
