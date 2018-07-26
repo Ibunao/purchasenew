@@ -37,6 +37,23 @@
 
         <ul class="pd_list_mod lazyimg">
             <li class="pd_list_pic_area fl">
+                <!-- 如果有两张图片显示这个 -->
+                <?php 
+                    $imgA = explode('.', $v['img_url']);
+                    $imgB = implode('_01.', $imgA);
+                    $haveB = false;
+                    if (file_exists(Yii::getAlias('@backend').'/web'.$imgB)){
+                        $haveB = true;
+                    }
+                    // var_dump($imgB, Yii::getAlias('@backend').'/web'.$imgB, $haveB);exit;
+                 ?>
+                <?php if ($haveB): ?>
+                    <div class="pd_list_pic_top">
+                      <label class="icon_zoomin fr"></label>
+                    </div>
+                <?php endif ?>
+
+
                 <div class="pd_list_pic_info">
                     <?php if ($v['is_order'] == 1):?>
                     <label class="icon_brought fr"></label>
@@ -48,9 +65,12 @@
                         echo "/images/default.jpg";
                      }?>">
                 </a>
-                <div id="inline_<?= $v['serial_num'];?>" style="width:300px;display: none;">
-                   <?php if($v['is_down']=='0'){ ?> <img src="<?= Yii::$app->params['img_url'].$v['img_url']; ?>"><?php }else{ ?>
+                <div id="inline_<?= $v['serial_num'];?>" style="max-width: 600px;display: none;">
+                    <!-- 弹窗显示多张图片 -->
+                   <?php if($v['is_down']=='0'){ ?> <img src="<?= Yii::$app->params['img_url'].$v['img_url']; ?>"  style="width:300px;float: left;"><?php }else{ ?>
                        <img src="/images/default.jpg">
+                    <?php }?>
+                    <?php if($v['is_down']=='0' && $haveB){ ?> <img src="<?= Yii::$app->params['img_url'].$imgB; ?>"  style="width:300px;float: left;">
                     <?php }?>
                 </div>
             </li>

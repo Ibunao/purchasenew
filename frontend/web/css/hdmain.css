@@ -1315,3 +1315,29 @@ font-size: 1.6rem;
     line-height: 30px;
     border-radius: 3px;
 }
+
+/* 新增加页面样式 */
+.detail_bt_modify{
+	display:inline-block;
+	padding:0px 20px;
+	color:#fff;
+	background-color:rgb(110, 179, 225);
+	height: 30px;
+    line-height: 30px;
+    border-radius: 3px;
+}
+.pd_list_pic_top {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 32px;
+    width: 150px;
+    vertical-align: baseline;
+}
+.icon_zoomin{
+	width: 15px;
+	height: 15px;
+	background: url(../images/pic_iconAll_01.png?v=6) -75px -90px no-repeat;
+	background-size: 250px;
+	margin: 10px 5px 0 0;
+}
