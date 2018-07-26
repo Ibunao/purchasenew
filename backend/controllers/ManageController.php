@@ -218,7 +218,7 @@ class ManageController extends BaseController
                     if (!empty($result[$i][12])) {
                         $count_all = ($t_c1 + $t_c2 + $t_c3 + $t_c4 + $t_c6);
                         if ($count_all != $result[$i][12]) {
-                            $warning .= "<span><b>各大类指标总和不等于总指标</b></span>";
+                            $warning .= "<span><b>各大类指标总和不等于总指标,总指标:{$count_all}, 其他指标:({$t_c1} + {$t_c2} + {$t_c3} + {$t_c4} + {$t_c6})</b></span>";
                         }
                     }
                 }
