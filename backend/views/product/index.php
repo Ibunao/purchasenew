@@ -219,7 +219,7 @@ $this->params['breadcrumbs'] = [
         <td width="60"><?= $v['serial_num'] ?></td>
         <td width="100"><?= $v['model_sn'] ?></td>
         <!-- <td width="30"><?= $v['purchase_id'] == 1 ? 'A' : 'B'; ?></td> -->
-        <td width="30"><?= $v['purchase_id'] == 1 ? '2018秋冬订货会' : 'B'; ?></td>
+        <td width="30"><?= $v['purchase_id'] == 1 ? Yii::$app->params['purchase_oct'] : 'B'; ?></td>
         <td width="100"><?= $v['name'] ?></td>
         <td width="100"><?= $v['cat_name'] ?></td>
         <td width="100"><?= $v['cat_middle'] ?></td>

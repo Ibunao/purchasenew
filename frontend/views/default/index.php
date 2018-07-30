@@ -40,7 +40,7 @@
                 <!-- 如果有两张图片显示这个 -->
                 <?php 
                     $imgA = explode('.', $v['img_url']);
-                    $imgB = implode('_01.', $imgA);
+                    $imgB = implode('_1.', $imgA);
                     $haveB = false;
                     if (file_exists(Yii::getAlias('@backend').'/web'.$imgB)){
                         $haveB = true;
