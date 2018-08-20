@@ -517,7 +517,7 @@ class ProductController extends BaseController
     public function actionImportFiles()
     {
         $postFile = isset($_FILES["file"]) ? $_FILES['file'] : exit("请上传文件");
-
+// var_dump($postFile);exit;
         $postFileType = pathinfo($postFile['name'], PATHINFO_EXTENSION);
         $allowExt = array('xls', 'xlsx', 'csv');
         if (empty($postFile)) {

@@ -44,3 +44,5 @@ backend/web/images/
 
 *.csv
 api/web/images/
+backend/web/allImages/
+backend/web/useImages/

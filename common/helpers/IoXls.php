@@ -48,6 +48,8 @@ class IoXls
         </head>';
         echo '<table width="100%" border="1">';
         echo '<tr><th filter=all>' . implode('</th><th filter=all>', $keys) . "</th></tr>\r\n";
+        // 单列
+        // echo '<tr><th filter=all>' . $keys . "</th></tr>\r\n";
         flush();
     }
 
@@ -56,6 +58,8 @@ class IoXls
 
         foreach ($rows as $row) {
             echo '<tr><td>' . implode('</td><td>', $row) . "</td></tr>\r\n";
+            // 单列
+            // echo '<tr><td>' . $row . "</td></tr>\r\n";
         }
         flush();
     }

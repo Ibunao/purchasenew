@@ -22,13 +22,17 @@ class File
 	 * @param  array  $path 文件名数组
 	 * @return [type]       [description]
 	 */
-	static function checkHas($root, $paths = [])
+	static function checkHas($root, $paths = [], $copy = false, $copyRoot = '')
 	{
 		$lack = [];
-		foreach ($paths as $path) {
-			$path = $root . $path;
+		foreach ($paths as $img) {
+			$path = $root . $img;
 			if (!file_exists($path)) {
 				$lack[] = substr(strrchr($path, '/'), 1);
+			}else{
+				if ($copy) {
+					copy($path, $copyRoot.$img);
+				}
 			}
 		}
 		return $lack;

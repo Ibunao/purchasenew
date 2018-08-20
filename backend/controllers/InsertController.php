@@ -84,14 +84,15 @@ class InsertController extends Controller
         $data = Yii::$app->cache->get('insert-getinfo-source-data');
         // var_dump($data);exit;
         // $result = (new Query)->select(['product_sn', 'style_sn', 'model_sn', 'serial_num', 'name', 'img_url', 'color_id', 'size_id', 'brand_id', 'cat_b', 'cat_m', 'cat_s', 'season_id', 'level_id', 'wave_id', 'scheme_id', 'cost_price', 'price_level_id', 'memo', 'type_id', 'disabled', 'is_error', 'is_down'])->from('meet_product')
-        $result = (new Query)->select(['model_sn', 'memo', 'wave_name', 'level_name'])->from('meet_product p')
+        $result = (new Query)->select(['model_sn', 'memo', 'wave_name', 'level_name', 'type_name'])->from('meet_product p')
             ->leftJoin('meet_wave w', 'w.wave_id = p.wave_id')
             ->leftJoin('meet_level l', 'l.level_id = p.level_id')
             ->leftJoin('meet_type t', 't.type_id = p.type_id')
             ->where(['model_sn' => $data])
-            ->orderBy('model_sn')
+            ->groupBy('model_sn')
             // ->indexBy('model_sn')
-            ->all(Yii::$app->db2);
+            ->all();
+            // var_dump(Yii::$app->db);exit;
         // 将已经查找过的删除
         foreach ($result as $key => $item) {
             foreach ($data as $kk => $value) {
@@ -129,9 +130,9 @@ class InsertController extends Controller
         // Yii::$app->cache->set('insert-getinfo-model-color', $model_color);
         Yii::$app->cache->set('insert-getinfo-source-data', $data);
         // $keys = ['product_sn', 'style_sn', 'model_sn', 'serial_num', 'name', 'img_url', 'color_id', 'size_id', 'brand_id', 'cat_b', 'cat_m', 'cat_s', 'season_id', 'level_id', 'wave_id', 'scheme_id', 'cost_price', 'price_level_id', 'memo', 'disabled'];
-        $keys = ['model_sn', 'memo', 'wave_name', 'level_name'];
+        $keys = ['model_sn', 'memo', 'wave_name', 'level_name', 'type_name'];
         // var_dump($result);exit;
-        $filename = 'bulaokuan0502';
+        $filename = 'bulaokuan0803';
         $export = new IoXls();
         $export->export_begin($keys, $filename, count($result));
         $export->export_rows($result);
@@ -177,12 +178,13 @@ class InsertController extends Controller
     public function actionGetCache()
     {
         $data = Yii::$app->cache->get('insert-getinfo-source-data');
-        var_dump($data);exit;
-        $result = (new Query)->from('meet_product')
-                    ->where(['model_sn' => $data])
-                    ->orderBy('model_sn')
-                    // ->indexBy('model_sn')
-                    ->all(Yii::$app->db2);
-        var_dump($result);
+        var_dump(count($data), $data);exit;
+        $keys = 'model_sn';
+        // var_dump($result);exit;
+        $filename = '数据库不存在的';
+        $export = new IoXls();
+        $export->export_begin($keys, $filename, count($data));
+        $export->export_rows($data);
+        $export->export_finish();
     }
 }

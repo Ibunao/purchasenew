@@ -1233,6 +1233,7 @@ class ProductModel extends \yii\db\ActiveRecord
             }else{
                 $style_sn = [];
                 $items = $this->listStyleSn($style_sn, $params, $conArr);
+                // var_dump($items);exit;
             }
         }
 // var_dump($items);exit;

@@ -7,6 +7,11 @@ use yii\web\Response;
 use yii\db\Query;
 use common\helpers\File;
 use common\helpers\IoXls;
+use yii\web\UploadedFile;
+use common\models\UploadForm;
+use common\models\AgentModel;
+use PHPExcel;
+use PHPExcel_IOFactory;
 /**
  * 辅助方法
  */
@@ -44,6 +49,63 @@ class HelpController extends Controller
         $export->export_rows($rews);
         $export->export_finish();
         // return $this->render('image');
+    }
+    /**
+     * 
+     * @return [type] [description]
+     */
+    public function actionCopyImage()
+    {
+        $data = Yii::$app->cache->get('insert-getinfo-for-img-source-data');
+        $root = Yii::$app->basePath.'/web/allImages/';
+        $checkArr = [];
+        foreach ($data as $key => $item) {
+            $checkArr[] = $item[0].'_'.$item['1'].'.jpg';
+        }
+        $copyRoot = Yii::$app->basePath.'/web/useImages/';
+        // 复制
+        $result = File::checkHas($root, $checkArr, true, $copyRoot);
+        return;
+        // 导出不存在的
+        // $result = File::checkHas($root, ['18131501_103.jpg']);
+        // var_dump($result);exit;
+        $rews = [];
+        $result = array_unique($result);
+        foreach ($result as $key => $item) {
+            $rews[] = ['A' => $item];
+        }
+
+        $keys = ['图片'];
+        $filename = '缺少的图片结果';
+        $export = new IoXls();
+        $export->export_begin($keys, $filename, count($rews));
+        $export->export_rows($rews);
+        $export->export_finish();
+    }
+    /**
+     * 读取excel数据到缓存
+     * 
+     * @return [type] [description]
+     */
+    public function actionGetInfoExcel()
+    {
+        $model = new UploadForm();
+
+        if (Yii::$app->request->isPost) {
+            $model->xlsFile = UploadedFile::getInstance($model, 'xlsFile');
+            if ($model->upload()) {
+                $objPHPExcel = new PHPExcel();
+                $objPHPExcel = PHPExcel_IOFactory::createReaderForFile($model->path);
+                $objPHPExcel = PHPExcel_IOFactory::load($model->path);
+                $result = $objPHPExcel->getActiveSheet()->toArray();
+                unset($result[0]);
+                // var_dump(count($result));
+                Yii::$app->cache->set('insert-getinfo-for-img-source-data', $result);
+                var_dump($result);
+            }
+        }
+
+        return $this->render('upload', ['model' => $model]);
     }
     /**
      * 查看日志

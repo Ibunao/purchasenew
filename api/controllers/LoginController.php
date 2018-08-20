@@ -32,10 +32,12 @@ class LoginController extends ApiController
             //检查该用户订单状态
             $orderModel = new ProductModel();
             $orderStatus = $orderModel->checkStatus($res->customer_id);
-            $result['status'] = $orderStatus[0]['status'];
+            $result['status'] = isset($orderStatus[0]['status'])?$orderStatus[0]['status']:0;
             $result['online'] = Yii::$app->params['is_online'];
             $result['is_change_url'] = Yii::$app->params['is_change_url'];
             $result['change_url'] = Yii::$app->params['change_url'];
+            // 本地只用
+            // $result['change_url'] = Yii::$app->params['change_url'];
             $result['is_distribution'] = $res['parent_id'] == 1 ? 'yes' : 'no';
             $result['purchase_name'] = $res['purchase_id'] == 1 ?
                 Yii::$app->params['purchase_oct'] : ($res['purchase_id'] == 2 ? Yii::$app->params['purchase_uki']: Yii::$app->params['purchase_all']);
