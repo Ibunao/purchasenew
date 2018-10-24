@@ -257,7 +257,6 @@ class CustomerModel extends \yii\db\ActiveRecord
             $data['big_4'] = (string)round($data['target'] * $data['big_4'] /100 , 2);
             $data['big_6'] = (string)round($data['target'] * $data['big_6'] /100 , 2);
         }
-
         if(empty($data['big_1_count'])){
             $data['big_1_count'] = 100;
         }
@@ -273,7 +272,7 @@ class CustomerModel extends \yii\db\ActiveRecord
         if(empty($data['big_6_count'])){
             $data['big_6_count'] = 100;
         }
-
+        
         //密码默认手机号码后四位
         if (!empty($data['password'])) {
             $data['password'] = md5(md5($data['password']));
@@ -495,7 +494,7 @@ class CustomerModel extends \yii\db\ActiveRecord
     {
         if (empty($id)) {
             echo "<script>alert('出错,缺少参数');history.go(-1);</script>";
-            die; 
+            die;
         }
         $res = (new Query)->from('meet_customer as a')
             ->leftJoin('meet_agent as b', 'a.agent = b.agent_code')

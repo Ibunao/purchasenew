@@ -11,6 +11,7 @@ use common\models\ProductModel;
 class ForderController extends FBaseController
 {
 	public $wave;
+    // public $orderState = 'active';
 	/**
      *  ajax 预订
      */

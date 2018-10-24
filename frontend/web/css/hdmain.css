@@ -820,6 +820,7 @@ header.hd_header{
 }
 .pop_order_div ul.dark{
 	background: #e5e5e5;
+	overflow-x: scroll;
 }
 .pop_order_div li{
 	width: 107px;

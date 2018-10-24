@@ -64,6 +64,8 @@ class DefaultController extends BaseController
     public function actionCache()
     {
         Yii::$app->cache->flush();
+        echo file_get_contents('http://128.128.1.75/default/cache');
+        echo file_get_contents('http://128.128.1.74/default/cache');
         echo "清除缓存";
     }
 }
