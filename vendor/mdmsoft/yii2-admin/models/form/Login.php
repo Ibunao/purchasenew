@@ -1,20 +1,21 @@
 <?php
-namespace common\models;
+
+namespace mdm\admin\models\form;
 
 use Yii;
 use yii\base\Model;
+use mdm\admin\models\User;
 
 /**
  * Login form
  */
-class LoginForm extends Model
+class Login extends Model
 {
     public $username;
     public $password;
     public $rememberMe = true;
-
-    private $_user;
-
+    
+    private $_user = false;
 
     /**
      * @inheritdoc
@@ -51,12 +52,12 @@ class LoginForm extends Model
     /**
      * Logs in a user using the provided username and password.
      *
-     * @return bool whether the user is logged in successfully
+     * @return boolean whether the user is logged in successfully
      */
     public function login()
     {
         if ($this->validate()) {
-            return Yii::$app->user->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
+            return Yii::$app->getUser()->login($this->getUser(), $this->rememberMe ? 3600 * 24 * 30 : 0);
         } else {
             return false;
         }
@@ -67,9 +68,9 @@ class LoginForm extends Model
      *
      * @return User|null
      */
-    protected function getUser()
+    public function getUser()
     {
-        if ($this->_user === null) {
+        if ($this->_user === false) {
             $this->_user = User::findByUsername($this->username);
         }
 

@@ -18,10 +18,5 @@ class BaseController extends Controller
 	public function init()
 	{
 		parent::init();
-        $login = Yii::$app->session->get('backend_login_in');
-		//未登录跳转登陆
-        if (empty($login)){
-        	$this->redirect(['/admin/login']);
-        } 
 	}
 }

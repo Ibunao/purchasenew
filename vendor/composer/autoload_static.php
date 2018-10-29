@@ -32,6 +32,7 @@ class ComposerStaticInit9ff3dcec2b92c403b36045f7c7a72c1d
         'm' => 
         array (
             'moonland\\phpexcel\\' => 18,
+            'mdm\\admin\\' => 10,
         ),
         'c' => 
         array (
@@ -117,6 +118,10 @@ class ComposerStaticInit9ff3dcec2b92c403b36045f7c7a72c1d
         'moonland\\phpexcel\\' => 
         array (
             0 => __DIR__ . '/..' . '/moonlandsoft/yii2-phpexcel',
+        ),
+        'mdm\\admin\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/mdmsoft/yii2-admin',
         ),
         'cebe\\markdown\\' => 
         array (

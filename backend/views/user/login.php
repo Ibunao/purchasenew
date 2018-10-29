@@ -59,7 +59,7 @@ AppAsset::register($this);
                     <fieldset>
                         <label class="block clearfix">
                             <span class="block input-icon input-icon-right">
-                                <input type="text" class="form-control" name="Desktopusers[name]"/>
+                                <input type="text" class="form-control" name="Desktopusers[username]"/>
                                 <i class="icon-user"></i>
                             </span>
                         </label>
