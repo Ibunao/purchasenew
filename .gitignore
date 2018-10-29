@@ -46,3 +46,4 @@ backend/web/images/
 api/web/images/
 backend/web/allImages/
 backend/web/useImages/
+backend/controllers/laokuan.sql

@@ -107,6 +107,26 @@ class HelpController extends Controller
 
         return $this->render('upload', ['model' => $model]);
     }
+    public function actionCacheModelsn()
+    {
+        // 用07的数据库
+        $model_sn = (new Query)->select('model_sn')
+            ->from('meet_product')
+            ->groupBy('model_sn')
+            ->all();
+        $arr = [];
+        foreach ($model_sn as $key => $item) {
+            $arr[] = $item['model_sn'];
+        }
+        var_dump($arr, count($arr));
+        Yii::$app->cache->set('cache-model_sn', $arr);
+    }
+    public function actionGetModelsn()
+    {
+        $arr = Yii::$app->cache->get('cache-model_sn');
+        // var_dump($arr, count($arr));
+        // Yii::
+    }
     /**
      * 查看日志
      * @return [type] [description]

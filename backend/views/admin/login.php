@@ -22,11 +22,11 @@ AppAsset::register($this);
 
 </head>
 <script type="text/javascript">
-    var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
-    if (!isChrome) {
-        alert("不是Chrome浏览器");
-        location.href='/';
-    }
+    // var isChrome = window.navigator.userAgent.indexOf("Chrome") !== -1;
+    // if (!isChrome) {
+    //     alert("不是Chrome浏览器");
+    //     location.href='/';
+    // }
 </script>
 <?php $this->beginBody() ?>
 <body class="login-layout" style="background-color: #478fca !important;">

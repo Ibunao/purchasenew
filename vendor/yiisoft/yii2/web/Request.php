@@ -570,7 +570,7 @@ class Request extends \yii\base\Request
                 }
             }
         }
-
+        // $this->_hostInfo .= ':90';
         return $this->_hostInfo;
     }
 
