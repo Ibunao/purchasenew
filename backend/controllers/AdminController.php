@@ -20,7 +20,7 @@ class AdminController extends Controller
     {
         $this->layout = false;
         $session = Yii::$app->session;
-        //登陆过的直接跳转
+        //已登陆的直接跳转首页
         $login = $session->get('backend_login_in');
         if (!empty($login)) {
             $this->redirect(['/default/index']);
