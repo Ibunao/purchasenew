@@ -58,12 +58,12 @@ use common\widgets\Alert;
                         <img class="nav-user-photo" src="/avatars/user.jpg" alt="Jason's Photo" />
                             <span class="user-info">
                                 <small>欢迎光临,</small>
-                                <?= Yii::$app->session['_admini']['name'];?>
+                                <?= Yii::$app->user->identity->username;?>
                             </span>
                         <i class="icon-caret-down"></i>
                     </a>
                     <ul class="user-menu pull-right dropdown-menu dropdown-yellow dropdown-caret dropdown-close">
-                        <li>
+                        <!-- <li>
                             <a href="#">
                                 <i class="icon-cog"></i>
                                 设置
@@ -74,8 +74,8 @@ use common\widgets\Alert;
                                 <i class="icon-user"></i>
                                 个人资料
                             </a>
-                        </li>
-                        <li class="divider"></li>
+                        </li> -->
+                        <!-- <li class="divider"></li> -->
                         <li>
                             <a href="<?= Url::to(['/user/logout']) ;?>">
                                 <i class="icon-off"></i>

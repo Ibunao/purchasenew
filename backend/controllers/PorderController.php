@@ -35,13 +35,8 @@ class PorderController extends BaseController
      */
     public function actionIndex()
     {
-        # 可选项，筛选条件
-    	$select_option = Yii::$app->cache->get('b_product_select_option');
+    	$select_option = $this->tables();
 
-    	if(empty($select_option))
-    	{
-    	    $select_option = $this->tables();
-    	}
     	$pageIndex = Yii::$app->request->get('page', 1);
 
     	$params= Yii::$app->request->get('param', []);
@@ -195,6 +190,12 @@ class PorderController extends BaseController
      * @return [type] [description]
      */
     public function tables(){
+        $select_option = Yii::$app->cache->get('b_product_select_option');
+
+        if(!empty($select_option))
+        {
+            return $select_option;
+        }
         //订货会：
         $select_option['purchase'] = PurchaseModel::getPurchase();
         //（渠道）客户类型：

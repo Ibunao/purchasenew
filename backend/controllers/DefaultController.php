@@ -53,7 +53,7 @@ class DefaultController extends BaseController
         $result['all_target'] != 0 ? $result['all_target_rate'] = round($result['confirm_orders'] / $result['all_target']*100, 2) : $result['all_target_rate'] = 0;
         //加盟审核后达成率  
         $result['jm_target'] != 0 ? $result['jm_target_rate'] = round($result['jm_finish'] / $result['jm_target'] *100, 2) : $result['jm_target_rate'] = 0;
-
+        //直营审核后达成率  
         $result['zy_target'] != 0 ? $result['zy_target_rate'] = round($result['zy_finish'] / $result['zy_target'] *100, 2) : $result['zy_target_rate'] = 0;
 
         return $this->render('index', ['res'=>$result]);

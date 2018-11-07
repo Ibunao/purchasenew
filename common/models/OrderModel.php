@@ -519,8 +519,7 @@ foreach ($queryAll as $key => $order) {
         }
         $query->orderBy([$orderBy => SORT_DESC]);
         $result = $query->select($select)->all();
-// var_dump($result);exit;
-        $orderIds = [];
+
         //判断下订单的价格是够改动
         foreach ($result as $k => $item) {
             //获取订单的价格
@@ -531,30 +530,8 @@ foreach ($queryAll as $key => $order) {
             if ($price['newprice'] != $price['oldprice']) {
                 $result[$k]['is_diff'] = true;
             }
-            // 记录订单id
-            $orderIds[] = $item['order_id'];
         }
-        // 添加品牌
-        // $bands = (new Query)->select(['SUM(oi.price * nums) as total', 'b.brand_id', 'b.brand_name', 'oi.order_id'])
-        //     ->from('meet_order_items as oi', 'oi.order_id = o.order_id')
-        //     ->leftJoin('meet_product as p', 'p.product_id = oi.product_id')
-        //     ->leftJoin('meet_brand as b', 'p.brand_id = b.brand_id')
-        //     ->andWhere(['oi.disabled' => 'false'])
-        //     ->andWhere(['in', 'oi.order_id', $orderIds])
-        //     // ->andWhere(['o.status' => 'finish'])
-        //     ->groupBy('oi.order_id, b.brand_id')
-        //     ->all();
-        // $orderBands = [];
-        // foreach ($bands as $key => $value) {
-        //     $orderBands[$value['order_id']][$value['brand_name']] = $value['total'];
-        // }
-        // foreach ($result as $k => $v) {
-        //     foreach ($orderBands[$v['order_id']] as $key => $value) {
-        //         $orderBands[$v['order_id']][$key] = round($orderBands[$v['order_id']][$key]/$result[$k]['cost_item'] * 100, 2).'%';
-        //     }
-        //     $result[$k]['brands'] = $orderBands[$v['order_id']];
-        // }
-        // var_dump($result);exit;
+
         return ['list'=>$result, 'pagination'=>$pagination, 'amount'=>$countMoney, 'amount_really'=>$finishMoney];
     }
     /**
@@ -580,6 +557,7 @@ foreach ($queryAll as $key => $order) {
             Yii::$app->db->createCommand()->update('meet_order', ['cost_item' => $info['amount']], 'order_id = '.$info['order_id'])->execute();
         }
     }
+    
     /**
      * 使用此方法的方法
      * this/orderQueryList
