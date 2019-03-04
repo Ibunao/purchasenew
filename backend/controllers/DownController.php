@@ -21,31 +21,12 @@ use common\models\OrderModel;
 use common\helpers\IoXls;
 
 /**
- * 下载订单
+ * 临时下载
  * @author dingran
  * @date(2017.8.14)
  */
 class DownController extends Controller
 {
-	public function actionIndex()
-	{
-		$query = new Query;
-		$result = $query->select(['p.serial_num', 'p.style_sn', 'p.color_id', 'size_id', 'sum(oi.nums) as nums'])
-			->from('meet_product as p')
-			->leftJoin('meet_order_items as oi', 'p.product_id = oi.product_id')
-			->where(['oi.disabled' => 'false'])
-			->groupBy('oi.product_id')
-			->all();
-		var_dump($result);exit;
-		$keys = ['流水号','款号','颜色','尺码','色号','订单量'];
-		$filename = '商品导出筛选结果';
-		$export = new IoXls();
-	    $export->export_begin($keys, $filename, count($data));
-	    $export->export_rows($data);
-	    $export->export_rows($data2);
-	    $export->export_finish();
-
-	}
 	/**
 	 * 下载
 	 * 大中小类，流水号，款号，商品名称，色号，颜色名称，尺码，波段，季节，商品等级，吊牌价，加盟订单数，直营订单数，总订单数
@@ -166,5 +147,123 @@ class DownController extends Controller
 			->indexBy('level_id')
 			->all();
 		return ['cat_b' => $cat_b, 'cat_m' => $cat_m, 'cat_s' => $cat_s, 'color' => $color, 'size' => $size, 'wave' => $wave, 'season' => $season, 'level' => $level];
+	}
+	/**
+	 * 下载
+	 * 商品代码 商品名称 商品价格 直营订货量 加盟订货量  
+	 * @return [type] [description]
+	 */
+	public function actionIndex2()
+	{
+		$query = new Query;
+		$temp = $query->select(['oi.model_sn', 'oi.name', 'p.cost_price', 'c.type', 'sum(oi.nums) nums'])
+			->from('meet_order_items oi')
+			->leftJoin('meet_product p', 'p.product_id = oi.product_id')
+			->leftJoin('meet_order o', 'o.order_id = oi.order_id')
+			->leftJoin('meet_customer c', 'c.customer_id = o.customer_id')
+			->where(['oi.disabled' => 'false'])
+			->groupBy(['oi.model_sn', 'c.type'])
+			->all();
+		$result = [];
+		foreach ($temp as $key => $item) {
+			$result[$item['model_sn'].$item['type']] = $item;
+		}
+		Yii::$app->cache->set('index2-temp', $result);
+		echo json_encode($result);
+	}
+	/**
+	 * 同上，切换库了2018年的比较特殊
+	 * @return [type] [description]
+	 */
+	public function actionIndex3()
+	{
+		$query = new Query;
+		$temp = $query->select(['oi.model_sn', 'oi.name', 'p.cost_price', 'c.type', 'sum(oi.nums) nums'])
+			->from('meet_order_items oi')
+			->leftJoin('meet_product p', 'p.product_id = oi.product_id')
+			->leftJoin('meet_order o', 'o.order_id = oi.order_id')
+			->leftJoin('meet_customer c', 'c.customer_id = o.customer_id')
+			->where(['oi.disabled' => 'false'])
+			->groupBy(['oi.model_sn', 'c.type'])
+			->all();
+		$result = [];
+		foreach ($temp as $key => $item) {
+			if (isset($result[$item['model_sn']])) {
+				if ($item['type'] == '客户') {
+					if (isset($result[$item['model_sn']]['kehu'])) {
+						$result[$item['model_sn']]['kehu'] += $item['nums'];
+					}else{
+						$result[$item['model_sn']]['kehu'] = $item['nums'];
+					}
+				}else{
+					if (isset($result[$item['model_sn']]['zhiying'])) {
+						$result[$item['model_sn']]['zhiying'] += $item['nums'];
+					}else{
+						$result[$item['model_sn']]['zhiying'] = $item['nums'];
+					}
+				}
+			}else {
+				if ($item['type'] == '客户') {
+					$item['kehu'] = $item['nums'];
+				}else{
+					$item['zhiying'] = $item['nums'];
+				}
+				unset($item['type']);
+				unset($item['nums']);
+				$result[$item['model_sn']] = $item;
+			}
+		}
+
+		$left = Yii::$app->cache->get('index2-temp');
+		foreach ($left as $key => $item) {
+			if (isset($result[$item['model_sn']])) {
+				if ($item['type'] == '客户') {
+					if (isset($result[$item['model_sn']]['kehu'])) {
+						$result[$item['model_sn']]['kehu'] += $item['nums'];
+					}else{
+						$result[$item['model_sn']]['kehu'] = $item['nums'];
+					}
+				}else{
+					if (isset($result[$item['model_sn']]['zhiying'])) {
+						$result[$item['model_sn']]['zhiying'] += $item['nums'];
+					}else{
+						$result[$item['model_sn']]['zhiying'] = $item['nums'];
+					}
+				}
+			}else {
+				if ($item['type'] == '客户') {
+					$item['kehu'] = $item['nums'];
+				}else{
+					$item['zhiying'] = $item['nums'];
+				}
+				unset($item['type']);
+				unset($item['nums']);
+				$result[$item['model_sn']] = $item;
+			}
+		}
+		// echo json_encode($result);exit;
+		foreach ($result as $key => $item) {
+			if (!isset($item['kehu'])) {
+				$item['kehu'] = 0;
+			}
+			if (!isset($item['zhiying'])) {
+				$item['zhiying'] = 0;
+			}
+			$sortArr = [
+				'A' => $item['model_sn'],
+				'B' => $item['name'],
+				'C' => $item['cost_price'],
+				'D' => $item['zhiying'],
+				'E' => $item['kehu']
+			];
+			$result[$key] = $sortArr;
+		}
+		$filename = 'index3';
+		$title = ['商品代码', '商品名称', '价格', '直营订货量', '加盟订货量'];
+		$ioxls = new IoXls;
+		$ioxls->export_begin($title, $filename);
+		$ioxls->export_rows($result);
+		$ioxls->export_finish();
+		// echo json_encode($result);
 	}
 }

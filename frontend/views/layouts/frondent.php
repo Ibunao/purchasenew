@@ -1,8 +1,11 @@
+<?php 
+use common\models\ConfigModel;
+ ?>
 <!doctype html>
 <html>
 <head>
     <title>
-        <?= Yii::$app->params['web_sites_title']; ?>
+        <?= ConfigModel::getWebTitle(); ?>
     </title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <meta content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />

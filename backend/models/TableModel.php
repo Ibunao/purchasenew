@@ -4,6 +4,9 @@ namespace backend\models;
 use yii\db\Query;
 /**
 * 综合数据查询
+* use
+* DefaultController
+* 
 * @user ding
 * @date(2017.07.27)
 */

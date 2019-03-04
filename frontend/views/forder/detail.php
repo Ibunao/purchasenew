@@ -1,3 +1,6 @@
+<?php 
+use common\models\ConfigModel;
+ ?>
 <?php foreach ($list as $v):?>
 <ul class="pd_list_mod lazyimg">
     <li class="pd_list_pic_area fl">
@@ -6,10 +9,10 @@
             <span class="num_pd_list fl"><?= $v['serial_num'];?>.</span>
         </div>
         <a href="#inline_<?= $v['serial_num'];?>" class="fancybox_img">
-            <img class="pd_list_pic" src="<?= Yii::$app->params['img_url'].$v['img_url']; ?>">
+            <img class="pd_list_pic" src="<?= ConfigModel::getImgUrl().$v['img_url']; ?>">
         </a>
         <div id="inline_<?= $v['serial_num'];?>" style="width:300px;display: none;">
-            <img src="<?= Yii::$app->params['img_url'].$v['img_url']; ?>">
+            <img src="<?= ConfigModel::getImgUrl().$v['img_url']; ?>">
         </div>
     </li>
     <li class="pd_list_dt">

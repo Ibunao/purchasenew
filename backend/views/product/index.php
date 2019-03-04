@@ -218,8 +218,7 @@ $this->params['breadcrumbs'] = [
         </td>
         <td width="60"><?= $v['serial_num'] ?></td>
         <td width="100"><?= $v['model_sn'] ?></td>
-        <!-- <td width="30"><?= $v['purchase_id'] == 1 ? 'A' : 'B'; ?></td> -->
-        <td width="30"><?= $v['purchase_id'] == 1 ? Yii::$app->params['purchase_oct'] : 'B'; ?></td>
+        <td width="30"><?= $selectFilter['purchase'][$v['purchase_id']]; ?></td>
         <td width="100"><?= $v['name'] ?></td>
         <td width="100"><?= $v['cat_name'] ?></td>
         <td width="100"><?= $v['cat_middle'] ?></td>
@@ -249,7 +248,7 @@ $this->params['breadcrumbs'] = [
             }
             $.ajax({
                 type: "get",
-                url: "<?=Url::to(['order/product/AjaxCatMiddle']) ;?>?catBig="+cat,
+                url: "<?=Url::to(['/product/ajax-cat-middle']) ;?>?catBig="+cat,
                 dataType: "json",
                 data: cat,
                 success:function (data) {

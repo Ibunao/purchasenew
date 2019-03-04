@@ -12,6 +12,7 @@ use common\models\UploadForm;
 use common\models\AgentModel;
 use PHPExcel;
 use PHPExcel_IOFactory;
+use common\models\ConfigModel;
 /**
  * 辅助方法
  */
@@ -19,7 +20,7 @@ class HelpController extends Controller
 {
     public $enableCsrfValidation = false;
     /**
-     * 下载缺少的图片
+     * 下载数据库商品缺少的图片
      * @return [type] [description]
      */
     public function actionImage()
@@ -33,7 +34,7 @@ class HelpController extends Controller
         foreach ($result as $key => $item) {
             $checkArr[] = $item['model_sn'].'_'.$item['color_no'].'.jpg';
         }
-        $root = Yii::$app->basePath.'/web'.Yii::$app->params['imagePath'];
+        $root = Yii::$app->basePath.'/web'.ConfigModel::getImgPath();
         $result = File::checkHas($root, $checkArr);
         // $result = File::checkHas($root, ['18131501_103.jpg']);
         // var_dump($result);exit;
@@ -48,27 +49,26 @@ class HelpController extends Controller
         $export->export_begin($keys, $filename, count($rews));
         $export->export_rows($rews);
         $export->export_finish();
-        // return $this->render('image');
     }
     /**
-     * 
+     * 临时
+     * 将下面那个excel数据中的产品
      * @return [type] [description]
      */
     public function actionCopyImage()
     {
         $data = Yii::$app->cache->get('insert-getinfo-for-img-source-data');
+        // 所有图片所在位置
         $root = Yii::$app->basePath.'/web/allImages/';
         $checkArr = [];
         foreach ($data as $key => $item) {
             $checkArr[] = $item[0].'_'.$item['1'].'.jpg';
         }
         $copyRoot = Yii::$app->basePath.'/web/useImages/';
-        // 复制
+        // 如果存在则复制
         $result = File::checkHas($root, $checkArr, true, $copyRoot);
         return;
         // 导出不存在的
-        // $result = File::checkHas($root, ['18131501_103.jpg']);
-        // var_dump($result);exit;
         $rews = [];
         $result = array_unique($result);
         foreach ($result as $key => $item) {
@@ -83,7 +83,8 @@ class HelpController extends Controller
         $export->export_finish();
     }
     /**
-     * 读取excel数据到缓存
+     * 临时 用来导入老产品的图片
+     * 读取excel数据老产品的数据到缓存
      * 
      * @return [type] [description]
      */
@@ -107,26 +108,7 @@ class HelpController extends Controller
 
         return $this->render('upload', ['model' => $model]);
     }
-    public function actionCacheModelsn()
-    {
-        // 用07的数据库
-        $model_sn = (new Query)->select('model_sn')
-            ->from('meet_product')
-            ->groupBy('model_sn')
-            ->all();
-        $arr = [];
-        foreach ($model_sn as $key => $item) {
-            $arr[] = $item['model_sn'];
-        }
-        var_dump($arr, count($arr));
-        Yii::$app->cache->set('cache-model_sn', $arr);
-    }
-    public function actionGetModelsn()
-    {
-        $arr = Yii::$app->cache->get('cache-model_sn');
-        // var_dump($arr, count($arr));
-        // Yii::
-    }
+
     /**
      * 查看日志
      * @return [type] [description]

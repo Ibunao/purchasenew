@@ -13,10 +13,17 @@ use common\helpers\IoXls;
 /**
  * 批量读取
  * 只能使用xls文件
+ * 
+ * 一下的所有方法只是暂时使用，商品部的傻叉没有做老款数据，要我们自己补  
+ * 
  * @author        ding
  */
 class InsertController extends Controller
 {
+    /**
+     * 批量导入agent  
+     * @return [type] [description]
+     */
 	public function actionRelation()
 	{
 		$model = new UploadForm();

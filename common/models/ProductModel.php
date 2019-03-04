@@ -12,7 +12,7 @@ use common\models\PurchaseModel;
 use common\models\OrderModel;
 use common\models\SchemeModel;
 use yii\data\Pagination;
-
+use common\models\ConfigModel;
 /**
  * This is the model class for table "{{%product}}".
  *
@@ -124,7 +124,12 @@ class ProductModel extends \yii\db\ActiveRecord
         if (!empty($data['catMiddle'])) {
             $result['catSmall'] = CatSmallModel::getCatSmall($data['catMiddle']);
         }
-
+        //订货会类型
+        $purchase = new PurchaseModel();
+        $purchase_list = $purchase->getPurchase();
+        foreach ($purchase_list as $k => $v) {
+            $result['purchase'][$v['purchase_id']] = $v['purchase_name'];
+        }
         return $result;
     }
     /**
@@ -230,14 +235,14 @@ class ProductModel extends \yii\db\ActiveRecord
      */
     public function getProductFilter($data = [])
     {
-        $result = false;Yii::$app->cache->get('add-product-filter');
+        $result = Yii::$app->cache->get('add-product-filter');
         if (empty($result)) {
             //获取订购会数据
             $purchaseModel = new PurchaseModel;
             $result['purchase'] = $purchaseModel->getPurchase();
             // var_dump($result['purchase']);exit;
             // 暂时修改
-            unset($result['purchase']['1']);
+            // unset($result['purchase']['1']);
             //获取品牌数据
             $brandModel = new BrandModel;
             $result['brand'] = $brandModel->getBrand();
@@ -400,7 +405,7 @@ class ProductModel extends \yii\db\ActiveRecord
         $color_no = (new ColorModel)->transColorAll()[$param['color']]['color_no'];
         //当上传图片为空，给定默认值
         if (empty($param['image'])) {
-            $param['image'] = Yii::$app->params['imagePath'] . $param['modelSn'] . "_" . $color_no . ".jpg";
+            $param['image'] = ConfigModel::getImgPath() . $param['modelSn'] . "_" . $color_no . ".jpg";
         }
 
         //判断是否有空值
@@ -557,7 +562,7 @@ class ProductModel extends \yii\db\ActiveRecord
         // $this->disabledErrorProduct($model_sn);
         //当上传图片为空，给定默认值
         if (empty($param['image'])) {
-            $param['image'] = Yii::$app->params['imagePath'] . $param['modelSn'] . "_" . $color_no . ".jpg";
+            $param['image'] = ConfigModel::getImgPath() . $param['modelSn'] . "_" . $color_no . ".jpg";
         }
 
         $nowTime = time();
@@ -991,7 +996,7 @@ class ProductModel extends \yii\db\ActiveRecord
         $color_no = (new ColorModel)->transColorAll()[$param['color']]['color_no'];
         //当上传图片为空，给定默认值
         if (empty($param['image'])) {
-            $param['image'] = Yii::$app->params['imagePath'] . $param['modelSn'] . "_" . $color_no . ".jpg";
+            $param['image'] = ConfigModel::getImgPath() . $param['modelSn'] . "_" . $color_no . ".jpg";
         }
 
         //判断是否有空值
@@ -1086,7 +1091,7 @@ class ProductModel extends \yii\db\ActiveRecord
             ->execute();
         if ($result) {
             // 添加日志 
-            Yii::info(Yii::$app->request->getPathInfo().$param['modelSn'], Yii::$app->session->get('backend_login_in')['name']);
+            Yii::info(Yii::$app->request->getPathInfo().$param['modelSn'], Yii::$app->user->identity->username);
             return true;
         }
         return ['code' => 400, 'msg' => "添加失败"];
@@ -1748,8 +1753,8 @@ class ProductModel extends \yii\db\ActiveRecord
 
     public function orderSprandSumItems($item_list)
     {
-        $season_one = Yii::$app->params['season_one'];
-        $season_two = Yii::$app->params['season_two'];
+        $season_one = ConfigModel::getSeasonInfo()['season_one'];
+        $season_two = ConfigModel::getSeasonInfo()['season_two'];
         $season_other = '3';
         //按product_id 排列数组
         foreach ($this->productListCache() as $v) {
@@ -2138,9 +2143,9 @@ class ProductModel extends \yii\db\ActiveRecord
     public function orderSeasonTable($orderList)
     {
         //配置第一个季节ID
-        $season_spring_one = Yii::$app->params['season_one'];
+        $season_spring_one = ConfigModel::getSeasonInfo()['season_one'];
         //配置第二个季节ID
-        $season_spring_two = Yii::$app->params['season_two'];
+        $season_spring_two = ConfigModel::getSeasonInfo()['season_two'];
 
         $listProducts = $this->productListCache();
         $all_list = array();

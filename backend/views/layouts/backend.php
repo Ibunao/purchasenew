@@ -4,14 +4,15 @@ use yii\helpers\Url;
 use backend\config\Menu;
 use yii\widgets\Breadcrumbs;
 use common\widgets\Alert;
+use common\models\ConfigModel;
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title><?= Yii::$app->params['web_sites_title']; ?>后台</title>
-    <meta name="keywords" content="<?= Yii::$app->params['web_sites_title']; ?>后台" />
-    <meta name="description" content="<?= Yii::$app->params['web_sites_title']; ?>后台" />
+    <title><?= ConfigModel::getWebTitle(); ?>后台</title>
+    <meta name="keywords" content="<?= ConfigModel::getWebTitle(); ?>后台" />
+    <meta name="description" content="<?= ConfigModel::getWebTitle(); ?>后台" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- basic styles -->

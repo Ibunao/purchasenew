@@ -5,6 +5,7 @@ namespace common\models;
 use Yii;
 use yii\base\Model;
 use yii\db\Query;
+use common\models\ConfigModel;
 
 class PublicModel extends Model
 {
@@ -65,7 +66,7 @@ class PublicModel extends Model
      */
     static function flushCacheAll()
     {
-        $res = Yii::$app->params['flush_cache_url'];
+        $res = ConfigModel::getAllCacheUrl();
         foreach ($res as $val) {
             file_get_contents($val . '/default/cache');
         }

@@ -21,6 +21,8 @@ use PHPExcel;
 use PHPExcel_IOFactory;
 use common\helpers\IoXls;
 use common\config\ParamsClass;
+use common\models\PurchaseModel;
+use common\models\ConfigModel;
 /**
  * 商品管理
  * @author        ding
@@ -43,7 +45,7 @@ class ProductController extends BaseController
         if (in_array($route, $ids)) {
             Yii::$app->db->createCommand()->insert('meet_pchange_log', [
                 'change_id' => $route,
-                'change_name' => Yii::$app->session->get('backend_login_in')['name'],
+                'change_name' => Yii::$app->user->identity->username,
                 'change_log' => json_encode(['get'=>$_GET, 'post'=>$_POST]),
                 'create_time' => time(),
             ])->execute();
@@ -52,8 +54,7 @@ class ProductController extends BaseController
     }
 	public function actionIndex()
 	{
-        // $catSmallArr = (new CatSmallModel)->getList('cat_name');
-        // var_dump($catSmallArr,$catSmallArr['包鞋袜']);exit;
+        // Yii::$app->cache->flush();
 		$request = Yii::$app->request;
 		$pageIndex = $request->get('page', 1);
 		$param = $request->get('param', []);
@@ -504,10 +505,6 @@ class ProductController extends BaseController
      */
     public function actionImport()
     {
-        if (!Yii::$app->params['product_include']) {
-            echo "502 forbidden";
-            die;
-        }
         return $this->render('import');
     }
 
@@ -555,11 +552,9 @@ class ProductController extends BaseController
                 echo "<script>alert('表中没有相关数据，请检查');</script>";
                 die;
             }
-            // 定义订货会
-            $purchase = array(
-                Yii::$app->params['purchase_oct'],
-                Yii::$app->params['purchase_uki'],
-            );
+            // 订货会参数
+            $purchase = PurchaseModel::getIdPurchase();
+
             $res_str = "";
             $schemeIdToName = [];
             //色系id对应色系记录
@@ -906,7 +901,7 @@ $schemeArr = (new SchemeModel)->getList('scheme_name');
 $typeArr = (new TypeModel)->getList('type_name');
 $groupSize = (new PublicModel)->getGroupSize();
         for ($i = 1, $num = 1; $i < $len_result; $i++, $num++) {
-            $purchase_id = $result[$i][1] == Yii::$app->params['purchase_oct'] ? 1 : 2;
+            $purchase_id = array_search($result[$i][1], PurchaseModel::getIdPurchase());
             $color_id = $colorArr[$result[$i][5]]['color_id'];
             $size_id = $sizeArr[$result[$i][6]]['size_id'];
             $brand_id = $brandArr[$result[$i][2]]['brand_id'];
@@ -929,7 +924,7 @@ $groupSize = (new PublicModel)->getGroupSize();
             }
             $style_sn = $model_sn . sprintf('%04d', $colorArr[$result[$i][5]]['color_no']);
             $product_sn = $style_sn . sprintf('%03d', $num);
-            $img_url = Yii::$app->params['imagePath'] . $model_sn . '_' . $colorArr[$result[$i][5]]['color_no'] . '.jpg';
+            $img_url = ConfigModel::getImgPath() . $model_sn . '_' . $colorArr[$result[$i][5]]['color_no'] . '.jpg';
             $data_values[] = [$purchase_id, $product_sn, $style_sn, $model_sn, $serial_num, $name, $img_url,
                          $color_id, $size_id, $brand_id, $b_cat_id, $m_cat_id, $s_cat_id, $season_id,
                          $level_id, $wave_id, $scheme_id, $cost_price, $price_level_id, $memo, $type_id];

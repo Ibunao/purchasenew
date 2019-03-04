@@ -35,7 +35,7 @@ class IoXls
     }
 
 
-    public function export_begin($keys, $type, $count)
+    public function export_begin($keys, $type, $count='')
     {
 
         $this->download($type . '.xlsx');

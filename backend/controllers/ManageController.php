@@ -7,15 +7,22 @@ use common\models\CustomerModel;
 use common\models\AgentModel;
 use PHPExcel;
 use PHPExcel_IOFactory;
-use common\helpers\IoXls;
+// use common\helpers\IoXls;
+use common\helpers\SimpleExcel;
 /**
- *用户管理
+ * 用户管理
  * @author        ding
  */
 class ManageController extends BaseController
 {
-    public $admin;
-    public $offPrize = 'percent';
+    //excel中的各品类订货折扣是按照百分比的形式还是小数形式
+    //true 表示百分比形式
+    public $percentDiscount = false;
+    //excel中的各品类订货指标是按照百分比的形式还是计算好的数额
+    //true 表示折扣是按照百分比显示, xls的折扣写的是 50% 的形式
+    public $percentTarget = false;
+    public $purchaseList = [];
+    
     public function actionIndex()
     {
         $param = Yii::$app->request->get('param');
@@ -25,7 +32,7 @@ class ManageController extends BaseController
         $insertOption = $guestMange->userFilter();
         // 查询检索的数据
         $selectResult = $guestMange->selectLikeDatabaseOperation($param);
-
+        
         return $this->render('index', [
             'param' => $param,
             'insert_option' => $insertOption,//显示内容
@@ -42,7 +49,7 @@ class ManageController extends BaseController
         $guestModel = new CustomerModel;
         $arr = Yii::$app->request->post('param');
         if (!empty($arr)) {
-            //插入
+            // 写入
             $res = $guestModel->insertDbOperation($arr);
             if ($res) {
                 Yii::$app->session->setFlash('info', '添加成功');
@@ -64,10 +71,6 @@ class ManageController extends BaseController
      */
     public function actionImport()
     {
-        if (!Yii::$app->params['customer_include']) {
-            echo "502 forbidden";
-            die;
-        }
         return $this->render('import');
     }
 
@@ -77,9 +80,8 @@ class ManageController extends BaseController
     public function actionUserImport()
     {
         header('Content-Type:text/html;Charset=GB2312;');
-        //折扣是按照百分比的显示, 百分比就是xls的折扣写的是[50%], 而不是百分比的就会写[0.5]
         
-        $percentTarget = false;
+        
         $postFile = !empty($_FILES["file"]['name']) ? $_FILES['file'] : exit("请上传文件");
         //获取文件后缀
         $postFileType = pathinfo($postFile['name'], PATHINFO_EXTENSION);
@@ -116,11 +118,12 @@ class ManageController extends BaseController
             }
             $customer = new CustomerModel();
             $list = $customer->userFilter();
-            $list['purchase'] = array(
-                Yii::$app->params['purchase_oct'],
-                Yii::$app->params['purchase_uki'],
-                Yii::$app->params['purchase_all'],
-            );
+            $this->purchaseList = $list['purchase'];
+            // $list['purchase'] = array(
+            //     Yii::$app->params['purchase_oct'],
+            //     Yii::$app->params['purchase_uki'],
+            //     Yii::$app->params['purchase_all'],
+            // );
             $agent = new AgentModel();
             $agent_code = $agent->transAgentCode();
             $res_str = '';
@@ -131,6 +134,7 @@ class ManageController extends BaseController
 
                 if (empty($result[$i][0])) {
                     $warning .= "<span><b>客户代码为空</b></span>";
+                // 如果用户已经存在数据库中
                 } elseif (isset($guest_list[$result[$i][0]])) {
                     $warning .= "<span>客户代码<b>" . $result[$i][0] . "</b>已存在</span>";
                 }
@@ -192,8 +196,8 @@ class ManageController extends BaseController
                     $warning .= "<span><b>代理名称与代理代码不匹配</b></span>";
                 }
 
-                //判断指标
-                if ($percentTarget) {
+                //各品类指标
+                if ($this->percentTarget) {
                     //导入指标按百分比
                     $t_c1 = rtrim($result[$i][13], '%');
                     $t_c2 = rtrim($result[$i][14], '%');
@@ -222,66 +226,66 @@ class ManageController extends BaseController
                         }
                     }
                 }
-
+                // 各品类折扣
                 $d_c1 = rtrim($result[$i][18], '%');
                 $d_c2 = rtrim($result[$i][19], '%');
                 $d_c3 = rtrim($result[$i][20], '%');
                 $d_c4 = rtrim($result[$i][21], '%');
                 $d_c6 = rtrim($result[$i][22], '%');
-                if ($this->offPrize == 'percent') {
+                if ($this->percentDiscount == true) {
 
                     if (!empty($d_c1)) {
-                        if ($d_c1 <= 0 || $d_c1 > 100) {
-                            $warning .= '<span><b>服装折扣</b>应该在0-100且不能与0之间</span>';
+                        if ($d_c1 <= 1 || $d_c1 > 100) {
+                            $warning .= '<span><b>服装折扣</b>应该在1-100之间且不能为100</span>';
                         }
                     }
 
                     if (!empty($d_c2)) {
-                        if ($d_c2 <= 0 || $d_c2 > 100) {
-                            $warning .= '<span><b>家居折扣</b>应该在0-100且不能与0之间</span>';
+                        if ($d_c2 <= 1 || $d_c2 > 100) {
+                            $warning .= '<span><b>家居折扣</b>应该在1-100之间且不能为100</span>';
                         }
                     }
 
                     if (!empty($d_c3)) {
-                        if ($d_c3 <= 0 || $d_c3 > 100) {
-                            $warning .= '<span><b>防辐射折扣</b>应该在0-100且不能与0之间</span>';
+                        if ($d_c3 <= 1 || $d_c3 > 100) {
+                            $warning .= '<span><b>防辐射折扣</b>应该在1-100之间且不能为100</span>';
                         }
                     }
 
                     if (!empty($d_c4)) {
-                        if ($d_c4 <= 0 || $d_c4 > 100) {
-                            $warning .= "<span><b>备品折扣</b>应该在0-100且不能与0之间</span>";
+                        if ($d_c4 <= 1 || $d_c4 > 100) {
+                            $warning .= "<span><b>备品折扣</b>应该在1-100之间且不能为100</span>";
                         }
                     }
 
                     if (!empty($d_c6)) {
-                        if ($d_c6 <= 0 || $d_c6 > 100) {
-                            $warning .= "<span><b>化妆品折扣</b>应该在0-100且不能与0之间</span>";
+                        if ($d_c6 <= 1 || $d_c6 > 100) {
+                            $warning .= "<span><b>化妆品折扣</b>应该在1-100之间且不能为100</span>";
                         }
                     }
                 } else {
 
                     if (!empty($d_c1)) {
                         if ($d_c1 <= 0 || $d_c1 > 1) {
-                            $warning .= '<span><b>服装折扣</b>应该在0-1且不能与0之间</span>';
+                            $warning .= '<span><b>服装折扣</b>应该在0-1之间且不能为1</span>';
                         }
                     }
 
                     if (!empty($d_c2)) {
                         if ($d_c2 <= 0 || $d_c2 > 1) {
-                            $warning .= '<span><b>家居折扣</b>应该在0-1且不能与0之间</span>';
+                            $warning .= '<span><b>家居折扣</b>应该在0-1之间且不能为1</span>';
                         }
                     }
 
                     if (!empty($d_c3)) {
                         if ($d_c3 <= 0 || $d_c3 > 1) {
-                            $warning .= '<span><b>防辐射折扣</b>应该在0-1且不能与0之间</span>';
+                            $warning .= '<span><b>防辐射折扣</b>应该在0-1之间且不能为1</span>';
                         }
                     }
 
                     if (!empty($d_c4)) {
                         if ($d_c4 <= 0 || $d_c4 > 1) {
-                            $warning .= "<span><b>备品折扣</b>应该在0-1且不能与0之间</span>";
+                            $warning .= "<span><b>备品折扣</b>应该在0-1之间且不能为1</span>";
                         }
                     }
 
@@ -302,7 +306,7 @@ class ManageController extends BaseController
             }
             if (empty($res_str)) {
                 // 添加到数据库
-                $res = $this->addCsvData($percentTarget, $result);
+                $res = $this->addCsvData($result);
                 if ($res) {
                     Yii::$app->session->setFlash('info', '上传成功');
                     $this->redirect(['/manage/index']);//上传成功
@@ -321,10 +325,10 @@ class ManageController extends BaseController
     /**
      * 
      * 添加上传的csv文件的数据  客户数据
-     * @param $percentTarget
+     * @param $result  数据
      * @return bool
      */
-    public function addCsvData($percentTarget, $result)
+    public function addCsvData($result)
     {
         $len_result = count($result);
 
@@ -335,7 +339,13 @@ class ManageController extends BaseController
             $name = $result[$i][1];
             $password = md5(md5(substr($result[$i][2], -4)));
             $mobile = $result[$i][2];
-            $purchase_id = $result[$i][3] == Yii::$app->params['purchase_oct'] ? 1 : $result[$i][3] == Yii::$app->params['purchase_uki'] ? 2 : 3;
+            // 获取对应的订货会id  
+            foreach ($this->purchaseList as $key => $item) {
+                if ($result[$i][3] == $item) {
+                    $purchaseId = $key;
+                }
+            }
+            $purchase_id = $purchaseId;
             $department = $result[$i][4];
             $type = $result[$i][5];
             $area = $result[$i][6];
@@ -345,12 +355,14 @@ class ManageController extends BaseController
             $agent = ltrim($result[$i][10], "'");
             $relation_code = $result[$i][11]?:'';
             $target = $result[$i][12];
-            if($percentTarget){
+            // 各品类指标如果使用百分比
+            if($this->percentTarget){
                 $target_cat1 = rtrim($result[$i][13], "%") * $target / 100;
                 $target_cat2 = rtrim($result[$i][14], "%") * $target / 100;
                 $target_cat3 = rtrim($result[$i][15], "%") * $target / 100;
                 $target_cat4 = rtrim($result[$i][16], "%") * $target / 100;
                 $target_cat6 = rtrim($result[$i][17], "%") * $target / 100;
+            // 各品类指标使用具体的值
             }else{
                 $target_cat1 = $result[$i][13];
                 $target_cat2 = $result[$i][14];
@@ -358,17 +370,20 @@ class ManageController extends BaseController
                 $target_cat4 = $result[$i][16];
                 $target_cat6 = $result[$i][17];
             }
-            $discount_cat1 = rtrim($result[$i][18], "%");
-            $discount_cat2 = rtrim($result[$i][19], "%");
-            $discount_cat3 = rtrim($result[$i][20], "%");
-            $discount_cat4 = rtrim($result[$i][21], "%");
-            $discount_cat6 = rtrim($result[$i][22], "%");
             if ($code == $agent) {
                 $parent_id = 1;
             } else {
                 $parent_id = 0;
             }
-            if ($this->offPrize == 'percent') {
+
+
+            $discount_cat1 = rtrim($result[$i][18], "%");
+            $discount_cat2 = rtrim($result[$i][19], "%");
+            $discount_cat3 = rtrim($result[$i][20], "%");
+            $discount_cat4 = rtrim($result[$i][21], "%");
+            $discount_cat6 = rtrim($result[$i][22], "%");
+            // 各品类折扣使用百分比形式
+            if ($this->percentDiscount == true) {
                 if (empty($discount_cat1)) {
                     $discount_cat1 = 100;
                 }
@@ -384,6 +399,7 @@ class ManageController extends BaseController
                 if (empty($discount_cat6)) {
                     $discount_cat6 = 100;
                 }
+            // 各品类折扣使用小数形式
             } else {
                 if (empty($discount_cat1)) {
                     $discount_cat1 = 100;
@@ -422,10 +438,9 @@ class ManageController extends BaseController
     public function actionExport()
     {
         $filename = '客户列表' . date('Y_m_d', time());
-        $keys = array('客户ID', '是否为代理', '订货会', '客户代码', '客户名称', '手机号码', '客户类型', '省份', '地区', '订货目标', '部门类别', '负责人', '代理名称', '代理代码', '客户关系代码', '服装指标', '家居指标', '防辐射指标', '备品指标', '化妆品指标', '服装折扣', '家居折扣', '防辐射折扣', '备品折扣', '化妆品折扣');
+        $keys = ['客户ID', '是否为代理', '订货会', '客户代码', '客户名称', '手机号码', '客户类型', '省份', '地区', '订货目标', '部门类别', '负责人', '代理名称', '代理代码', '客户关系代码', '服装指标', '家居指标', '防辐射指标', '备品指标', '化妆品指标', '服装折扣', '家居折扣', '防辐射折扣', '备品折扣', '化妆品折扣'];
         $customerModel = new CustomerModel();
         $result = $customerModel->getAllCustomers();
-        $export = new IoXls();
         foreach ($result as $v) {
             $item = [];
             $item[] = $v['customer_id'];
@@ -455,9 +470,10 @@ class ManageController extends BaseController
             $item[] = $v['big_6_count'] . '%';
             $data[] = $item;
         }
-        $export->export_begin($keys, $filename, count($data));
-        $export->export_rows($data);
-        $export->export_finish();
+        // 下载
+        SimpleExcel::echoBegin($filename, $keys);
+        SimpleExcel::echoRows($data);
+        SimpleExcel::echoFinish();
     }
 
     /**
@@ -483,10 +499,6 @@ class ManageController extends BaseController
      */
     public function actionUpdate()
     {
-        if (!Yii::$app->params['update_customer_info']) {
-            echo "502 forbidding";
-            die;
-        }
         $user_id = Yii::$app->request->get('id', '');
         $guestModel = new CustomerModel();//实例化一个模型
         if ($_POST) {

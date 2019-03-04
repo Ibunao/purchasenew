@@ -175,7 +175,8 @@ class CustomerModel extends \yii\db\ActiveRecord
         foreach ($purchase_list as $k => $v) {
             $result['purchase'][$v['purchase_id']] = $v['purchase_name'];
         }
-        $result['purchase'][3] = 'AB';
+        
+        unset($result['purchase'][3]);
         //省份
         $result['province'] = Yii::$app->params['customer_province'];
 
@@ -250,6 +251,7 @@ class CustomerModel extends \yii\db\ActiveRecord
      */
     public function insertDbOperation($data = [])
     {
+        // 计算各种类指标
         if(($data['big_1']+$data['big_2']+$data['big_3']+$data['big_4']+$data['big_6'] == '100') && !empty($data['target'])){
             $data['big_1'] = (string)round($data['target'] * $data['big_1'] /100 , 2);
             $data['big_2'] = (string)round($data['target'] * $data['big_2'] /100 , 2);
@@ -257,6 +259,7 @@ class CustomerModel extends \yii\db\ActiveRecord
             $data['big_4'] = (string)round($data['target'] * $data['big_4'] /100 , 2);
             $data['big_6'] = (string)round($data['target'] * $data['big_6'] /100 , 2);
         }
+        // 各指标折扣
         if(empty($data['big_1_count'])){
             $data['big_1_count'] = 100;
         }

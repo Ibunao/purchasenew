@@ -1,4 +1,5 @@
 <?php
+use common\models\ConfigModel;
 $this->params['breadcrumbs'] = [
     ['label' => '订单'],
     ['label' => '订单详细汇总'],
@@ -58,23 +59,23 @@ $this->params['breadcrumbs'] = [
                     </tr>
                     <tr class="odd" style="background-color: #f9f9f9">
                         <!-- 款式数量-->
-                        <td><?php echo Yii::$app->params['season_one_name']; ?></td>
-                        <td><?php echo Yii::$app->params['season_two_name']; ?></td>
+                        <td><?php echo ConfigModel::getSeasonInfo()['season_one_name']; ?></td>
+                        <td><?php echo ConfigModel::getSeasonInfo()['season_two_name']; ?></td>
                         <td>其它</td>
                         <td>合计</td>
                         <!-- 订货数量-->
-                        <td><?php echo Yii::$app->params['season_one_name']; ?></td>
+                        <td><?php echo ConfigModel::getSeasonInfo()['season_one_name']; ?></td>
                         <td>占比</td>
-                        <td><?php echo Yii::$app->params['season_two_name']; ?></td>
+                        <td><?php echo ConfigModel::getSeasonInfo()['season_two_name']; ?></td>
                         <td>占比</td>
                         <td>其它</td>
                         <td>占比</td>
                         <td>总计</td>
                         <td>占比</td>
                         <!-- 订货金额-->
-                        <td><?php echo Yii::$app->params['season_one_name']; ?></td>
+                        <td><?php echo ConfigModel::getSeasonInfo()['season_one_name']; ?></td>
                         <td>占比</td>
-                        <td><?php echo Yii::$app->params['season_two_name']; ?></td>
+                        <td><?php echo ConfigModel::getSeasonInfo()['season_two_name']; ?></td>
                         <td>占比</td>
                         <td>其它</td>
                         <td>占比</td>

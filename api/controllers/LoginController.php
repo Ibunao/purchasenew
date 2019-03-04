@@ -5,6 +5,7 @@ use Yii;
 use common\models\CustomerModel;
 use common\models\ProductModel;
 use api\controllers\base\ApiController;
+use common\models\ConfigModel;
 /**
  * 登陆
  */
@@ -41,7 +42,7 @@ class LoginController extends ApiController
             $result['is_distribution'] = $res['parent_id'] == 1 ? 'yes' : 'no';
             $result['purchase_name'] = $res['purchase_id'] == 1 ?
                 Yii::$app->params['purchase_oct'] : ($res['purchase_id'] == 2 ? Yii::$app->params['purchase_uki']: Yii::$app->params['purchase_all']);
-            $result['is_spring_summer'] = Yii::$app->params['season_title'] == '春夏' ? 'yes' : 'no';
+            $result['is_spring_summer'] = ConfigModel::getSeasonInfo()['season_title'] == '春夏' ? 'yes' : 'no';
             return ['code' => '200', 'data' => $result];
         } else {
             return ['code' => '400', 'msg' => '登录失败'];

@@ -4,6 +4,7 @@ namespace backend\controllers;
 use Yii;
 use backend\controllers\base\BaseController;
 use backend\models\TableModel;
+use common\models\ConfigModel;
 /**
  * 后台首页
  */
@@ -59,13 +60,15 @@ class DefaultController extends BaseController
         return $this->render('index', ['res'=>$result]);
     }
     /**
-     * 删除缓存
+     * 删除所有缓存，因为是文件缓存，要清除所有项目的缓存
      */
     public function actionCache()
     {
         Yii::$app->cache->flush();
-        echo file_get_contents('http://128.128.1.75/default/cache');
-        echo file_get_contents('http://128.128.1.74/default/cache');
+        $routes = ConfigModel::getAllCacheUrl();
+        foreach ($routes as $key => $item) {
+            echo file_get_contents("{$item}/default/cache");
+        }
         echo "清除缓存";
     }
 }

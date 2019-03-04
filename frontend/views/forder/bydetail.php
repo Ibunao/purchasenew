@@ -1,3 +1,6 @@
+<?php 
+use common\models\ConfigModel;
+ ?>
 <!--主导航-->
 <div id="nav_shade" class="none"></div>
 <?php echo $this->render('/layouts/_nav', array('sel' => 'bydetail')); ?>
@@ -14,10 +17,10 @@
                     <span class="num_pd_list fl"><?php echo $v['serial_num'];?>.</span>
                 </div>
                 <a href="#inline_<?php echo $v['serial_num'];?>" class="fancybox_img">
-                    <img class="pd_list_pic" src="<?php echo Yii::$app->params['img_url'].$v['img_url']; ?>">
+                    <img class="pd_list_pic" src="<?php echo ConfigModel::getImgUrl().$v['img_url']; ?>">
                 </a>
                 <div id="inline_<?php echo $v['serial_num'];?>" style="width:300px;display: none;">
-                    <img src="<?php echo Yii::$app->params['img_url'].$v['img_url']; ?>">
+                    <img src="<?php echo ConfigModel::getImgUrl().$v['img_url']; ?>">
                 </div>
             </li>
             <li class="pd_list_dt">

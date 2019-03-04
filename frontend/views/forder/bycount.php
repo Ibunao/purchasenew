@@ -1,3 +1,6 @@
+<?php 
+use common\models\ConfigModel;
+ ?>
 <!--主导航-->
 <div id="nav_shade" class="none"></div>
 <?= $this->render('/layouts/_nav', array('sel' => 'bycount')); ?>
@@ -10,8 +13,8 @@
     <li class="div10 fl first_v first_l">大类</li>
     <li class="div12 fl first_l">小类</li>
     <li class="div10 fl first_l">款数</li>
-    <li class="div10 fl first_l"><?= Yii::$app->params['season_one_name']; ?>季</li>
-    <li class="div10 fl first_l"><?= Yii::$app->params['season_two_name']; ?>季</li>
+    <li class="div10 fl first_l"><?= ConfigModel::getSeasonInfo()['season_one_name']; ?>季</li>
+    <li class="div10 fl first_l"><?= ConfigModel::getSeasonInfo()['season_two_name']; ?>季</li>
     <li class="div14 fl first_l">总订货数量</li>
     <li class="div10 fl first_l">总数量占比</li>
     <li class="div14 fl first_l">总订货金额</li>
@@ -148,7 +151,7 @@ var option = {
     legend: {
         bottom: 100,
         left: 'center',
-        data: ['<?=Yii::$app->params['season_one_name'].'\',\''.Yii::$app->params['season_two_name'] ?>']
+        data: ['<?=ConfigModel::getSeasonInfo()['season_one_name'].'\',\''.ConfigModel::getSeasonInfo()['season_two_name'] ?>']
     },
     series : [
         {
@@ -175,7 +178,7 @@ var myChart = echarts.init(document.getElementById('one'));
 
 option = {
     title : {
-        text: '<?=Yii::$app->params['season_one_name'] ;?>季各大类占比',
+        text: '<?=ConfigModel::getSeasonInfo()['season_one_name'] ;?>季各大类占比',
         subtext: '数量占比',
         x:'center'
     },
@@ -232,7 +235,7 @@ var myChart = echarts.init(document.getElementById('two'));
 
 option = {
     title : {
-        text: '<?=Yii::$app->params['season_two_name'] ;?>季各大类占比',
+        text: '<?=ConfigModel::getSeasonInfo()['season_two_name'] ;?>季各大类占比',
         subtext: '数量占比',
         x:'center'
     },

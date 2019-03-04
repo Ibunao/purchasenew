@@ -5,6 +5,7 @@ use Yii;
 use frontend\controllers\base\FBaseController;
 use common\models\OrderModel;
 use common\models\ProductModel;
+use common\models\ConfigModel;
 /**
 * ce
 */
@@ -53,15 +54,15 @@ class ForderController extends FBaseController
 // var_dump(array('list' => $result['list'], 'result' => $result));exit;
         //图形数据
         $charts['bing'] = [];
-        $charts[Yii::$app->params['season_one_name']] = 0;
-        $charts[Yii::$app->params['season_two_name']] = 0;
+        $charts[ConfigModel::getSeasonInfo()['season_one_name']] = 0;
+        $charts[ConfigModel::getSeasonInfo()['season_two_name']] = 0;
         $charts['其他'] = 0;
         $oneCatArr = [];
         $twoCatArr = [];
         // var_dump($result['list']);exit;
         foreach ($result['list'] as $k => $v) {
-            $charts[Yii::$app->params['season_one_name']] += $v['season_id_1'];
-            $charts[Yii::$app->params['season_two_name']] += $v['season_id_2'];
+            $charts[ConfigModel::getSeasonInfo()['season_one_name']] += $v['season_id_1'];
+            $charts[ConfigModel::getSeasonInfo()['season_two_name']] += $v['season_id_2'];
             $charts['其他'] += $v['season_id_3'];
             if ($v['season_id_1'] != 0) {
                 $oneCatArr['cat'][] = urlencode($v['b_name']);
@@ -85,8 +86,8 @@ class ForderController extends FBaseController
         $oneCatArr['value'] = json_encode(isset($oneCatArr['value'])?$oneCatArr['value']:0);
         $twoCatArr['cat'] = urldecode(json_encode(isset($twoCatArr['cat'])?$twoCatArr['cat']:''));
         $twoCatArr['value'] = json_encode(isset($twoCatArr['value'])?$twoCatArr['value']:0);
-        $charts['bing'][] = ['value'=>$charts[Yii::$app->params['season_one_name']], 'name' => urlencode(Yii::$app->params['season_one_name'])];
-        $charts['bing'][] = ['value'=>$charts[Yii::$app->params['season_two_name']], 'name' => urlencode(Yii::$app->params['season_two_name'])];
+        $charts['bing'][] = ['value'=>$charts[ConfigModel::getSeasonInfo()['season_one_name']], 'name' => urlencode(ConfigModel::getSeasonInfo()['season_one_name'])];
+        $charts['bing'][] = ['value'=>$charts[ConfigModel::getSeasonInfo()['season_two_name']], 'name' => urlencode(ConfigModel::getSeasonInfo()['season_two_name'])];
         $charts['bing'][] = ['value'=>$charts['其他'], 'name' => urlencode('其他')];
         $charts['bing'] = json_encode($charts['bing']);
 

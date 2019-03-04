@@ -18,7 +18,7 @@ use common\helpers\IoXls;
 use common\helpers\ErpCsv;
 use common\models\OrderItemsModel;
 use yii\web\NotFoundHttpException;
-
+use common\models\ConfigModel;
 /**
  * 下载订单
  * @author dingran
@@ -875,7 +875,7 @@ class MorderController extends BaseController
 		   $data[$i]['C'] = '\''.$v['size_no'];
 		   $data[$i]['D'] = '\''.$v['nums'];
 		   $data[$i]['E'] = '\''.$v['cost_price'];
-		   $data[$i]['F'] = '\''.($customer_info[$v['order_id']]['big_'.$model_info[$v['model_sn']].'_count'] /100);
+		   $data[$i]['F'] = '\''.($customer_info[$v['order_id']]['big_'.$model_info[$v['model_sn']].'_count']);
 		   $data[$i]['G'] = '\''.$v['code'];
            $data[$i]['H'] = '\''.$v['order_id'];
 		   $data[$i]['J'] = '\''.$v['name'];
@@ -949,8 +949,8 @@ class MorderController extends BaseController
      */
     public function  actionStatistics()
     {
-        $season_sp_id = Yii::$app->params['season_one'];
-        $season_sm_id = Yii::$app->params['season_two'];
+        $season_sp_id = ConfigModel::getSeasonInfo()['season_one'];
+        $season_sm_id = ConfigModel::getSeasonInfo()['season_two'];
 		$request = Yii::$app->request;
         $order_id = $request->get('order_id');//获取订单号
         $type = $request->get("type");
@@ -1112,8 +1112,8 @@ class MorderController extends BaseController
             } else {
                 $target_p = round($item['all_amount'] / $target * 100, 1) . "%";
             }
-            $season_spring = Yii::$app->params['season_one_name'];
-            $season_summer = Yii::$app->params['season_two_name'];
+            $season_spring = ConfigModel::getSeasonInfo()['season_one_name'];
+            $season_summer = ConfigModel::getSeasonInfo()['season_two_name'];
             $title_header = array(
                 "大类", "小类", "{$season_spring}款式数量", "{$season_summer}款式数量", "{$season_spring}{$season_summer}款式数量合计",
                 "{$season_spring}订货数量", "{$season_spring}订货数量占比", "{$season_summer}订货数量", "{$season_summer}订货数量占比",

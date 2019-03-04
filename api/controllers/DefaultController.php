@@ -9,6 +9,7 @@ use common\models\ProductModel;
 use common\models\PublicModel;
 use common\models\OrderModel;
 use api\controllers\base\ApiController;
+use common\models\ConfigModel;
 
 /**
  * api接口
@@ -118,7 +119,7 @@ class DefaultController extends ApiController
         foreach ($model['list'] as $v) {
             $item['product_id'] = $v['product_id'];
             $item['name'] = $v['name'];
-            $item['img_url'] = Yii::$app->params['img_url']. $v['img_url'];
+            $item['img_url'] = ConfigModel::getImgUrl(). $v['img_url'];
             $item['model_sn'] = $v['model_sn'];
             $item['serial_num'] = $v['serial_num'];
             $item['type_id'] = $v['type_id'];
@@ -373,7 +374,7 @@ class DefaultController extends ApiController
             $items['name'] = $v['name'];
             $items['serial_num'] = $v['serial_num'];
             $items['cost_price'] = $v['cost_price'];
-            $items['img_url'] = Yii::$app->params['img_url'].$v['img_url'];
+            $items['img_url'] = ConfigModel::getImgUrl().$v['img_url'];
             $items['wave'] = $wave_list[$v['wave_id']];
             $items['memo'] = $v['memo'];
             $items['type_id'] = $v['type_id'];

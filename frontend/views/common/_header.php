@@ -1,3 +1,6 @@
+<?php 
+use common\models\PurchaseModel;
+ ?>
 <header class="hd_header w100">
     <div class="header_logo fl">
         <img class="header_logo_img" src="<?='/images/pic_logo_top_01.png?v=2'; ?>">
@@ -5,13 +8,8 @@
     <div class="header_title fl">
 <?php
     $purchaseId = $this->context->purchaseId;
-    if ($purchaseId == 1) {
-        echo Yii::$app->params['purchase_oct'];
-    }elseif ($purchaseId == 2) {
-        echo Yii::$app->params['purchase_uki'];
-    }else{
-        echo Yii::$app->params['purchase_all'];
-    }
+    echo PurchaseModel::getIdPurchase()[$purchaseId];
+
 ?></div>
     <div class="header_info fr">
         <span class="header_info_title">客户代码:</span>

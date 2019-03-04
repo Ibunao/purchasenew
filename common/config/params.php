@@ -1,58 +1,53 @@
 <?php
 return [
-    'web_sites_title' => '十月妈咪春夏订货会', //前后台台网站title
+    // use
+    // 'web_sites_title' => '十月妈咪春夏订货会', //前后台台网站title
+    //需要清空缓存的地址 use
+    // 'flush_cache_url' => array(
+    //     'http://128.128.1.72',
+    // 	'http://128.128.1.74',
+    //     'http://128.128.1.75',
+    //     'http://128.128.1.79',
+    //     'http://fair.st.octmami.com',
+    //     // 'http://128.128.1.65',
+    // ),
+    //图片地址 use
+    // 'img_url' => 'http://128.128.1.79', //正式环境请 取消注释
+    // 'img_url' => 'http://admin.dinghuo.com', //本地
+    //创建文件图片文件夹，为了更好的分类，每次订货会要更改
+    // 'imagePath' => '/images/2018-07/',
+    
+    //订货会基础数据相关配置
+    // 春夏
+    // 'season_one' => '1', //季节1ID ！【'1'(春) || '3'(秋)】
+    // 'season_two' => '2', //季节2ID ！【'2'(夏) || '4'(冬)】
+    // 'season_one_name' => '春', //季节1名称 【'春' || '秋'】
+    // 'season_two_name' => '夏', //季节2名称 【'夏' || '冬'】
+    // 'season_title' => '春夏',  //季节1、2 名称 【'春夏' || '秋冬'】
 
+    // // 秋冬
+    // 'season_one' => '3', //季节1ID ！【'1'(春) || '3'(秋)】
+    // 'season_two' => '4', //季节2ID ！【'2'(夏) || '4'(冬)】
+    // 'season_one_name' => '秋', //季节1名称 【'春' || '秋'】
+    // 'season_two_name' => '冬', //季节2名称 【'夏' || '冬'】
+    // 'season_title' => '秋冬',  //季节1、2 名称 【'春夏' || '秋冬'】
+
+    
+    // 不用改
     'is_latest_price' => true, //复制订单时是否为最新价格 是最新价格：true  不是最新：false
 
-    'update_customer_info' => true,  //是否允许修改用户资料  允许：true， 不允许：false
-    'customer_include' => true, //用户批量导入 允许：true, 不允许 ：false
-    'product_include' => true, //商品批量导入 允许：true, 不允许 ：false
-    //客户类型
+
+
+
+    //同时属于AB订货会的订货会id use 不用动
+    'purchaseAB' => 3,
+
+    //客户类型 use
     'customer_type' => array(
         '直营' => '直营',
         '客户' => '客户',
     ),
-    // 每次订货会要改
-    'purchase_oct' => '2019OCT春夏订货会', //OCT订货会名称
-    'purchase_uki' => '2019OCT春夏订货会B', //Weekend订货会名称
-    'purchase_all' => '2019OCT春夏订货会', //AB订货会名称
-
-    //需要清空缓存的地址
-    'flush_cache_url' => array(
-        'http://128.128.1.72',
-    	'http://128.128.1.74',
-        'http://128.128.1.75',
-        'http://128.128.1.79',
-        'http://fair.st.octmami.com',
-        // 'http://128.128.1.65',
-    ),
-    //同时属于AB订货会的订货会id
-    'purchaseAB' => 3,
-
-    //创建文件图片文件夹，为了更好的分类，每次订货会要更改
-    'imagePath' => '/images/2018-07/',
-
-    //订货会基础数据相关配置
-    // 春夏
-    'season_one' => '1', //季节1ID ！【'1'(春) || '3'(秋)】
-    'season_two' => '2', //季节2ID ！【'2'(夏) || '4'(冬)】
-    'season_one_name' => '春', //季节1名称 【'春' || '秋'】
-    'season_two_name' => '夏', //季节2名称 【'夏' || '冬'】
-    'season_title' => '春夏',  //季节1、2 名称 【'春夏' || '秋冬'】
-
-    // 秋冬
-    'season_one' => '3', //季节1ID ！【'1'(春) || '3'(秋)】
-    'season_two' => '4', //季节2ID ！【'2'(夏) || '4'(冬)】
-    'season_one_name' => '秋', //季节1名称 【'春' || '秋'】
-    'season_two_name' => '冬', //季节2名称 【'夏' || '冬'】
-    'season_title' => '秋冬',  //季节1、2 名称 【'春夏' || '秋冬'】
-    
-    //图片地址
-    // 'img_url' => 'http://128.128.1.79', //正式环境请 取消注释
-    'img_url' => 'http://admin.dinghuo.com', //本地
-    
-    
-    //大区
+    //大区 use
     'customer_area' => array(
         '1' => '京苏赣鄂渝',
         '2' => '沪宁闽',
@@ -70,13 +65,13 @@ return [
         '14' => '西北',
         '15' => '意向客户',
     ),
-    //部门类别
+    //部门类别 use
     'customer_department' => array(
         '1' => '直营直属',
         '2' => '直营托管',
         '3' => '加盟部',
     ),
-    //负责人
+    //负责人 use
     'customer_leader' => array(
         '1' => '曾畅',
         '2' => '陈凌',
@@ -113,7 +108,7 @@ return [
         '33' => '徐云霞',
         '34' => '张献梅',
     ),
-    //省份
+    //省份 use
     'customer_province' => array(
         '1' => '北京',
         '2' => '上海',

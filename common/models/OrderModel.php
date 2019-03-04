@@ -173,41 +173,7 @@ class OrderModel extends \yii\db\ActiveRecord
         }
         $query->select($select);
         $list = $query->all();
-        /*
 
-        array(15) {
-          [0]=>
-          array(14) {
-            ["nums"]=>
-            string(3) "941"
-            ["amount"]=>
-            string(9) "496848.00"
-            ["name"]=>
-            string(28) "针织拼条纹可哺乳T恤"
-            ["cost_price"]=>
-            string(6) "528.00"
-            ["style_sn"]=>
-            string(12) "173107050164"
-            ["product_id"]=>
-            string(1) "1"
-            ["img_url"]=>
-            string(24) "/images/17310705_164.jpg"
-            ["serial_num"]=>
-            string(1) "1"
-            ["cat_b"]=>
-            string(1) "1"
-            ["cat_m"]=>
-            string(1) "1"
-            ["cat_s"]=>
-            string(2) "10"
-            ["size_id"]=>
-            string(1) "3"
-            ["type_id"]=>
-            string(1) "1"
-            ["order_id"]=>
-            string(16) "2017031497575098"
-          }
-         */
         return array('item' => $list, 'pagination' => $pagination, 'nums' => $nums, 'amount' => $amount);
     }
 

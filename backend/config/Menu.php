@@ -10,7 +10,7 @@ public static $aclList =
 [
 	'/'=>
 	[
-	    'name'=>'订单',
+	    'name'=>'目录',
 	    'ctl'=>
 	    [
 	        [
@@ -61,8 +61,31 @@ public static $aclList =
 	                    	'add'=>'商品添加'
 	                    ]
 	                ],
-	            ]
+	            ],
 
+	        ],
+	        [
+	            'name'=>'项目管理',
+	            'list_ctl'=>['config'],
+	            'act'=>
+	            [
+	                'config'=>
+	                [
+	                    'name'=>'初始化配置',
+	                    'default_id'=>'index',
+	                    'list_act'=>[
+	                    	'index'=>'配置详情',
+	                	]
+	            	],
+	            	'oconfig'=>
+	                [
+	                    'name'=>'额外配置',
+	                    'default_id'=>'index',
+	                    'list_act'=>[
+	                    	'cache'=>'配置详情',
+	                	]
+	            	],
+	            ],
 	        ]
 	    ]
 	],

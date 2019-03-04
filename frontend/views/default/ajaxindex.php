@@ -1,3 +1,6 @@
+<?php 
+use common\models\ConfigModel;
+ ?>
 <?php foreach ($model['list'] as $k=>$v):?>
 <ul class="pd_list_mod lazyimg">
     <li class="pd_list_pic_area fl">
@@ -25,21 +28,21 @@
             <span class="num_pd_list fl"><?php echo $v['serial_num'];?>.</span>
         </div>
         <a href="#inline_<?php echo $v['serial_num'];?>" class="fancybox_img">
-            <img class="pd_list_pic" src="<?php if($v['is_down']=='0'){  echo Yii::$app->params['img_url'].$v['img_url']; }else{
+            <img class="pd_list_pic" src="<?php if($v['is_down']=='0'){  echo ConfigModel::getImgUrl().$v['img_url']; }else{
                         echo "/images/default.jpg";
                      }?>">
         </a>
         <!-- <div id="inline_<?php echo $v['serial_num'];?>" style="width:300px;display: none;">
-            <?php if($v['is_down']=='0'){ ?> <img src="<?php echo Yii::$app->params['img_url'].$v['img_url']; ?>"><?php }else{ ?>
+            <?php if($v['is_down']=='0'){ ?> <img src="<?php echo ConfigModel::getImgUrl().$v['img_url']; ?>"><?php }else{ ?>
                 <img src="/images/default.jpg">
             <?php }?>
         </div> -->
         <div id="inline_<?= $v['serial_num'];?>" style="max-width: 600px;display: none;">
             <!-- 弹窗显示多张图片 -->
-           <?php if($v['is_down']=='0'){ ?> <img src="<?= Yii::$app->params['img_url'].$v['img_url']; ?>"  style="width:300px;float: left;"><?php }else{ ?>
+           <?php if($v['is_down']=='0'){ ?> <img src="<?= ConfigModel::getImgUrl().$v['img_url']; ?>"  style="width:300px;float: left;"><?php }else{ ?>
                <img src="/images/default.jpg">
             <?php }?>
-            <?php if($v['is_down']=='0' && $haveB){ ?> <img src="<?= Yii::$app->params['img_url'].$imgB; ?>"  style="width:300px;float: left;">
+            <?php if($v['is_down']=='0' && $haveB){ ?> <img src="<?= ConfigModel::getImgUrl().$imgB; ?>"  style="width:300px;float: left;">
             <?php }?>
         </div>
     </li>
