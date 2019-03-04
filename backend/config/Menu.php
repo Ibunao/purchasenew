@@ -85,6 +85,14 @@ public static $aclList =
 	                    	'cache'=>'配置详情',
 	                	]
 	            	],
+	            	'admin'=>
+	                [
+	                    'name'=>'权限设置',
+	                    'default_id'=>'user',
+	                    'list_act'=>[
+	                    	'cache'=>'配置详情',
+	                	]
+	            	],
 	            ],
 	        ]
 	    ]

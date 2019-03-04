@@ -46,6 +46,7 @@ echo Alert::widget([
 ]);
  ?>
 <div class="container">
+	<h3><a href="/documents/xiangmupeizhi.html" target="_abank">项目配置说明文档</a></h3>
 	<h2>配置数据库</h2>
 	<div class="my-banner-danger float-left">
 		<h3>创建新库</h3>
@@ -71,12 +72,12 @@ echo Alert::widget([
 </div>
 <div class="container">
 	<h2>配置参数</h2>
-	<div>
+	<!-- <div>
 		<h3>项目名称</h3>
 		<span style="color: red;">显示的项目名称，一般只改春夏、秋冬,用来记录每次订货会和数据库的对应关系</span><br>
 		<label>修改项目名称:</label><input id="web-title" style="width:50%" type="text" name="web-title" value="<?=ConfigModel::getWebTitle() ;?>">
 		<button type="button" class="btn btn-primary" onclick="updateWebTitle()">保存</button>
-	</div>
+	</div> -->
 	<div>
 		<h3>图片相关</h3>
 		<span style="color: red;">图片url正常是后台的地址</span><br>

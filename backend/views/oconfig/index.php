@@ -33,10 +33,9 @@ echo Alert::widget([
 				if (data.code == 200) {
 					alert("清除成功")
 					return
-				}else{
-					alert('失败')
 				}
 			}
+			alert('失败')
 		    console.log(data, status);
 		});
 	}

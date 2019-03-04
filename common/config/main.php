@@ -14,8 +14,8 @@ return [
         'db' => $db,
         'config' => $config,
         // rbac
-        // 'authManager' => [
-        //     'class' => 'yii\rbac\DbManager',
-        // ],
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager',
+        ],
     ],
 ];

@@ -47,3 +47,5 @@ api/web/images/
 backend/web/allImages/
 backend/web/useImages/
 backend/controllers/laokuan.sql
+backend/web/backup/data/purchase_2018_11_16_backup2019-03-04-11-10-30.sql
+backend/web/backup/data/purchase_2018_11_16_backup2019-03-04-10-53-00.sql
