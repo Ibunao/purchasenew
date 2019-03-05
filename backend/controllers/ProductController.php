@@ -52,6 +52,7 @@ class ProductController extends BaseController
         }
         return $result;
     }
+
 	public function actionIndex()
 	{
         // Yii::$app->cache->flush();
@@ -89,7 +90,7 @@ class ProductController extends BaseController
             $res = $productModel->addProductOperation($param);
             if (!isset($res['code'])) {
                 // 清除所有缓存
-                // PublicModel::flushCacheAll();
+                PublicModel::flushCacheAll();
                 //使用setFlash
                 Yii::$app->session->setFlash('info', '添加成功');
                 $this->redirect("/product/index");
@@ -162,7 +163,7 @@ class ProductController extends BaseController
             $res = $productModel->updateProductOperation($postParam, $moreData, $lessData, $serialNum);//, $purchaseId);
 
             //清除缓存
-            // PublicModel::flushCacheAll();
+            PublicModel::flushCacheAll();
             if ($res) {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '修改成功');
@@ -216,7 +217,7 @@ class ProductController extends BaseController
             $param['costPrice'] = $results['cost_price'];
             $res = $productModel->addProductOperation($param);
 
-            // PublicModel::flushCacheAll();
+            PublicModel::flushCacheAll();
             if ($res) {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '修改成功');
@@ -482,7 +483,7 @@ class ProductController extends BaseController
             $param['type'] = $results['type_id'];
             $param['costPrice'] = $results['cost_price'];
             $res = $productModel->addProductOperation($param);
-            // PublicModel::flushCacheAll();
+            PublicModel::flushCacheAll();
             if ($res) {
                 //跳转到首页
                 Yii::$app->session->setFlash('info', '添加成功');
@@ -526,7 +527,7 @@ class ProductController extends BaseController
         }
         // var_dump($postFile);exit;
         if (!is_uploaded_file($postFile['tmp_name'])) {
-            exit("不是通过HTP POST上传的文件");
+            exit("不是通过HTTP POST上传的文件");
         }
         $productModel = new ProductModel();
         $nowTime = time();
@@ -750,7 +751,7 @@ $groupSize = (new PublicModel)->getGroupSize();
                         // ->where(['model_sn' => $model_sn])
                         ->where(['serial_num' => $result[$i][4]])
                         ->count();
-                        $warning .= "<span><b>此产品流水号".$checkSerial."/款号".$checkModel."已存在,请到商品管理添加修改</b></span>";
+                        $warning .= "<span><b>此产品流水号有".$checkSerial."个/款号有".$checkModel."个。已存在,请到商品管理添加修改</b></span>";
                     }
                 }
 

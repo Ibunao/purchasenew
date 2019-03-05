@@ -6,6 +6,7 @@ use backend\controllers\base\BaseController;
 use yii\helpers\FileHelper;
 use yii\db\Query;
 use common\models\ConfigModel;
+use common\models\PublicModel;
 /**
 * 配置类-其他
 */
@@ -28,11 +29,11 @@ class OconfigController extends BaseController
 	 */
 	public function actionCache()
 	{
-		$res = ConfigModel::getAllCacheUrl();
-        foreach ($res as $val) {
-            file_get_contents($val . '/default/cache');
-        }
-        return $this->sendSucc([]);
+		if (PublicModel::flushCacheAll()) {
+			
+        	return $this->sendSucc([]);
+		}
+		echo "清除缓存失败";
 	}
 	/**
 	 * 配置订货会名称

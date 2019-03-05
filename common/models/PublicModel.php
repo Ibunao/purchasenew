@@ -67,10 +67,11 @@ class PublicModel extends Model
     static function flushCacheAll()
     {
         $res = ConfigModel::getAllCacheUrl();
-        foreach ($res as $val) {
-            file_get_contents($val . '/default/cache');
-        }
-        echo "清除所有的缓存";
+        Yii::$app->cache->flush();
+        // foreach ($res as $val) {
+        //     file_get_contents($val . '/default/cache');
+        // }
+        return true;
     }
 
     /**
