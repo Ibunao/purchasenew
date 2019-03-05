@@ -64,7 +64,7 @@ use common\models\ConfigModel;
                     <li class="order_dt_flow fl">
                         <!--溢出表格宽度-->
                         <div class="pop_order_div" style="width: 250px;">
-                            <ul class="dark">
+                            <ul class="dark" style="overflow-x:visible">
                                 <li></li>
                                 <?php ksort($v['size_list']);foreach ($v['size_list'] as $vv):?>
                                     <li><?php echo $vv['size_name'];?></li>
@@ -125,7 +125,7 @@ use common\models\ConfigModel;
         $(window).scroll(function(){
             var page = $('#page').val() * 1;
             totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop());
-            if($(document).height() <= totalheight + 120){
+            if($(document).height() > totalheight){
                 if(stop==true){
                     stop=false;
                     $('#J_loadmore').addClass('enabled');

@@ -16,7 +16,7 @@
 </div>
 <div class="pop_order_dt">
         <div class="pop_order_div">
-            <ul class="dark">
+            <ul class="dark" style="overflow-x:visible">
                 <li></li>
                 <?php ksort($list['size_list']);foreach ($list['size_list'] as $v):?>
                 <li><?php echo $v['size_name'];?></li>
