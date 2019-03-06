@@ -77,9 +77,9 @@ public static $aclList =
 	                    	'index'=>'配置详情',
 	                	]
 	            	],
-	            	'oconfig'=>
+	            	'helper'=>
 	                [
-	                    'name'=>'额外配置',
+	                    'name'=>'辅助功能',
 	                    'default_id'=>'index',
 	                    'list_act'=>[
 	                    	'cache'=>'配置详情',

@@ -35,7 +35,12 @@ class ConfigController extends BaseController
 		$month = date('m');
 		$day = date('d');
 		$dbname = "purchase_{$year}_{$month}_{$day}";
-		return $this->render('index', ['dbname' => $dbname]);
+
+		$purchase = (new Query)
+			->from('meet_purchase')
+			->all();
+
+		return $this->render('index', ['dbname' => $dbname, 'purchase' => $purchase]);
 	}
 	/**
 	 * 更新/创建网站title
@@ -339,5 +344,39 @@ class ConfigController extends BaseController
 	private function _flushCahce()
 	{
 		// Yii::$app->cache->flush();
+	}
+
+	/**
+	 * 配置订货会名称
+	 * @return [type] [description]
+	 */
+	public function actionPurchase()
+	{
+		$req = Yii::$app->request;
+		$purchases = $req->post('purchase', []);
+		if (empty($purchases)) {
+			return $this->sendError();
+		}
+		foreach ($purchases as $key => $item) {
+			Yii::$app->db->createCommand("UPDATE meet_purchase SET purchase_name = '{$item}' WHERE purchase_id = {$key}")->execute();
+		}
+		$session = Yii::$app->session;
+		$session->setFlash('purchase', '更新成功');
+		$this->redirect('/config/index');
+	}
+	/**
+	 * 下载备份页面
+	 * @return [type] [description]
+	 */	
+	public function actionDownBackup()
+	{
+		$path = $this->dataPath;
+		$data = FileHelper::findFiles($path);
+		$list = [];
+		foreach ($data as $key => $item) {
+			$item = trim(strrchr($item, '/'),'/');
+			$list[$item] = 'http://128.128.1.79/backup/data/'.$item;
+		}
+		return $this->render('down', ['list' => $list]);
 	}
 }

@@ -65,7 +65,7 @@ echo Alert::widget([
 		<p>info:备份当前数据库数据</p>
 		<button type="button" class="btn btn-primary" onclick="backupDb()">开始备份</button>
 		<h5>下载备份数据</h5>
-		<a href="/backup/data/">下载地址</a>
+		<a href="/config/down-backup/">下载地址</a>
 	</div>
 	<div style="clear: both;"></div>
 	<span style="color: red;">当前数据库信息：<?=Yii::$app->db->dsn;?></span>
@@ -106,6 +106,16 @@ echo Alert::widget([
 		<?php endforeach ?>
 		<label>地址(额外添加):</label><input style="width:50%" type="text" name="projectUrl[]" value=""><br/>
 		<button type="submit" class="btn btn-primary">保存</button>
+		</form>
+	</div>
+	<div>
+		<form action="/config/purchase" method="post">
+			<h3>配置订货会名称</h3>
+			<?php foreach ($purchase as $key => $item): ?>
+				<label>订货会<?=$item['purchase_id'] ;?>名称:</label><input style="width:50%" type="text" name="purchase[<?=$item['purchase_id'] ;?>]" value="<?=$item['purchase_name'] ;?>"><br/>
+				
+			<?php endforeach ?>
+			<button type="submit" class="btn btn-primary">保存</button>
 		</form>
 	</div>
 </div>

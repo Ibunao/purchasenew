@@ -1,6 +1,6 @@
 <?php
 // 设置本地还是生产数据库
-$env = '-local';
+$env = '';
 
 $db = require(__DIR__ . "/db{$env}.php");
 $config = require(__DIR__ . "/config{$env}.php");

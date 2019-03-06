@@ -292,9 +292,9 @@ class MorderController extends BaseController
 		$request = Yii::$app->request;
 		$orderId = $request->post('order_id');
 		$status = $request->post('status');
-		$loginInfo = Yii::$app->session->get('backend_login_in');
-        $name = $loginInfo['name'];
-		$userId = $loginInfo['user_id'];
+		$user = Yii::$app->user->identity;
+        $name = $user->username;
+		$userId = $user->id;
 		if (empty($orderId)) {
 			return ['code' => 400];
 		}
