@@ -68,9 +68,9 @@ class PublicModel extends Model
     {
         $res = ConfigModel::getAllCacheUrl();
         Yii::$app->cache->flush();
-        // foreach ($res as $val) {
-        //     file_get_contents($val . '/default/cache');
-        // }
+        foreach ($res as $val) {
+            file_get_contents($val . '/default/cache');
+        }
         return true;
     }
 
