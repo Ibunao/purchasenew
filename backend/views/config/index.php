@@ -86,16 +86,7 @@ echo Alert::widget([
 		<label>图片存放路径(如：/images/2018-07/):</label><input id="img-path" style="width:50%" type="text" name="web-title" value="<?=ConfigModel::getImgPath() ;?>"><br/>
 		<button type="button" class="btn btn-primary" onclick="updateImgInfo()">保存</button>
 	</div>
-	<div>
-		<h3>季节</h3>
-		<span style="color: red;">前台表格统计用到</span><br>
-		<label>选择季节:</label>
-		<select id='jijie' name="jijie">
-		  <option value ="1">春夏</option>
-		  <option value ="2">秋冬</option>
-		</select>
-		<button type="button" class="btn btn-primary" onclick="updateSeason()">保存</button>
-	</div>
+	
 	<div>
 		<form action="/config/cache-url" method="post">
 		<h3>项目地址(用来清缓存)</h3>
@@ -110,11 +101,29 @@ echo Alert::widget([
 	</div>
 	<div>
 		<form action="/config/purchase" method="post">
-			<h3>配置订货会名称</h3>
-			<?php foreach ($purchase as $key => $item): ?>
-				<label>订货会<?=$item['purchase_id'] ;?>名称:</label><input style="width:50%" type="text" name="purchase[<?=$item['purchase_id'] ;?>]" value="<?=$item['purchase_name'] ;?>"><br/>
-				
-			<?php endforeach ?>
+			<div>
+				<h3>配置订货会名称</h3>
+				<h4>选择季节</h4>
+				<!-- <span style="color: red;">前台表格统计用到</span><br> -->
+				<label>选择季节:</label>
+				<select id='jijie' name="jijie">
+					<?php if (empty($season)): ?>
+						<option value =""></option>
+					<?php endif ?>
+					<option value ="1" <?=$season['content'] == 1 ? 'checked':'' ;?>>春夏</option>
+			  		<option value ="2" <?=$season['content'] == 2 ? 'checked':'' ;?>>秋冬</option>
+				</select>
+			</div>
+			<h4>选择年份</h4>
+			<label>选择年份:</label>
+			<select id='year' name="year">
+				<?php if (empty($year)): ?>
+					<option value =""></option>
+				<?php endif ?>
+	  			<option value ="<?=date('Y') ;?>" <?=isset($year['content']) && $year['content'] == date('Y') ? 'checked':'' ;?>><?=date('Y') ;?></option>
+	  	  		<option value ="<?=date('Y')+1 ;?>" <?=isset($year['content']) && $year['content'] == date('Y')+1 ? 'checked':'' ;?>><?=date('Y')+1 ;?></option>
+			</select>
+			<br/>
 			<button type="submit" class="btn btn-primary">保存</button>
 		</form>
 	</div>

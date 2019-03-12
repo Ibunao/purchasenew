@@ -30,17 +30,24 @@ class ConfigController extends BaseController
 	 */
 	public function actionIndex()
 	{
-		$query = new Query;
 		$year = date('Y');
 		$month = date('m');
 		$day = date('d');
 		$dbname = "purchase_{$year}_{$month}_{$day}";
 
-		$purchase = (new Query)
-			->from('meet_purchase')
-			->all();
+		// 查询季节配置是否存在  
+		$query = new Query;
+		$season = $query
+			->from('config')
+			->where(['type' => 'season'])
+			->one(Yii::$app->config);
+		$query = new Query;
+		$year = $query
+			->from('config')
+			->where(['type' => 'year'])
+			->one(Yii::$app->config);
 
-		return $this->render('index', ['dbname' => $dbname, 'purchase' => $purchase]);
+		return $this->render('index', ['dbname' => $dbname, 'season' => $season, 'year' => $year]);
 	}
 	/**
 	 * 更新/创建网站title
@@ -353,11 +360,43 @@ class ConfigController extends BaseController
 	public function actionPurchase()
 	{
 		$req = Yii::$app->request;
-		$purchases = $req->post('purchase', []);
-		if (empty($purchases)) {
+		$year = $req->post('year', '');
+		$jijie = $req->post('jijie', '');
+		if (empty($jijie) || empty($year)) {
 			return $this->sendError();
 		}
-		foreach ($purchases as $key => $item) {
+
+		// 查询季节配置是否存在  
+		$query = new Query;
+		$result = $query
+			->from('config')
+			->where(['type' => 'season'])
+			->one(Yii::$app->config);
+		$time = time();
+		if (!empty($result)) {
+			Yii::$app->config->createCommand("UPDATE config SET content = '{$jijie}', update_time = {$time} WHERE type = 'season'")->execute();
+		}else{
+			Yii::$app->config->createCommand("INSERT INTO config (type, content, create_time) VALUES ('season', '{$jijie}', {$time})")->execute();
+		}
+		// 查询年份配置是否存在  
+		$query = new Query;
+		$result = $query
+			->from('config')
+			->where(['type' => 'year'])
+			->one(Yii::$app->config);
+		$time = time();
+		if (!empty($result)) {
+			Yii::$app->config->createCommand("UPDATE config SET content = '{$year}', update_time = {$time} WHERE type = 'year'")->execute();
+		}else{
+			Yii::$app->config->createCommand("INSERT INTO config (type, content, create_time) VALUES ('year', '{$year}', {$time})")->execute();
+		}
+
+		$season = $jijie == 1 ? '春夏' : '秋冬';
+		$purchaseList = [
+			1 => $year.'年'.$season.'订货会A',
+			2 => $year.'年'.$season.'订货会B',
+		];
+		foreach ($purchaseList as $key => $item) {
 			Yii::$app->db->createCommand("UPDATE meet_purchase SET purchase_name = '{$item}' WHERE purchase_id = {$key}")->execute();
 		}
 		$session = Yii::$app->session;

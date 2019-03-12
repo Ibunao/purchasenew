@@ -309,9 +309,6 @@ $this->params['breadcrumbs'] = [
                                         echo round(($small_amount_season_all / $item['all_amount']) * 100, 1) . "%";
                                     } ?>
                                 </td>
-                            <td></td>
-                            <td></td>
-
                         </tr>
                         <?php unset($cat['cat_small'][0]);
                         foreach ($cat['cat_small'] as $small) {
@@ -422,8 +419,6 @@ $this->params['breadcrumbs'] = [
                                         echo round(($small_amount_season_all / $item['all_amount']) * 100, 1) . "%";
                                     } ?>
                                 </td>
-                                <td></td>
-                                <td></td>
                             </tr>
                         <?php } ?>
                         <tr class="odd">

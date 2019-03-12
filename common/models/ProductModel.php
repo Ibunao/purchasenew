@@ -1208,6 +1208,13 @@ class ProductModel extends \yii\db\ActiveRecord
                 }else{
                     $query->andWhere(['purchase_id' => $params['purchase_id']]);
                 }
+
+                // 2019临时添加，直营不能定特价品  
+                if (Yii::$app->session['type'] == '直营') {
+                    $query->andWhere(['not', 'cat_b = 4']);
+                }
+
+
                 $row = $query->distinct()
                 ->indexBy('style_sn')
                 ->asArray()
@@ -1227,6 +1234,13 @@ class ProductModel extends \yii\db\ActiveRecord
                 }else{
                     $query->andWhere(['purchase_id' => $params['purchase_id']]);
                 }
+
+                // 2019临时添加，直营不能定特价品  
+                if (Yii::$app->session['type'] == '直营') {
+                    $query->andWhere(['not', 'cat_b = 4']);
+                }
+
+
                 $row = $query->distinct()
                 ->indexBy('style_sn')
                 ->asArray()
@@ -1236,8 +1250,31 @@ class ProductModel extends \yii\db\ActiveRecord
                 $items = $this->listStyleSn($row, $params, $conArr);
 
             }else{
-                $style_sn = [];
-                $items = $this->listStyleSn($style_sn, $params, $conArr);
+                // $style_sn = [];
+
+                //流水号
+                $query = self::find()->select(['style_sn'])
+                ->andWhere(['disabled' => 'false'])
+                ->andWhere(['is_down' => 0]);
+                if ($params['purchase_id'] == Yii::$app->params['purchaseAB']) {
+                    $query->andWhere(['in', 'purchase_id', [1,2]]);
+                }else{
+                    $query->andWhere(['purchase_id' => $params['purchase_id']]);
+                }
+
+                // 2019临时添加，直营不能定特价品  
+                if (Yii::$app->session['type'] == '直营') {
+                    $query->andWhere(['not', 'cat_b = 4']);
+                }
+
+                
+                $row = $query->distinct()
+                ->indexBy('style_sn')
+                ->asArray()
+                ->all();
+
+                if (empty($row)) return [];
+                $items = $this->listStyleSn($row, $params, $conArr);
                 // var_dump($items);exit;
             }
         }

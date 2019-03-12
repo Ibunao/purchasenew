@@ -18,7 +18,8 @@ use common\models\PublicModel;
                 <li class="dropdown" <?php if ($v['id'] == $b_id):?>style="display: list-item;"<?php endif;?>>
                     <ul>
                         <?php foreach ($v['child'] as $vv):?>
-                        <?php if ($vv['num']):?>
+                            <!-- 2019临时添加直营部展示特价品 -->
+                        <?php if ($vv['num'] && (Yii::$app->session['type'] != '直营' || $b_id != 4)):?>
                         <li>
                             <a href="/default/index?c_id=<?= $v['id'].','.$vv['id'];?>" class="level1 <?php if ($c_id == $vv['id']):?>curSelectedNode<?php endif;?>">
                                 <span title="" class="cat_num">(<?= $vv['num'];?>)</span>
