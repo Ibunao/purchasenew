@@ -6,6 +6,8 @@ use frontend\controllers\base\FBaseController;
 use common\models\OrderModel;
 use common\models\ProductModel;
 use common\models\ConfigModel;
+use yii\db\Query;
+
 /**
 * ce
 */
@@ -92,9 +94,34 @@ class ForderController extends FBaseController
         $charts['bing'] = json_encode($charts['bing']);
 
 
-
+        # 计算各指标情况  
+        $targets = (new Query)->from('meet_customer')
+            ->select(['big_1', 'big_2', 'big_3', 'big_4', 'big_6'])
+            ->where(['customer_id' => Yii::$app->session['customer_id']])
+            ->one();
+        $orderItem = (new Query)->from('meet_order o')
+            ->select(['p.cat_b', 'sum(amount) total'])
+            ->leftJoin('meet_order_items oi', 'o.order_id = oi.order_id')
+            ->leftJoin('meet_product p', 'p.product_id = oi.product_id')
+            ->where(['oi.disabled' => 'false', 'o.customer_id' => Yii::$app->session['customer_id']])
+            ->groupBy('p.cat_b')
+            ->all();
+        $orderCatSum = [];
+        foreach ($orderItem as $key => $item) {
+            $orderCatSum[$item['cat_b']] = $item['total'];
+        }
+        foreach ([1, 2, 3, 4, 6] as $key => $item) {
+            if (!isset($orderCatSum[$item])) {
+                $orderCatSum[$item] = 0;
+            }
+        }
+        ksort($orderCatSum);
+        $targetChart = [
+            'targets' => array_values($targets), 
+            'orderCatSum' => array_values($orderCatSum)
+        ];
         // var_dump(json_encode($charts['bing']));exit;
-        return $this->render('bycount', array('list' => $result['list'], 'result' => $result, 'bing' => urldecode($charts['bing']), 'onecat' => $oneCatArr['cat'], 'onevalue' => $oneCatArr['value'], 'twocat' => $twoCatArr['cat'], 'twovalue' => $twoCatArr['value']));
+        return $this->render('bycount', array('list' => $result['list'], 'result' => $result, 'bing' => urldecode($charts['bing']), 'onecat' => $oneCatArr['cat'], 'onevalue' => $oneCatArr['value'], 'twocat' => $twoCatArr['cat'], 'twovalue' => $twoCatArr['value'], 'targetChart' => $targetChart));
     }
 
     /**

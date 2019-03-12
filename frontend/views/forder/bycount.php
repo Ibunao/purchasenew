@@ -128,10 +128,75 @@ use common\models\ConfigModel;
 </div>
 
 
-<div id="main" style="width: 400px;height:600px; float: left;"></div>
-<div id="one" style="width: 300px;height:400px; float: left;"></div>
-<div id="two" style="width: 300px;height:400px;float: left;"></div>
+<div id="target" style="width: 55%;height:600px; float: left;"></div>
+<div id="main" style="width: 42%;height:600px; float: left;"></div>
+<div id="one" style="width: 45%;height:400px; float: left;"></div>
+<div id="two" style="width: 45%;height:400px;float: left;"></div>
+<div style="clear: both;margin-bottom: 50px;"></div>
 <script type="text/javascript">
+//柱状图
+var myChart = echarts.init(document.getElementById('target'));
+var data = JSON.parse('<?=json_encode($targetChart) ;?>');
+
+var option = {
+    title : {
+        text: '各指标达成情况',
+        subtext: '左边为指标，右边为订货金额'
+    },
+    tooltip : {
+        trigger: 'axis'
+    },
+    legend: {
+        data:['指标值','订购值']
+    },
+    toolbox: {
+        show : true,
+        feature : {
+            mark : {show: true},
+            dataView : {show: true, readOnly: false},
+            // magicType : {show: true, type: ['line', 'bar']},
+            // restore : {show: true},
+            // saveAsImage : {show: true}
+        }
+    },
+    calculable : true,
+    xAxis : [
+        {
+            type : 'category',
+            data : ['服装','家居','防辐射','特价品','化妆品']
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'指标值',
+            type:'bar',
+            data:data.targets,
+            markPoint : {
+                data : [
+                    {type : 'max', name: '最大值'},
+                    {type : 'min', name: '最小值'}
+                ]
+            }
+        },
+        {
+            name:'订购值',
+            type:'bar',
+            data:data.orderCatSum,
+            markPoint : {
+                data : [
+                    {type : 'max', name: '最大值'},
+                    {type : 'min', name: '最小值'}
+                ]
+            }
+        }
+    ]
+};
+myChart.setOption(option);
 
 //饼状图
 var myChart = echarts.init(document.getElementById('main'));
