@@ -132,7 +132,7 @@ use common\models\ConfigModel;
 <div id="main" style="width: 42%;height:600px; float: left;"></div>
 <div id="one" style="width: 45%;height:400px; float: left;"></div>
 <div id="two" style="width: 45%;height:400px;float: left;"></div>
-<div style="clear: both;margin-bottom: 50px;"></div>
+<div style="clear: both;margin-bottom: 50px;height:30px;"></div>
 <script type="text/javascript">
 //柱状图
 var myChart = echarts.init(document.getElementById('target'));
