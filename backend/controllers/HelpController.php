@@ -63,6 +63,7 @@ class HelpController extends Controller
         $checkArr = [];
         foreach ($data as $key => $item) {
             $checkArr[] = $item[0].'_'.$item['1'].'.jpg';
+            $checkArr[] = $item[0].'_'.$item['1'].'_1.jpg';
         }
         $copyRoot = Yii::$app->basePath.'/web/useImages/';
         // 如果存在则复制

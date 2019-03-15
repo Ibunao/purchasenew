@@ -1209,9 +1209,9 @@ class ProductModel extends \yii\db\ActiveRecord
                     $query->andWhere(['purchase_id' => $params['purchase_id']]);
                 }
 
-                // 2019临时添加，直营不能定特价品  
+                // 2019临时添加，直营只能定新款
                 if (Yii::$app->session['type'] == '直营') {
-                    $query->andWhere(['not', 'cat_b = 4']);
+                    $query->andWhere(['type_id' => 1]);
                 }
 
 
@@ -1235,9 +1235,9 @@ class ProductModel extends \yii\db\ActiveRecord
                     $query->andWhere(['purchase_id' => $params['purchase_id']]);
                 }
 
-                // 2019临时添加，直营不能定特价品  
+                // 2019临时添加，直营只能定新款
                 if (Yii::$app->session['type'] == '直营') {
-                    $query->andWhere(['not', 'cat_b = 4']);
+                    $query->andWhere(['type_id' => 1]);
                 }
 
 
@@ -1262,9 +1262,9 @@ class ProductModel extends \yii\db\ActiveRecord
                     $query->andWhere(['purchase_id' => $params['purchase_id']]);
                 }
 
-                // 2019临时添加，直营不能定特价品  
+                // 2019临时添加，直营只能定新款 
                 if (Yii::$app->session['type'] == '直营') {
-                    $query->andWhere(['not', 'cat_b = 4']);
+                    $query->andWhere(['type_id' => 1]);
                 }
 
                 

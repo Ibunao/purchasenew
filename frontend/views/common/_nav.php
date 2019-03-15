@@ -18,7 +18,7 @@ use common\models\PublicModel;
                 <li class="dropdown" <?php if ($v['id'] == $b_id):?>style="display: list-item;"<?php endif;?>>
                     <ul>
                         <?php foreach ($v['child'] as $vv):?>
-                            <!-- 2019临时添加直营部展示特价品 -->
+                         <!-- 2019临时添加直营部展示特价品 -->
                         <?php if ($vv['num'] && (Yii::$app->session['type'] != '直营' || $b_id != 4)):?>
                         <li>
                             <a href="/default/index?c_id=<?= $v['id'].','.$vv['id'];?>" class="level1 <?php if ($c_id == $vv['id']):?>curSelectedNode<?php endif;?>">
@@ -73,7 +73,7 @@ use common\models\PublicModel;
                 <?php endforeach;?>
             </ul>
         </li>
-        <li class="hd_nav_fLevel fl">
+        <!-- <li class="hd_nav_fLevel fl">
             <a  href="javascript:void(0)" onClick="nav_toggle(this);">
                 <?= '等级';?>
                 <label class="nav_trgl"></label></a>
@@ -83,7 +83,7 @@ use common\models\PublicModel;
                     <li><a href="<?= $this->context->urlParams(array('lv'=>$k.'_'.$v))?>"><?= $v;?></a></li>
                 <?php endforeach;?>
             </ul>
-        </li>
+        </li> -->
         <li class="hd_nav_fLevel fl">
             <a  href="javascript:void(0)" onClick="nav_toggle(this);">
                 <?= '价格带';?>

@@ -4,6 +4,7 @@ namespace frontend\controllers;
 use Yii;
 use frontend\controllers\base\FBaseController;
 use common\models\ProductModel;
+use yii\db\Query;
 /**
  * 首页controller
  */
@@ -33,7 +34,25 @@ class DefaultController extends FBaseController
         $this->cat_b = $productModel->tableValue('cat_big', 'cat_name', 'big_id');
         $this->cat_m = $productModel->tableValue('cat_middle', 'cat_name', 'middle_id');
         $this->cat_s = $productModel->tableValue('cat_small', 'cat_name', 'small_id');
-        $this->wave = $productModel->tableValue('wave', 'wave_name', 'wave_id');
+        $waveList = $productModel->tableValue('wave', 'wave_name', 'wave_id');
+
+        // 季节排序
+        $chunxia = array_slice($waveList, 3, 6);
+
+        $qiudong = array_merge(array_slice($waveList, 0, 3), array_slice($waveList, 9, 3));
+        $other = array_slice($waveList, 12, 2);
+        $query = new Query;
+        $result = $query
+            ->from('config')
+            ->where(['type' => 'season'])
+            ->one(Yii::$app->config);
+        $temp = $result == 1 ? array_merge($chunxia, $qiudong, $other) : array_merge($qiudong, $chunxia, $other);
+        $wave = [];
+        foreach ($temp as $key => $item) {
+            $wave_id = array_search($item, $waveList);
+            $wave[$wave_id] = $item;
+        }
+        $this->wave = $wave;
         $this->scheme = $productModel->tableValue('scheme', 'scheme_name', 'scheme_id');
         $this->season = $productModel->tableValue('season', 'season_name', 'season_id');
         $this->color = $productModel->tableValue('color', 'color_name', 'color_id');
