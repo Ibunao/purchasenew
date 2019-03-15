@@ -83,8 +83,10 @@ class PublicModel extends Model
     public static function cateList()
     {
         $purchase_id = Yii::$app->session['purchase_id'];
-
-        $items = Yii::$app->cache->get('cat_big_small_list-'.$purchase_id);
+        // $items = Yii::$app->cache->get('cat_big_small_list-'.$purchase_id);
+        
+        // 2019临时添加，直营不能定特价品 
+        $items = Yii::$app->cache->get('cat_big_small_list-'.Yii::$app->session['type']);
         if (!$items) {
             //分类
             $list = (new Query)->from('meet_cat_big_small')
@@ -104,6 +106,12 @@ class PublicModel extends Model
             }else{
                 $query->andWhere(['purchase_id' => $purchase_id]);
             }
+
+            // 2019临时添加，直营不能定特价品  
+            if (Yii::$app->session['type'] == '直营') {
+                $query->andWhere(['type_id' => 1]);
+            }
+            
             $small = $query->groupBy('style_sn')->all();
             //统计大分类下小分类的数量
             foreach ($small as $v) {
