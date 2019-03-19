@@ -214,7 +214,7 @@ $this->params['breadcrumbs'] = [
         <td width="25"><input type="checkbox"></td>
         <td width="40">
             <a href="<?=Url::to(['/product/update', 'serial_num' => $v['serial_num'], 'purchase_id' => $v['purchase_id']]) ;?>"><i class="icon-pencil"></i></a>
-       &nbsp;&nbsp;&nbsp;&nbsp;<a href="<?=Url::to(['/product/copy', 'serial_num' => $v['serial_num']]) ;?>"><i class="icon-copy"></i></a>
+       &nbsp;&nbsp;&nbsp;&nbsp;<a href="<?=Url::to(['/product/change', 'modelSn' => $v['model_sn']]) ;?>"><i class="icon-copy"></i></a>
         </td>
         <td width="60"><?= $v['serial_num'] ?></td>
         <td width="100"><?= $v['model_sn'] ?></td>

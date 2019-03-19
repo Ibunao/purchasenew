@@ -10,6 +10,7 @@ $this->params['breadcrumbs'] = [
 
 <script type="text/javascript" src="/js/layer/layer.min.js"></script>
 <script type="text/javascript" src="/js/jquery.PrintArea.js"></script>
+<script src="/js/echarts.common.min.js"></script>
 
 <div class="row">
     <div class="col-xs-12">
@@ -24,6 +25,7 @@ $this->params['breadcrumbs'] = [
             <!--E 汇总-->
         </div>
 
+<div id="target" style="width: 55%;height:600px;"></div>
 
         <?php foreach($result as $k=> $v){  ?>
         <div class="table-responsive ">
@@ -313,4 +315,69 @@ $this->params['breadcrumbs'] = [
         });
     });
 
+</script>
+<script>
+    //柱状图
+    var myChart = echarts.init(document.getElementById('target'));
+    var data = JSON.parse('<?=json_encode($targetChart) ;?>');
+
+    var option = {
+        title : {
+            text: '各指标达成情况',
+            subtext: '左边为指标，右边为订货金额'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['指标值','订购值']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                // magicType : {show: true, type: ['line', 'bar']},
+                // restore : {show: true},
+                // saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                data : ['服装','家居','防辐射','特价品','化妆品']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'指标值',
+                type:'bar',
+                data:data.targets,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                }
+            },
+            {
+                name:'订购值',
+                type:'bar',
+                data:data.orderCatSum,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
 </script>

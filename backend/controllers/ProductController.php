@@ -202,6 +202,20 @@ class ProductController extends BaseController
             ->andWhere(['p.disabled' => 'false'])
             ->one();
 
+        //size 已选尺码
+        $results['size'] = [];
+        //该商品存在的尺码
+        $paramSize = (new Query)->select(['size_id', 'product_sn'])
+            ->from('meet_product')
+            ->where(['model_sn' => $modelSn])
+            ->andWhere(['disabled' => 'false'])
+            // ->andWhere(['purchase_id' => $purchaseId])
+            ->groupBy('size_id')
+            ->all();
+        foreach ($paramSize as $val) {
+            $results['size'][] = $val['size_id'];
+        }
+
         $param = Yii::$app->request->post('param');
         if (!empty($param)) {
             $param['type'] = $results['type_id'];

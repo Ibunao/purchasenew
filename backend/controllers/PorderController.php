@@ -91,6 +91,40 @@ class PorderController extends BaseController
 
 
     	    }
+
+            // 不统计到尺码
+            // $temp = [];
+            // foreach ($result['item'] as $k=> $item) {
+            //     if (isset($temp[$item['style_sn']])) {
+            //         $item['nums'] += $temp[$item['style_sn']]['nums'];
+            //         $item['customer'] += $temp[$item['style_sn']]['customer'];
+            //         $item['self'] += $temp[$item['style_sn']]['self'];
+            //     }
+            //     $temp[$item['style_sn']] = $item;
+            // }
+            // $keys = array('大类','中类','小类','款色','流水','商品类型', '吊牌价' ,'加盟订货','直营订货','总订货', '波段', '商品款号', '商品名称', '色号', '颜色名称', '品牌', '季节');
+            // $data = [];
+            // foreach($temp as $k=> $v){
+            //     $data[$k]['A'] = $v['cat_big_name'];
+            //     $data[$k]['B'] = $v['cat_middle_name'];
+            //     $data[$k]['C'] = $v['cat_small_name'];
+            //     $data[$k]['D'] = $v['style_sn'];
+            //     $data[$k]['E'] = $v['serial_num'];
+            //     $data[$k]['F'] = $v['type_name'];
+            //     $data[$k]['G'] = $v['cost_price'];
+            //     $data[$k]['H'] = $v['customer'];
+            //     $data[$k]['I'] = $v['self'];
+            //     $data[$k]['J'] = $v['nums'];
+            //     $data[$k]['l'] = $waveArr[$v['wave_id']]['wave_name'];
+            //     $data[$k]['m'] = $v['model_sn'];
+            //     $data[$k]['n'] = $v['name'];
+            //     $data[$k]['o'] = $colorArr[$v['color_id']]['color_no'];
+            //     $data[$k]['p'] = $colorArr[$v['color_id']]['color_name'];
+            //     $data[$k]['q'] = $brandArr[$v['brand_id']]['brand_name'];
+            //     $data[$k]['r'] = $seasonArr[$v['season_id']]['season_name'];
+            // }
+
+
             $keys = array('大类','中类','小类','款色','流水','商品类型', '吊牌价' ,'加盟订货','直营订货','总订货','尺寸', '波段', '商品款号', '商品名称', '色号', '颜色名称', '品牌', '季节');
             $data = [];
             foreach($result['item'] as $k=> $v){

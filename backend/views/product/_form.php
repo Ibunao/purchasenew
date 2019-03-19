@@ -266,7 +266,7 @@ use yii\widgets\LinkPager;
                 ?>
                         <div class="checkbox">
                             <label>
-                                <input name="param[size][]" value="<?= $v['size_id'] ?>" type="checkbox" class="ace" <?php if( isset($param['size_id']) && isset($param['size'])){ foreach($param['size'] as $val){ if($val ==$v['size_id']){ echo "checked"; } } }?>>
+                                <input name="param[size][]" value="<?= $v['size_id'] ?>" type="checkbox" class="ace" <?php if( isset($param['size_id']) && isset($param['size'])){ foreach($param['size'] as $val){ if($val ==$v['size_id']){ echo "checked"; } } }?> <?php if ($action == 'change'||$action == 'copy'){echo "disabled";} ?>>
                                 <span class="lbl"><?= $v['size_name']; ?></span>
                             </label>
                         </div>

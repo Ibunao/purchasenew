@@ -4,6 +4,7 @@ $this->params['breadcrumbs'] = [
     ['label' => '默认页'],
 ];
 ?>
+<script src="/js/echarts.common.min.js"></script>
 <style>
     .infobox {
         width: 250px !important;
@@ -200,5 +201,204 @@ $this->params['breadcrumbs'] = [
         </div>
     </div>
 </div>
+
+<div style="clear:both;margin-bottom: 50px;height:30px;width:100%;"></div>
+<div id="ktarget" style="width: 88%;height:600px; float: left;"></div>
+<div id="ztarget" style="width: 88%;height:600px; float: left;"></div>
+
+<div id="atarget" style="width: 88%;height:600px; float: left;"></div>
+<script>
+    //柱状图
+    var myChart = echarts.init(document.getElementById('ktarget'));
+    var data = JSON.parse('<?=json_encode($ktargetChart) ;?>');
+
+    var option = {
+        title : {
+            text: '客户各指标达成情况',
+            subtext: '左边为指标，右边为订货金额'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['指标值','订购值']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                // magicType : {show: true, type: ['line', 'bar']},
+                // restore : {show: true},
+                // saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                data : ['服装','家居','防辐射','特价品','化妆品']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'指标值',
+                type:'bar',
+                data:data.targets,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                }
+            },
+            {
+                name:'订购值',
+                type:'bar',
+                data:data.orderCatSum,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+
+    //柱状图
+    var myChart = echarts.init(document.getElementById('ztarget'));
+    var data = JSON.parse('<?=json_encode($ztargetChart) ;?>');
+
+    var option = {
+        title : {
+            text: '直营各指标达成情况',
+            subtext: '左边为指标，右边为订货金额'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['指标值','订购值']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                // magicType : {show: true, type: ['line', 'bar']},
+                // restore : {show: true},
+                // saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                data : ['服装','家居','防辐射','特价品','化妆品']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'指标值',
+                type:'bar',
+                data:data.targets,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                }
+            },
+            {
+                name:'订购值',
+                type:'bar',
+                data:data.orderCatSum,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+
+    //柱状图
+    var myChart = echarts.init(document.getElementById('atarget'));
+    var data = JSON.parse('<?=json_encode($atargetChart) ;?>');
+
+    var option = {
+        title : {
+            text: '总的各指标达成情况',
+            subtext: '左边为指标，右边为订货金额'
+        },
+        tooltip : {
+            trigger: 'axis'
+        },
+        legend: {
+            data:['指标值','订购值']
+        },
+        toolbox: {
+            show : true,
+            feature : {
+                mark : {show: true},
+                dataView : {show: true, readOnly: false},
+                // magicType : {show: true, type: ['line', 'bar']},
+                // restore : {show: true},
+                // saveAsImage : {show: true}
+            }
+        },
+        calculable : true,
+        xAxis : [
+            {
+                type : 'category',
+                data : ['服装','家居','防辐射','特价品','化妆品']
+            }
+        ],
+        yAxis : [
+            {
+                type : 'value'
+            }
+        ],
+        series : [
+            {
+                name:'指标值',
+                type:'bar',
+                data:data.targets,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                }
+            },
+            {
+                name:'订购值',
+                type:'bar',
+                data:data.orderCatSum,
+                markPoint : {
+                    data : [
+                        {type : 'max', name: '最大值'},
+                        {type : 'min', name: '最小值'}
+                    ]
+                }
+            }
+        ]
+    };
+    myChart.setOption(option);
+</script>
 
 
