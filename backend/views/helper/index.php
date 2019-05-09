@@ -22,7 +22,7 @@ echo Alert::widget([
 	 * @return {[type]} [description]
 	 */
 	function clearCache() {
-		$.get("/helper/cache-all", function(data, status){
+		$.get("/helper/cache", function(data, status){
 			if(status == 'success'){
 				if (data.code == 200) {
 					alert("清除成功")

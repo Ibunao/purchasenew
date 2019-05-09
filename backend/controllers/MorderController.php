@@ -897,8 +897,10 @@ class MorderController extends BaseController
 		   '客户代码',
            '订单编号',
 		   '备注',
+           '序号'
 		];
 		$fileName = '订单详细信息导出';
+        $orderList = [];
 		// $xls->export_begin($key, $fileName, 0);
 		foreach($order_info as $i => $v){
 		   $data[$i]['A'] = '\''.$v['model_sn'];
@@ -906,10 +908,18 @@ class MorderController extends BaseController
 		   $data[$i]['C'] = '\''.$v['size_no'];
 		   $data[$i]['D'] = '\''.$v['nums'];
 		   $data[$i]['E'] = '\''.$v['cost_price'];
-		   $data[$i]['F'] = '\''.($customer_info[$v['order_id']]['big_'.$model_info[$v['model_sn']].'_count']);
+		   $data[$i]['F'] = '\''.($customer_info[$v['order_id']]['big_'.$model_info[$v['model_sn']].'_count'])/100;
 		   $data[$i]['G'] = '\''.$v['code'];
            $data[$i]['H'] = '\''.$v['order_id'];
-		   $data[$i]['J'] = '\''.$v['name'];
+           $data[$i]['J'] = '\''.$v['name'];
+           // 添加一列，同一订单 序号
+           if (isset($orderList[$v['order_id']])) {
+               $num = $orderList[$v['order_id']] + 1;
+           }else{
+               $num = 1;
+           }
+           $orderList[$v['order_id']] = $num;
+		   $data[$i]['K'] = '\''.$num;
 
            // var_dump($data);exit;
 		   $i++;
