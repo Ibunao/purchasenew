@@ -21,7 +21,7 @@ class ConfigController extends BaseController
 
 		$this->config = require(Yii::getAlias('@common/config/template/db.php'));
 		$this->dataPath = Yii::getAlias('@backend/web/backup/data/');
-		$this->initial = Yii::getAlias('@backend/web/backup/data/purchase_2018_07.sql');
+		$this->initial = Yii::getAlias('@backend/web/backup/data/purchase_2019_03_backup2019-05-22-13-25-10.sql');
 		$this->sqlPath = Yii::getAlias('@backend/web/backup/sql/db.sql');
 	}
 	/**
