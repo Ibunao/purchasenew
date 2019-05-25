@@ -71,10 +71,11 @@ class TableModel
 		$row = (new Query)
 			->from('meet_order as o')
 			->leftJoin('meet_customer as c', 'c.customer_id=o.customer_id')
-			->where(['o.disabled' => 'false'])
+			->leftJoin('meet_order_items as oi', 'oi.order_id = o.order_id')
+			->where(['o.disabled' => 'false', 'oi.disabled' => 'false'])
 			->andFilterWhere(['c.type' => $type])
 			->andFilterWhere(['o.status' => $status])
-			->sum('o.cost_item');
+			->sum('oi.amount');
 		return $row;
 	}
 }

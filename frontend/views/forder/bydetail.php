@@ -125,7 +125,7 @@ use common\models\ConfigModel;
         $(window).scroll(function(){
             var page = $('#page').val() * 1;
             totalheight = parseFloat($(window).height()) + parseFloat($(window).scrollTop());
-            if($(document).height() > totalheight){
+            if($(document).height() <= totalheight + 120){
                 if(stop==true){
                     stop=false;
                     $('#J_loadmore').addClass('enabled');
